@@ -1,0 +1,21 @@
+#summary How to build lilbmmp
+#labels Featured,Phase-Deploy
+
+= Introduction =
+At the moment libmmp comes only as a static library.
+
+= Linux =
+
+In the folder named "linux" you will find the Makefile.
+  * *make clean* will clean existing files
+  * *make debug* will build the debug version
+  * *make all* will build the relase version
+  * *make unittests* will build an application (named unittest) that will test the library and print out a TAP formatted report.
+
+= Windows =
+
+In the folder named "vc98" you will find a Visual Studio 98 solution and project.
+Said project has tree build configuration:
+  * *debug* will build the debug version
+  * *release* will build the release version
+  * *unittest* will build an application (named unittest) that will test the library and print out a TAP formatted report.
