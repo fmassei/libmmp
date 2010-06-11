@@ -19,6 +19,8 @@
 #ifndef H_MMP_SHM_H
 #define H_MMP_SHM_H
 
+/* shared memory functions */
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
