@@ -33,7 +33,7 @@ static t_mmp_tap_result_e test_stat(void)
     return MMP_TAP_UNTESTED;
 }
 
-ret_t mmp_file_unittest(t_mmp_tap_cycle_s *cycle)
+ret_t mmp_files_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret = mmp_tap_test(cycle, "mmp_stat", "unimplemented",

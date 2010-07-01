@@ -24,6 +24,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #ifndef _WIN32
 #   include <unistd.h>
 #else
@@ -44,8 +45,8 @@
 int mmp_stat(const char *path, t_mmp_stat_s *stat_ptr);
 
 #ifdef UNIT_TESTING
-#include "mmp_tap.h"
-ret_t mmp_file_unittest(t_mmp_tap_cycle_s *cycle);
+#   include "mmp_tap.h"
+    ret_t mmp_files_unittest(t_mmp_tap_cycle_s *cycle);
 #endif /* UNIT_TESTING */
 
-#endif /* H_MMP_DIR_H */
+#endif /* H_MMP_FILES_H */
