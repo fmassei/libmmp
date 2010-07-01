@@ -27,8 +27,9 @@
 #include "mmp_list.h"
 #include "mmp_htab.h"
 #include "mmp_thread.h"
+#include "mmp_files.h"
 
-int main()
+int main(void)
 {
     t_mmp_tap_cycle_s *cycle;
     if ((cycle = mmp_tap_startcycle("mmp unit test"))==NULL) {
@@ -41,6 +42,7 @@ int main()
             (mmp_error_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_string_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_thread_unittest(cycle)!=MMP_ERR_OK) ||
+            (mmp_files_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_tap_print(cycle, stdout)!=MMP_ERR_OK) ) {
         mmp_trace_print(stdout);
         return EXIT_FAILURE;
