@@ -38,6 +38,15 @@ char *xindex(char *str, char c)
     return NULL;
 }
 
+int xstrncasecmp(const char *s1, const char *s2, size_t n)
+{
+#ifdef _WIN32
+    return _strnicmp(s1, s2, n);
+#else
+    return strncasecmp(s1, s2, n);
+#endif
+}
+
 int mmp_str_is_trimmable(char c)
 {
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
