@@ -31,12 +31,12 @@ static const char * const error_strings[] = {
     "Socket error"
 };
 
-const char * const mmp_error_ret_getdesc(ret_t ret)
+const char * mmp_error_ret_getdesc(ret_t ret)
 {
     return error_strings[ret];
 }
 
-const char * const mmp_error_err_getdesc(err_t err)
+const char * mmp_error_err_getdesc(err_t err)
 {
     return xstrerror(err);
 }
