@@ -23,9 +23,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#ifdef _WIN32
-char *strptime(const char *buf, const char *fmt, struct tm *tm);
-#endif
+/* strptime wrapper */
+char *xstrptime(const char *buf, const char *fmt, struct tm *tm);
 
 /* format the current time in some useful formats */
 void mmp_time_1123_format(time_t t, char *datestr, size_t strsize);
