@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_date.c"
+				>
+			</File>
+			<File
 				RelativePath="..\unittest.c"
 				>
 			</File>
@@ -366,6 +370,10 @@
 			</File>
 			<File
 				RelativePath="..\mmp_files.h"
+				>
+			</File>
+			<File
+				RelativePath="..\mmp_date.h"
 				>
 			</File>
 		</Filter>
