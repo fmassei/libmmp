@@ -112,7 +112,7 @@ static const unsigned char *find_string(const unsigned char *bp, int *tgt,
 	return NULL;
 }
 
-char *strptime(const char *buf, const char *fmt, struct tm *tm)
+char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
 {
 	unsigned char c;
 	const unsigned char *bp, *ep;
@@ -198,7 +198,7 @@ literal:
 		case 'x':	/* The date, using the locale's format. */
 			new_fmt =_ctloc(d_fmt);
 		    recurse:
-			bp = (const unsigned char *)strptime((const char *)bp,
+			bp = (const unsigned char *)xstrptime((const char *)bp,
 							    new_fmt, tm);
 			LEGAL_ALT(ALT_E);
 			continue;
@@ -558,6 +558,11 @@ literal:
 
 	return (char*)bp;
 }
+#else
+char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
+{
+    return strptime(buf, fmt, tm);
+}
 #endif
 
 /* format in a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
@@ -590,7 +595,7 @@ static int parse_1123_date(char *date, time_t *t)
 {
     char *c;
     struct tm tt;
-    c = strptime(date, "%a, %d %b %Y %H:%M:%S GMT", &tt);
+    c = xstrptime(date, "%a, %d %b %Y %H:%M:%S GMT", &tt);
     if ((c==NULL)||(*c!='\0'))
         return -1;
     *t = mktime(&tt);
@@ -602,7 +607,7 @@ static int parse_1036_date(char *date, time_t *t)
 {
     char *c;
     struct tm tt;
-    c = strptime(date, "%A, %d-%b-%y %H:%M:%S GMT", &tt);
+    c = xstrptime(date, "%A, %d-%b-%y %H:%M:%S GMT", &tt);
     if ((c==NULL)||(*c!='\0'))
         return -1;
     *t = mktime(&tt);
@@ -613,7 +618,7 @@ static int parse_asctime_date(char *date, time_t *t)
 {
     char *c;
     struct tm tt;
-    c = strptime(date, "%a %b %d %H:%M:%S %Y", &tt);
+    c = xstrptime(date, "%a %b %d %H:%M:%S %Y", &tt);
     if ((c==NULL)||(*c!='\0'))
         return -1;
     *t = mktime(&tt);
