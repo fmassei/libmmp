@@ -47,6 +47,15 @@ int xstrncasecmp(const char *s1, const char *s2, size_t n)
 #endif
 }
 
+char *xstrtok_r(char *str, const char *delim, char **ctx)
+{
+#ifdef _WIN32
+    return strtok_s(str, delim, ctx);
+#else
+    return strtok_r(str, delim, ctx);
+#endif
+}
+
 int mmp_str_is_trimmable(char c)
 {
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
@@ -87,12 +96,18 @@ static enum mmp_tap_result_e test_xindex(void)
         return MMP_TAP_PASSED;
     return MMP_TAP_FAILED;
 }
+static enum mmp_tap_result_e test_xstrtok_r(void)
+{
+    return MMP_TAP_UNTESTED;
+}
 ret_t mmp_string_unittest(struct mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret=mmp_tap_test(cycle, "xstrdup", NULL, test_xstrdup()))!=MMP_ERR_OK)
         return ret;
     if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xindex()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xstrtok_r()))!=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }
