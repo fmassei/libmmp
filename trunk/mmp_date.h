@@ -22,16 +22,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "mmp_compat.h"
 
 /* strptime wrapper */
 char *xstrptime(const char *buf, const char *fmt, struct tm *tm);
 
 /* format the current time in some useful formats */
-void mmp_time_1123_format(time_t t, char *datestr, size_t strsize);
-void mmp_time_1036_format(time_t t, char *datestr, size_t strsize);
-void mmp_time_asctime_format(time_t t, char *datestr, size_t strsize);
+void mmp_time_1123_format(time_t t, char * __restrict datestr, size_t strsize);
+void mmp_time_1036_format(time_t t, char * __restrict datestr, size_t strsize);
+void mmp_time_asctime_format(time_t t, char * __restrict datestr, size_t strsize);
 /* parse the string passed into a date */
-int mmp_parse_date(char *date, time_t *t);
+int mmp_parse_date(const char * __restrict date, time_t * __restrict t);
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

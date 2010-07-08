@@ -36,6 +36,7 @@
 #   include <fcntl.h>
     typedef int t_mmp_shm_mapf;
 #endif
+#include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
 #include "mmp_trace.h"
@@ -47,9 +48,9 @@ typedef struct mmp_shm_s {
     t_mmp_shm_mapf map;
 } t_mmp_shm_s;
 
-t_mmp_shm_s *mmp_shm_attach(const char *name, size_t size);
-ret_t mmp_shm_getdata(t_mmp_shm_s *shm, void *dst, size_t from, size_t len);
-ret_t mmp_shm_putdata(t_mmp_shm_s *shm, void *src, size_t from, size_t len);
-void mmp_shm_detach(t_mmp_shm_s **map);
+t_mmp_shm_s *mmp_shm_attach(const char * __restrict name, size_t size);
+ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, const void * __restrict dst, size_t from, size_t len);
+ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm, const void * __restrict src, size_t from, size_t len);
+void mmp_shm_detach(t_mmp_shm_s ** __restrict map);
 
 #endif /* H_MMP_SHM_H */

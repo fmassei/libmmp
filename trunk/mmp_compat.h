@@ -19,6 +19,17 @@
 #ifndef H_MMP_COMPAT_H
 #define H_MMP_COMPAT_H
 
+/* restrict features */
+#if !(__GNUC__ == 2 && __GNUC_MINOR__ == 95)
+#   if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901
+#       define __restrict
+#       define __inline
+#   else
+#       define __restrict   restrict
+#       define __inline     inline
+#   endif
+#endif
+
 /* unix strncpy() */
 #ifdef _WIN32
 #   define xstrncpy(_S1, _S2, _N)   strcpy_s((_S1), (_N), (_S2))

@@ -26,18 +26,18 @@
 #include "mmp_memory.h"
 
 /* unix strdup() */
-char *xstrdup(const char *s);
+char *xstrdup(const char * __restrict s);
 /* unix index() */
-char *xindex(char *s, char c);
+char *xindex(const char * s, char c);
 /* unix strncasecmp() */
-int xstrncasecmp(const char *s1, const char *s2, size_t n);
+int xstrncasecmp(const char * s1, const char * s2, size_t n);
 /* GNU strtok_r() */
-char *xstrtok_r(char *str, const char *delim, char **ctx);
+char *xstrtok_r(char *str, const char * const delim, char **ctx);
 
 /* trim functions */
 int mmp_str_is_trimmable(char c);   /* is a character "trimmable"? */
-char *mmp_str_ltrim(char *str);     /* left trim */
-char *mmp_str_rtrim(char *str);     /* right trim */
+char *mmp_str_ltrim(const char * str);     /* left trim */
+char *mmp_str_rtrim(char * const str);     /* right trim */
 char *mmp_str_trim(char *str);      /* left and right trim */
 
 #ifdef UNIT_TESTING

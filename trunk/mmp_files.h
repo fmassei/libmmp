@@ -31,6 +31,7 @@
 #   include <windows.h>
 #endif
 
+#include "mmp_compat.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
@@ -42,7 +43,7 @@
     typedef struct _stat t_mmp_stat_s;
 #endif
 
-int mmp_stat(const char *path, t_mmp_stat_s *stat_ptr);
+int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr);
 
 #ifdef UNIT_TESTING
 #   include "mmp_tap.h"
