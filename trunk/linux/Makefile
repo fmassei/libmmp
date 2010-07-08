@@ -1,7 +1,7 @@
 GCC =   gcc
 RM  =   rm -f
 AR	=	ar rcs
-GCCFLAG	= -Wall -ansi -pedantic -fPIC
+GCCFLAG	= -Wall -std=c99 -pedantic -fPIC
 LDFLAG	=
 INCLUDE	= -I.
 SRCDIR	= ..

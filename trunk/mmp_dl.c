@@ -24,6 +24,7 @@
 #   define HANDLE   HMODULE
 #endif
 
+/** \todo missing unittest */
 void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
                               const char * __restrict getfnc_name)
 {

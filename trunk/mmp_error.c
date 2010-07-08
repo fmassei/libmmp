@@ -31,11 +31,13 @@ static const char * const error_strings[] = {
     "Socket error"
 };
 
+/** \test   mmp_error_unittest */
 const char * const mmp_error_ret_getdesc(ret_t ret)
 {
     return error_strings[ret];
 }
 
+/** \todo   untested */
 const char * const mmp_error_err_getdesc(err_t err)
 {
     return xstrerror(err);
