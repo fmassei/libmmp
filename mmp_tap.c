@@ -28,7 +28,7 @@ static void freetest(t_mmp_tap_entry_s **entry)
 }
 static void freetestv(void **ptr)
 {
-    freetest((struct mmp_tap_entry_s **)ptr);
+    freetest((t_mmp_tap_entry_s**)ptr);
 }
 
 void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle)
@@ -57,7 +57,7 @@ t_mmp_tap_cycle_s *mmp_tap_startcycle(const char * const name)
 static t_mmp_tap_entry_s *create_test(const char * const desc,
                         const char * const comment, t_mmp_tap_result_e res)
 {
-    struct mmp_tap_entry_s *ret = NULL;
+    t_mmp_tap_entry_s *ret = NULL;
     if (    ((ret = xmalloc(sizeof(*ret)))==NULL)) {
         mmp_setError(MMP_ERR_ENOMEM);
         freetest(&ret);

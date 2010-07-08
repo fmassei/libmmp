@@ -18,15 +18,15 @@
 */
 #include "mmp_dir.h"
 
-static void freeres(void **res) { xfree(*res); *res=NULL; }
-void mmp_dir_free_list_results(t_mmp_list_s **list)
+static void freeres(void ** __restrict res) { xfree(*res); *res=NULL; }
+void mmp_dir_free_list_results(t_mmp_list_s ** __restrict list)
 {
     if (list==NULL || *list==NULL)
         return;
     mmp_list_delete_withdata(list, freeres);
 }
 
-t_mmp_list_s *mmp_dir_listfiles(const char * const dirname)
+t_mmp_list_s *mmp_dir_listfiles(const char * __restrict dirname)
 {
     t_mmp_list_s *ret = NULL;
 #ifndef _WIN32

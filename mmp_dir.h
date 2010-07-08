@@ -33,12 +33,13 @@
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
+#include "mmp_compat.h"
 
 /* list all files in a directory */
-t_mmp_list_s *mmp_dir_listfiles(const char * const dirname);
+t_mmp_list_s *mmp_dir_listfiles(const char * __restrict dirname);
 
 /* free the results of a mmp_dir_listfiles */
-void mmp_dir_free_list_results(t_mmp_list_s **list);
+void mmp_dir_free_list_results(t_mmp_list_s ** __restrict list);
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

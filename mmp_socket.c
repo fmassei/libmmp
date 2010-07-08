@@ -38,7 +38,7 @@ ret_t mmp_socket_finiSystem(void)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
+ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock)
 {
 #ifndef _WIN32
     struct sockaddr_in sa;
@@ -63,8 +63,8 @@ ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
         return MMP_ERR_SOCKET;
     }
 #else
-    struct addrinfo *result = NULL, hints;
-    char buf[10];
+    struct addrinfo * __restrict result = NULL, hints;
+    char __restrict buf[10];
     sprintf(buf, "%d", port);
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -97,7 +97,7 @@ ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_close(t_socket *sock, int shut)
+ret_t mmp_socket_close(t_socket * __restrict sock, int shut)
 {
 #ifndef _WIN32
     if (shut)
@@ -112,7 +112,7 @@ ret_t mmp_socket_close(t_socket *sock, int shut)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_server_accept(t_socket *listen_sock, t_socket *out, char **ip)
+ret_t mmp_socket_server_accept(t_socket * __restrict listen_sock, t_socket * __restrict out, char **ip)
 {
     struct sockaddr_in addr;
     socklen_t addrlen = sizeof(addr);
@@ -123,8 +123,8 @@ ret_t mmp_socket_server_accept(t_socket *listen_sock, t_socket *out, char **ip)
     return MMP_ERR_OK;
 }
 
-int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
-                                                            struct timeval *to)
+int mmp_socket_server_select(int nfds, fd_set * __restrict rd, fd_set * __restrict wd, fd_set * __restrict ex,
+                                                            struct timeval * __restrict to)
 {
     int ret;
 #ifndef _WIN32
@@ -138,12 +138,12 @@ int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
     return ret;
 }
 
-int mmp_socket_read(t_socket *sock, void *buf, size_t len)
+int mmp_socket_read(t_socket * __restrict sock, void * buf, size_t len)
 {
     return recv(*sock, buf, len, 0);
 }
 
-int mmp_socket_write(t_socket *sock, void *buf, size_t len)
+int mmp_socket_write(t_socket * __restrict sock, void * buf, size_t len)
 {
     return send(*sock, buf, len, 0);
 }

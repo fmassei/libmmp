@@ -18,7 +18,7 @@
 */
 #include "mmp_files.h"
 
-int mmp_stat(const char *path, t_mmp_stat_s *stat_ptr)
+int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
 {
 #ifndef _WIN32
     return stat(path, stat_ptr);

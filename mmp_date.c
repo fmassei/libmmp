@@ -566,19 +566,19 @@ char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
 #endif
 
 /* format in a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
-void mmp_time_1123_format(time_t t, char *datestr, size_t strsize)
+void mmp_time_1123_format(time_t t, char * __restrict datestr, size_t strsize)
 {
     strftime(datestr, strsize, "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
 }
 
 /* format in a RFC-1036 (old 850) format (Sunday, 06-Nov-94 08:49:37 GMT) */
-void mmp_time_1036_format(time_t t, char *datestr, size_t strsize)
+void mmp_time_1036_format(time_t t, char * __restrict datestr, size_t strsize)
 {
     strftime(datestr, strsize, "%A, %d-%b-%y %H:%M:%S GMT", gmtime(&t));
 }
 
 /* format in asctime format */
-void mmp_time_asctime_format(time_t t, char *datestr, size_t strsize)
+void mmp_time_asctime_format(time_t t, char * __restrict datestr, size_t strsize)
 {
     struct tm tt;
 #ifndef _WIN32
@@ -591,7 +591,7 @@ void mmp_time_asctime_format(time_t t, char *datestr, size_t strsize)
 }
 
 /* try to parse a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
-static int parse_1123_date(char *date, time_t *t)
+static int parse_1123_date(const char * __restrict date, time_t * __restrict t)
 {
     char *c;
     struct tm tt;
@@ -603,7 +603,7 @@ static int parse_1123_date(char *date, time_t *t)
 }
 
 /* try to parse a RFC-1036 (old 822) format (Sunday, 06-Nov-94 08:49:37 GMT) */
-static int parse_1036_date(char *date, time_t *t)
+static int parse_1036_date(const char * __restrict date, time_t * __restrict t)
 {
     char *c;
     struct tm tt;
@@ -614,7 +614,7 @@ static int parse_1036_date(char *date, time_t *t)
     return 0;
 }
 
-static int parse_asctime_date(char *date, time_t *t)
+static int parse_asctime_date(const char * __restrict date, time_t * __restrict t)
 {
     char *c;
     struct tm tt;
@@ -626,7 +626,7 @@ static int parse_asctime_date(char *date, time_t *t)
 }
 
 /* try all the parsing, returns -1 if no available parsing where possible */
-int mmp_parse_date(char *date, time_t *t)
+int mmp_parse_date(const char * __restrict date, time_t * __restrict t)
 {
     if (parse_1123_date(date, t)==0)
         return 0;

@@ -18,9 +18,9 @@
 */
 #include "mmp_string.h"
 
-char *xstrdup(const char *s)
+char *xstrdup(const char * __restrict s)
 {
-    char *ret;
+    char * __restrict ret;
     if (s==NULL) return NULL;
     if ((ret = xmalloc(strlen(s) + 1))==NULL) {
         errno = ENOMEM;
@@ -30,15 +30,15 @@ char *xstrdup(const char *s)
     return ret;
 }
 
-char *xindex(char *str, char c)
+char *xindex(const char * str, char c)
 {
     if (str==NULL || *str=='\0') return NULL;
     while(*str!=c && *str!='\0') ++str;
-    if (*str==c) return str;
+    if (*str==c) return (char*)str;
     return NULL;
 }
 
-int xstrncasecmp(const char *s1, const char *s2, size_t n)
+int xstrncasecmp(const char * s1, const char * s2, size_t n)
 {
 #ifdef _WIN32
     return _strnicmp(s1, s2, n);
@@ -47,7 +47,7 @@ int xstrncasecmp(const char *s1, const char *s2, size_t n)
 #endif
 }
 
-char *xstrtok_r(char *str, const char *delim, char **ctx)
+char *xstrtok_r(char *str, const char * const delim, char **ctx)
 {
 #ifdef _WIN32
     return strtok_s(str, delim, ctx);
@@ -61,22 +61,22 @@ int mmp_str_is_trimmable(char c)
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
 }
 
-char *mmp_str_ltrim(char *str)
+char *mmp_str_ltrim(const char * str)
 {
     if (str==NULL) return NULL;
-    if (*str=='\0') return str;
+    if (*str=='\0') return (char*)str;
     while (mmp_str_is_trimmable(*str) && *str!='\0') ++str;
-    return str;
+    return (char*)str;
 }
 
-char *mmp_str_rtrim(char *str)
+char *mmp_str_rtrim(char * const str)
 {
     int i;
     if (str==NULL) return NULL;
-    if (*str=='\0') return str;
+    if (*str=='\0') return (char*)str;
     for (i=strlen(str)-1; mmp_str_is_trimmable(str[i]) && (i>=0); --i)
         str[i] = '\0';
-    return str;
+    return (char*)str;
 }
 
 char *mmp_str_trim(char *str)

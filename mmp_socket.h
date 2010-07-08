@@ -46,19 +46,20 @@
     /* socket error is defined */
 #endif
 
+#include "mmp_compat.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
 
 ret_t mmp_socket_initSystem(void);
 ret_t mmp_socket_finiSystem(void);
-ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
-ret_t mmp_socket_close(t_socket *sock, int shut);
-ret_t mmp_socket_server_accept(t_socket *listen_sock, t_socket *out, char **ip);
-int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
+ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock);
+ret_t mmp_socket_close(t_socket * __restrict sock, int shut);
+ret_t mmp_socket_server_accept(t_socket * __restrict listen_sock, t_socket * __restrict out, char **ip);
+int mmp_socket_server_select(int nfds, fd_set * __restrict rd, fd_set * __restrict wd, fd_set * __restrict ex,
                                                             struct timeval *to);
-int mmp_socket_read(t_socket *sock, void *buf, size_t len);
-int mmp_socket_write(t_socket *sock, void *buf, size_t len);
+int mmp_socket_read(t_socket * __restrict sock, void *buf, size_t len);
+int mmp_socket_write(t_socket * __restrict sock, void *buf, size_t len);
 
 int mmp_socket_is_block_last_error(void);
 
