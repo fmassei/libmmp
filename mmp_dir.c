@@ -16,19 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include "mmp_dir.h"
 
-static void freeres(void ** __restrict res) { xfree(*res); *res=NULL; }
-void mmp_dir_free_list_results(t_mmp_list_s ** __restrict list)
+static __inline void freeres(void **res)
+{
+    xfree(*res);
+    *res=NULL;
+}
+
+/** \todo missing unittest */
+__inline void mmp_dir_free_list_results(t_mmp_dirlist_s **list)
 {
     if (list==NULL || *list==NULL)
         return;
     mmp_list_delete_withdata(list, freeres);
 }
 
-t_mmp_list_s *mmp_dir_listfiles(const char * __restrict dirname)
+/** \todo missing unittest */
+t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname)
 {
-    t_mmp_list_s *ret = NULL;
+    t_mmp_dirlist_s *ret = NULL;
 #ifndef _WIN32
     DIR *dirp;
     struct dirent *de;

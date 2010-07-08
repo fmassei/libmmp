@@ -559,26 +559,26 @@ literal:
 	return (char*)bp;
 }
 #else
-char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
+__inline char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
 {
     return strptime(buf, fmt, tm);
 }
 #endif
 
-/* format in a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
-void mmp_time_1123_format(time_t t, char * __restrict datestr, size_t strsize)
+/** \todo missing unittest */
+__inline void mmp_time_1123_format(time_t t, char * datestr, size_t strsize)
 {
     strftime(datestr, strsize, "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
 }
 
-/* format in a RFC-1036 (old 850) format (Sunday, 06-Nov-94 08:49:37 GMT) */
-void mmp_time_1036_format(time_t t, char * __restrict datestr, size_t strsize)
+/** \todo missing unittest */
+__inline void mmp_time_1036_format(time_t t, char * datestr, size_t strsize)
 {
     strftime(datestr, strsize, "%A, %d-%b-%y %H:%M:%S GMT", gmtime(&t));
 }
 
-/* format in asctime format */
-void mmp_time_asctime_format(time_t t, char * __restrict datestr, size_t strsize)
+/** \todo missing unittest */
+__inline void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize)
 {
     struct tm tt;
 #ifndef _WIN32
@@ -591,50 +591,54 @@ void mmp_time_asctime_format(time_t t, char * __restrict datestr, size_t strsize
 }
 
 /* try to parse a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
-static int parse_1123_date(const char * __restrict date, time_t * __restrict t)
+static ret_t parse_1123_date(const char * __restrict date,
+                                                        time_t * __restrict t)
 {
-    char *c;
+    char * __restrict c;
     struct tm tt;
     c = xstrptime(date, "%a, %d %b %Y %H:%M:%S GMT", &tt);
     if ((c==NULL)||(*c!='\0'))
-        return -1;
+        return MMP_ERR_PARSE;
     *t = mktime(&tt);
-    return 0;
+    return MMP_ERR_OK;
 }
 
 /* try to parse a RFC-1036 (old 822) format (Sunday, 06-Nov-94 08:49:37 GMT) */
-static int parse_1036_date(const char * __restrict date, time_t * __restrict t)
+static ret_t parse_1036_date(const char * __restrict date,
+                                                        time_t * __restrict t)
 {
-    char *c;
+    char * __restrict c;
     struct tm tt;
     c = xstrptime(date, "%A, %d-%b-%y %H:%M:%S GMT", &tt);
     if ((c==NULL)||(*c!='\0'))
-        return -1;
+        return MMP_ERR_PARSE;
     *t = mktime(&tt);
-    return 0;
+    return MMP_ERR_OK;
 }
 
-static int parse_asctime_date(const char * __restrict date, time_t * __restrict t)
+static ret_t parse_asctime_date(const char * __restrict date,
+                                                        time_t * __restrict t)
 {
-    char *c;
+    char * __restrict c;
     struct tm tt;
     c = xstrptime(date, "%a %b %d %H:%M:%S %Y", &tt);
     if ((c==NULL)||(*c!='\0'))
-        return -1;
+        return MMP_ERR_PARSE;
     *t = mktime(&tt);
-    return 0;
+    return MMP_ERR_OK;
 }
 
 /* try all the parsing, returns -1 if no available parsing where possible */
-int mmp_parse_date(const char * __restrict date, time_t * __restrict t)
+/** \todo missing unittest */
+ret_t mmp_parse_date(const char * __restrict date, time_t * __restrict t)
 {
-    if (parse_1123_date(date, t)==0)
-        return 0;
-    if (parse_1036_date(date, t)==0)
-        return 0;
-    if (parse_asctime_date(date, t)==0)
-        return 0;
-    return -1;
+    if (parse_1123_date(date, t)==MMP_ERR_OK)
+        return MMP_ERR_OK;
+    if (parse_1036_date(date, t)==MMP_ERR_OK)
+        return MMP_ERR_OK;
+    if (parse_asctime_date(date, t)==MMP_ERR_OK)
+        return MMP_ERR_OK;
+    return MMP_ERR_PARSE;
 }
 
 #ifdef UNIT_TESTING
@@ -646,7 +650,7 @@ static enum mmp_tap_result_e test_parse(void)
 {
     return MMP_TAP_UNTESTED;
 }
-ret_t mmp_date_unittest(struct mmp_tap_cycle_s *cycle)
+ret_t mmp_date_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret=mmp_tap_test(cycle, "datefmt", NULL, test_fmt()))!=MMP_ERR_OK)

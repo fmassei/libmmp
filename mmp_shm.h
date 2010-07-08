@@ -49,7 +49,7 @@ typedef struct mmp_shm_s {
 } t_mmp_shm_s;
 
 t_mmp_shm_s *mmp_shm_attach(const char * __restrict name, size_t size);
-ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, const void * __restrict dst, size_t from, size_t len);
+ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, void * __restrict dst, size_t from, size_t len);
 ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm, const void * __restrict src, size_t from, size_t len);
 void mmp_shm_detach(t_mmp_shm_s ** __restrict map);
 
