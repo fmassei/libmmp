@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_getopt.h
+ * \brief   getopt function
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_GETOPT_H
 #define H_MMP_GETOPT_H
 
@@ -35,6 +40,7 @@
 
 #endif
 
+/** unix getopt */
 int xgetopt(const int argc, char * const *argv, char *opts);
 
 #ifdef UNIT_TESTING

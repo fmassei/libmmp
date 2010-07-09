@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_string.h
+ * \brief   string functions
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_STRING_H
 #define H_MMP_STRING_H
 
@@ -25,20 +30,23 @@
 #include "mmp_error.h"
 #include "mmp_memory.h"
 
-/* unix strdup() */
-char *xstrdup(const char * __restrict s);
-/* unix index() */
-char *xindex(const char * s, char c);
-/* unix strncasecmp() */
-int xstrncasecmp(const char * s1, const char * s2, size_t n);
-/* GNU strtok_r() */
-char *xstrtok_r(char *str, const char * const delim, char **ctx);
+/** unix strdup() */
+char *xstrdup(const char *s);
+/** unix index() */
+char *xindex(const char *s, char c);
+/** unix strncasecmp() */
+int xstrncasecmp(const char *s1, const char *s2, size_t n);
+/** GNU strtok_r() */
+char *xstrtok_r(char *str, const char *delim, char **ctx);
 
-/* trim functions */
-int mmp_str_is_trimmable(char c);   /* is a character "trimmable"? */
-char *mmp_str_ltrim(const char * str);     /* left trim */
-char *mmp_str_rtrim(char * const str);     /* right trim */
-char *mmp_str_trim(char *str);      /* left and right trim */
+/** is a character "trimmable"? */
+int mmp_str_is_trimmable(char c);
+/** left trim */
+char *mmp_str_ltrim(const char *str);
+/** right trim */
+char *mmp_str_rtrim(char *str);
+/** left and right trim */
+char *mmp_str_trim(char *str);
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

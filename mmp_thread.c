@@ -18,6 +18,7 @@
 */
 #include "mmp_thread.h"
 
+/** \test mmp_thread_unittest */
 ret_t mmp_thread_create(t_mmp_thread_start fnc, void *arg, t_mmp_thread *out)
 {
 #ifndef _WIN32
@@ -33,6 +34,7 @@ ret_t mmp_thread_create(t_mmp_thread_start fnc, void *arg, t_mmp_thread *out)
     return MMP_ERR_OK;
 }
 
+/** \test mmp_thread_unittest */
 ret_t mmp_thread_join(t_mmp_thread *id)
 {
 #ifndef _WIN32
@@ -43,6 +45,7 @@ ret_t mmp_thread_join(t_mmp_thread *id)
     return MMP_ERR_OK;
 }
 
+/** \test mmp_thread_unittest */
 void mmp_thread_exit(int code)
 {
 #ifndef _WIN32

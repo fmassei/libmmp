@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_socket.h
+ * \brief   socket functions
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_SOCKET_H
 #define H_MMP_SOCKET_H
 
@@ -51,16 +56,27 @@
 #include "mmp_memory.h"
 #include "mmp_string.h"
 
+/** initialize socket subsystem */
 ret_t mmp_socket_initSystem(void);
+/** finalize socket subsystem */
 ret_t mmp_socket_finiSystem(void);
-ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock);
-ret_t mmp_socket_close(t_socket * __restrict sock, int shut);
-ret_t mmp_socket_server_accept(t_socket * __restrict listen_sock, t_socket * __restrict out, char **ip);
-int mmp_socket_server_select(int nfds, fd_set * __restrict rd, fd_set * __restrict wd, fd_set * __restrict ex,
-                                                            struct timeval *to);
-int mmp_socket_read(t_socket * __restrict sock, void *buf, size_t len);
-int mmp_socket_write(t_socket * __restrict sock, void *buf, size_t len);
-
+/** starts a socket server */
+ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
+/** close a socket */
+ret_t mmp_socket_close(t_socket *sock, int shut);
+/** accept a socket */
+ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
+                                        t_socket * __restrict out, char **ip);
+/** multiplex sockets */
+int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
+                                const struct timeval * __restrict to);
+/** read from a socket */
+int mmp_socket_read(const t_socket * __restrict sock,
+                                void * __restrict buf, size_t len);
+/** write to a socket */
+int mmp_socket_write(const t_socket * __restrict sock,
+                                const void * __restrict buf, size_t len);
+/** was the last error an EWOULDBLOCK error? */
 int mmp_socket_is_block_last_error(void);
 
 #endif /* H_MMP_SOCKET_H */

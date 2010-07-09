@@ -16,12 +16,18 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_sync.h
+ * \brief   various syncronization objects
+ * \author  FtM
+ * \date    2010-Jul-08
+ *
+ * The names for syncronization objects are as follows:
+ * semaphore => semaphore.
+ * mutex => binary semaphore, acquirable/releasable only by the same thread.
+ * event => manually (re)settable binary semaphore.
+ */
 #ifndef H_MMP_SYNC_H
 #define H_MMP_SYNC_H
-
-/* semaphore => semaphore. */
-/* mutex => binary semaphore, acquirable/releasable only by the same thread. */
-/* event => manually (re)settable binary semaphore. */
 
 #ifdef _WIN32
 #   include <windows.h>
@@ -45,22 +51,34 @@
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 
-/* semaphore */
+/* semaphore*/
+/** create semaphore */
 t_mmp_thr_sem mmp_thr_sem_create(long initCount, long maxCount);
+/** destroy semaphore */
 ret_t mmp_thr_sem_close(t_mmp_thr_sem *sem);
+/** lock semaphore */
 ret_t mmp_thr_sem_lock(t_mmp_thr_sem sem);
+/** release semaphore */
 ret_t mmp_thr_sem_release(t_mmp_thr_sem sem);
 
 /* mutex */
+/** create mutex */
 t_mmp_thr_mtx mmp_thr_mtx_create(void);
+/** destroy mutex */
 ret_t mmp_thr_mtx_close(t_mmp_thr_mtx *mtx);
+/** lock mutex */
 ret_t mmp_thr_mtx_lock(t_mmp_thr_mtx mtx);
+/** release mutex */
 ret_t mmp_thr_mtx_release(t_mmp_thr_mtx mtx);
 
 /* event */
+/** create event */
 t_mmp_thr_evt mmp_thr_evt_create();
+/** destroy event */
 ret_t mmp_thr_evt_close(t_mmp_thr_evt *evt);
+/** signal an event */
 ret_t mmp_thr_evt_signal(t_mmp_thr_evt evt);
+/** wait on event */
 ret_t mmp_thr_evt_wait(t_mmp_thr_evt evt);
 
 #endif /* H_MMP_SYNC_H */

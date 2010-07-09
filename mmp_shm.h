@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_shm.h
+ * \brief   shared memory functions
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_SHM_H
 #define H_MMP_SHM_H
 
@@ -41,6 +46,7 @@
 #include "mmp_string.h"
 #include "mmp_trace.h"
 
+/** a shared memory object */
 typedef struct mmp_shm_s {
     void *base;
     size_t len;
@@ -48,9 +54,15 @@ typedef struct mmp_shm_s {
     t_mmp_shm_mapf map;
 } t_mmp_shm_s;
 
-t_mmp_shm_s *mmp_shm_attach(const char * __restrict name, size_t size);
-ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, void * __restrict dst, size_t from, size_t len);
-ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm, const void * __restrict src, size_t from, size_t len);
-void mmp_shm_detach(t_mmp_shm_s ** __restrict map);
+/** create and attach a shared memory */
+t_mmp_shm_s *mmp_shm_attach(const char * name, size_t size);
+/** put data on the shared memory */
+ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
+                        void * __restrict dst, size_t from, size_t len);
+/** get data from the shared memory */
+ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
+                        const void * __restrict src, size_t from, size_t len);
+/** detach and destroy the shared memory */
+void mmp_shm_detach(t_mmp_shm_s **map);
 
 #endif /* H_MMP_SHM_H */

@@ -18,10 +18,6 @@
 */
 #include "mmp_trace.h"
 
-/* this module is completely statically allocated to keep working in case of
- * memory exaustion (one of the cases in which we'd like to trace where things
- * broke ;) ) */
-
 #define MMP_TRACE_FILENAME_LEN  0xff
 #define MMP_TRACE_EXTRA_LEN     0xff
 #define MMP_TRACE_ARR_LEN       20
@@ -37,8 +33,9 @@ typedef struct mmp_trace_s {
 static t_mmp_trace_s m_trace_arr[MMP_TRACE_ARR_LEN];
 static int m_trace_num = 0;
 
-void mmp_trace_create(const char * const filename, int line, ret_t ret,
-                                    err_t err, const char * const extramsg)
+/** \todo missing unittest */
+void mmp_trace_create(const char * __restrict filename, int line, ret_t ret,
+                                err_t err, const char * __restrict extramsg)
 {
     if (m_trace_num>=MMP_TRACE_ARR_LEN)
         return;
@@ -62,6 +59,7 @@ void mmp_trace_create(const char * const filename, int line, ret_t ret,
     m_trace_num++;
 }
 
+/** \todo missing unittest */
 void mmp_trace_print(FILE *out)
 {
     int i;
@@ -83,6 +81,7 @@ void mmp_trace_print(FILE *out)
     }
 }
 
+/** \todo missing unittest */
 void mmp_trace_reset(void)
 {
     m_trace_num = 0;

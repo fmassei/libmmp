@@ -18,6 +18,7 @@
 */
 #include "mmp_socket.h"
 
+/** \todo missing unittest */
 ret_t mmp_socket_initSystem(void)
 {
 #ifdef _WIN32
@@ -30,6 +31,7 @@ ret_t mmp_socket_initSystem(void)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_socket_finiSystem(void)
 {
 #ifdef _WIN32
@@ -38,7 +40,8 @@ ret_t mmp_socket_finiSystem(void)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock)
+/** \todo missing unittest */
+ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
 {
 #ifndef _WIN32
     struct sockaddr_in sa;
@@ -64,7 +67,7 @@ ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock)
     }
 #else
     struct addrinfo * __restrict result = NULL, hints;
-    char __restrict buf[10];
+    char buf[10];
     sprintf(buf, "%d", port);
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -97,7 +100,8 @@ ret_t mmp_socket_server_start(int port, int qsize, t_socket * __restrict sock)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_close(t_socket * __restrict sock, int shut)
+/** \todo missing unittest */
+ret_t mmp_socket_close(t_socket *sock, int shut)
 {
 #ifndef _WIN32
     if (shut)
@@ -112,19 +116,22 @@ ret_t mmp_socket_close(t_socket * __restrict sock, int shut)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_socket_server_accept(t_socket * __restrict listen_sock, t_socket * __restrict out, char **ip)
+/** \todo missing unittest */
+ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
+                                    t_socket * __restrict out, char **ip)
 {
     struct sockaddr_in addr;
     socklen_t addrlen = sizeof(addr);
     *out = accept(*listen_sock, (struct sockaddr *)&addr, &addrlen);
     if ((*ip = xstrdup(inet_ntoa(addr.sin_addr)))==NULL) {
-        /* do nothing? */
+        /** \todo do nothing? */
     }
     return MMP_ERR_OK;
 }
 
-int mmp_socket_server_select(int nfds, fd_set * __restrict rd, fd_set * __restrict wd, fd_set * __restrict ex,
-                                                            struct timeval * __restrict to)
+/** \todo missing unittest */
+int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
+                             const struct timeval * __restrict to)
 {
     int ret;
 #ifndef _WIN32
@@ -138,16 +145,21 @@ int mmp_socket_server_select(int nfds, fd_set * __restrict rd, fd_set * __restri
     return ret;
 }
 
-int mmp_socket_read(t_socket * __restrict sock, void * buf, size_t len)
+/** \todo missing unittest */
+int mmp_socket_read(const t_socket * __restrict sock,
+                                    void * __restrict buf, size_t len)
 {
     return recv(*sock, buf, len, 0);
 }
 
-int mmp_socket_write(t_socket * __restrict sock, void * buf, size_t len)
+/** \todo missing unittest */
+int mmp_socket_write(const t_socket * __restrict sock,
+                                    const void * __restrict buf, size_t len)
 {
     return send(*sock, buf, len, 0);
 }
 
+/** \todo missing unittest */
 int mmp_socket_is_block_last_error(void)
 {
 #ifdef _WIN32
@@ -159,4 +171,3 @@ int mmp_socket_is_block_last_error(void)
 #endif
     return 0;
 }
-

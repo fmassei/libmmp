@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_files.h
+ * \brief   common file management functions
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_FILES_H
 #define H_MMP_FILES_H
 
@@ -37,12 +42,14 @@
 #include "mmp_memory.h"
 #include "mmp_string.h"
 
+/** unix stat structure */
 #ifndef _WIN32
     typedef struct stat t_mmp_stat_s;
 #else
     typedef struct _stat t_mmp_stat_s;
 #endif
 
+/** unix stat */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr);
 
 #ifdef UNIT_TESTING

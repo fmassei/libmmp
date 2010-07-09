@@ -18,7 +18,8 @@
 */
 #include "mmp_string.h"
 
-char *xstrdup(const char * __restrict s)
+/** \test mmp_string_unittest */
+char *xstrdup(const char *s)
 {
     char * __restrict ret;
     if (s==NULL) return NULL;
@@ -30,7 +31,8 @@ char *xstrdup(const char * __restrict s)
     return ret;
 }
 
-char *xindex(const char * str, char c)
+/** \test mmp_string_unittest */
+char *xindex(const char *str, char c)
 {
     if (str==NULL || *str=='\0') return NULL;
     while(*str!=c && *str!='\0') ++str;
@@ -38,7 +40,8 @@ char *xindex(const char * str, char c)
     return NULL;
 }
 
-int xstrncasecmp(const char * s1, const char * s2, size_t n)
+/** \todo missing unittest */
+int xstrncasecmp(const char *s1, const char *s2, size_t n)
 {
 #ifdef _WIN32
     return _strnicmp(s1, s2, n);
@@ -47,7 +50,8 @@ int xstrncasecmp(const char * s1, const char * s2, size_t n)
 #endif
 }
 
-char *xstrtok_r(char *str, const char * const delim, char **ctx)
+/** \todo missing unittest */
+char *xstrtok_r(char *str, const char *delim, char **ctx)
 {
 #ifdef _WIN32
     return strtok_s(str, delim, ctx);
@@ -56,11 +60,13 @@ char *xstrtok_r(char *str, const char * const delim, char **ctx)
 #endif
 }
 
+/** \todo missing unittest */
 int mmp_str_is_trimmable(char c)
 {
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
 }
 
+/** \todo missing unittest */
 char *mmp_str_ltrim(const char * str)
 {
     if (str==NULL) return NULL;
@@ -69,7 +75,8 @@ char *mmp_str_ltrim(const char * str)
     return (char*)str;
 }
 
-char *mmp_str_rtrim(char * const str)
+/** \todo missing unittest */
+char *mmp_str_rtrim(char *str)
 {
     int i;
     if (str==NULL) return NULL;
@@ -79,6 +86,7 @@ char *mmp_str_rtrim(char * const str)
     return (char*)str;
 }
 
+/** \todo missing unittest */
 char *mmp_str_trim(char *str)
 {
     return mmp_str_rtrim(mmp_str_ltrim(str));
@@ -107,7 +115,7 @@ ret_t mmp_string_unittest(struct mmp_tap_cycle_s *cycle)
         return ret;
     if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xindex()))!=MMP_ERR_OK)
         return ret;
-    if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xstrtok_r()))!=MMP_ERR_OK)
+    if ((ret=mmp_tap_test(cycle, "xstrtok", NULL, test_xstrtok_r()))!=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }
