@@ -22,9 +22,9 @@
  * \date    2010-Jul-08
  *
  * The names for syncronization objects are as follows:
- * semaphore => semaphore.
- * mutex => binary semaphore, acquirable/releasable only by the same thread.
- * event => manually (re)settable binary semaphore.
+ * - semaphore => semaphore.
+ * - mutex => binary semaphore, acquirable/releasable only by the same thread.
+ * - event => manually (re)settable binary semaphore.
  */
 #ifndef H_MMP_SYNC_H
 #define H_MMP_SYNC_H
@@ -40,13 +40,23 @@
 #else
 #   include <pthread.h>
 #   include <semaphore.h>
+    /** semaphore type */
     typedef sem_t *t_mmp_thr_sem;
+    /** mutex type */
     typedef pthread_mutex_t *t_mmp_thr_mtx;
+    /** event type */
     typedef sem_t *t_mmp_thr_evt;
 #   define MMP_THRSEM_INVALID NULL
 #   define MMP_THRMTX_INVALID NULL
 #   define MMP_THREVT_INVALID NULL
 #endif
+
+/** \def MMP_THRSEM_INVALID
+ * \brief invalid semaphore constant */
+/** \def MMP_THRMTX_INVALID
+ * \brief invalid mutex constant */
+/** \def MMP_THREVT_INVALID
+ * \brief invalid event constant */
 
 #include "mmp_trace.h"
 #include "mmp_memory.h"
