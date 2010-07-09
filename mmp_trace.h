@@ -34,21 +34,22 @@
 #include "mmp_compat.h"
 #include "mmp_error.h"
 
-/** low-level trace creator. Use the mmp_setError() macros instead! */
+/** \brief low-level trace creator. Use the mmp_setError() macros instead!
+ * \internal */
 void mmp_trace_create(const char * __restrict f, int l, ret_t ret, err_t err,
                       const char * __restrict extramsg);
 
-/** set an error on the trace list */
+/** \brief set an error on the trace list */
 #define mmp_setError(_R)    \
     mmp_trace_create(__FILE__, __LINE__, (_R), errno, NULL)
-/** set an error on the trace list, with an extra message */
+/** \brief set an error on the trace list, with an extra message */
 #define mmp_setError_ext(_R, _E)    \
     mmp_trace_create(__FILE__, __LINE__, (_R), errno, (_E))
 
-/** print out the complete trace list messages */
+/** \brief print out the complete trace list messages */
 void mmp_trace_print(FILE *out);
 
-/** reset the trace stack */
+/** \brief reset the trace stack */
 void mmp_trace_reset(void);
 
 #endif /* H_MMP_TRACE_H */

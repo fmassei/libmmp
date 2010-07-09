@@ -46,23 +46,26 @@
 #include "mmp_string.h"
 #include "mmp_trace.h"
 
-/** a shared memory object */
+/** \typedef t_mmp_shm_mapf
+ * \brief share memory object */
+
+/** \brief a shared memory object */
 typedef struct mmp_shm_s {
-    void *base;
-    size_t len;
-    char *filename;
-    t_mmp_shm_mapf map;
+    void *base;             /**< base address */
+    size_t len;             /**< memory block length */
+    char *filename;         /**< associated filename */
+    t_mmp_shm_mapf map;     /**< shared map object */
 } t_mmp_shm_s;
 
-/** create and attach a shared memory */
+/** \brief create and attach a shared memory */
 t_mmp_shm_s *mmp_shm_attach(const char * name, size_t size);
-/** put data on the shared memory */
+/** \brief put data on the shared memory */
 ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
                         void * __restrict dst, size_t from, size_t len);
-/** get data from the shared memory */
+/** \brief get data from the shared memory */
 ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
                         const void * __restrict src, size_t from, size_t len);
-/** detach and destroy the shared memory */
+/** \brief detach and destroy the shared memory */
 void mmp_shm_detach(t_mmp_shm_s **map);
 
 #endif /* H_MMP_SHM_H */
