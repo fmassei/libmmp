@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_h_utils.h
+ * \brief   header file utility
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_H_UTILS_H
 #define H_MMP_H_UTILS_H
 
@@ -27,6 +32,7 @@
 #   define MMP_CEXTERN_END
 #endif
 
+/** unreferenced parameter macro */
 #ifndef UNREFERENCED_PARAM
 #   define UNREFERENCED_PARAM(_P) ((void)(_P))
 #endif

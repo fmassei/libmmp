@@ -41,9 +41,9 @@ void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle)
     *cycle = NULL;
 }
 
-t_mmp_tap_cycle_s *mmp_tap_startcycle(const char * const name)
+t_mmp_tap_cycle_s *mmp_tap_startcycle(const char *name)
 {
-    t_mmp_tap_cycle_s *ret = NULL;
+    t_mmp_tap_cycle_s * __restrict ret = NULL;
     if (    ((ret = xmalloc(sizeof(*ret)))==NULL) ||
             ((ret->name = xstrdup(name))==NULL) ||
             ((ret->tests = mmp_list_create())==NULL)    ) {
@@ -54,10 +54,10 @@ t_mmp_tap_cycle_s *mmp_tap_startcycle(const char * const name)
     return ret;
 }
 
-static t_mmp_tap_entry_s *create_test(const char * const desc,
-                        const char * const comment, t_mmp_tap_result_e res)
+static t_mmp_tap_entry_s *create_test(const char * __restrict desc,
+                    const char * __restrict comment, t_mmp_tap_result_e res)
 {
-    t_mmp_tap_entry_s *ret = NULL;
+    t_mmp_tap_entry_s * __restrict ret = NULL;
     if (    ((ret = xmalloc(sizeof(*ret)))==NULL)) {
         mmp_setError(MMP_ERR_ENOMEM);
         freetest(&ret);
@@ -74,10 +74,11 @@ static t_mmp_tap_entry_s *create_test(const char * const desc,
     return ret;
 }
 
-ret_t mmp_tap_test(t_mmp_tap_cycle_s *cycle, const char * const desc,
-                        const char * const comment, t_mmp_tap_result_e res)
+ret_t mmp_tap_test(t_mmp_tap_cycle_s * __restrict cycle,
+                    const char * __restrict desc,
+                    const char * __restrict comment, t_mmp_tap_result_e res)
 {
-    t_mmp_tap_entry_s *entry;
+    t_mmp_tap_entry_s * __restrict entry;
     if (cycle==NULL) {
         mmp_setError(MMP_ERR_PARAMS);
         return MMP_ERR_PARAMS;
@@ -89,20 +90,23 @@ ret_t mmp_tap_test(t_mmp_tap_cycle_s *cycle, const char * const desc,
     return mmp_list_add_data(cycle->tests, entry);
 }
 
-ret_t mmp_tap_test_passed(t_mmp_tap_cycle_s *cycle, 
-                        const char * const desc, const char * const comment)
+ret_t mmp_tap_test_passed(t_mmp_tap_cycle_s * __restrict cycle, 
+                    const char * __restrict desc,
+                    const char * __restrict comment)
 {
     return mmp_tap_test(cycle, desc, comment, MMP_TAP_PASSED);
 }
 
-ret_t mmp_tap_test_failed(t_mmp_tap_cycle_s *cycle, 
-                        const char * const desc, const char * const comment)
+ret_t mmp_tap_test_failed(t_mmp_tap_cycle_s * __restrict cycle, 
+                    const char * __restrict desc,
+                    const char * __restrict comment)
 {
     return mmp_tap_test(cycle, desc, comment, MMP_TAP_FAILED);
 }
 
-ret_t mmp_tap_test_skipped(t_mmp_tap_cycle_s *cycle, 
-                        const char * const desc, const char * const comment)
+ret_t mmp_tap_test_skipped(t_mmp_tap_cycle_s * __restrict cycle, 
+                    const char * __restrict desc,
+                    const char * __restrict comment)
 {
     return mmp_tap_test(cycle, desc, comment, MMP_TAP_UNTESTED);
 }

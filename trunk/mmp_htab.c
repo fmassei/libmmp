@@ -18,9 +18,10 @@
 */
 #include "mmp_htab.h"
 
+/** \test mmp_htab_unittest */
 t_mmp_htab_s *mmp_htab_create(size_t size)
 {
-    t_mmp_htab_s *ret;
+    t_mmp_htab_s * __restrict ret;
     size_t i;
     if ((ret = xmalloc(sizeof(*ret)))==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
@@ -37,6 +38,7 @@ t_mmp_htab_s *mmp_htab_create(size_t size)
     return ret;
 }
 
+/** \test mmp_htab_unittest */
 void mmp_htab_destroy(t_mmp_htab_s **ptr)
 {
     t_mmp_htab_elem_s *p, *q;
@@ -54,6 +56,7 @@ void mmp_htab_destroy(t_mmp_htab_s **ptr)
     *ptr = NULL;
 }
 
+/** \todo missing unittest */
 void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr, void(*datadel)(void**))
 {
     t_mmp_htab_elem_s *p, *q;
@@ -76,7 +79,9 @@ void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr, void(*datadel)(void**))
     *ptr = NULL;
 }
 
-unsigned int mmp_htab_hash(t_mmp_htab_s *htab, char *str, int max)
+/** \test mmp_htab_unittest */
+unsigned int mmp_htab_hash(const t_mmp_htab_s * __restrict htab,
+                                        const char * __restrict str, int max)
 {
     unsigned int hashval;
     int i;
@@ -85,7 +90,9 @@ unsigned int mmp_htab_hash(t_mmp_htab_s *htab, char *str, int max)
     return hashval % htab->size;
 }
 
-static t_mmp_htab_elem_s *lookup(t_mmp_htab_s *htab, char *key, int keylen)
+/** \test mmp_htab_unittest */
+static t_mmp_htab_elem_s *lookup(const t_mmp_htab_s * __restrict htab, 
+                                    const char * __restrict key, int keylen)
 {
     t_mmp_htab_elem_s *np;
     if (htab==NULL || key==NULL) {
@@ -98,7 +105,9 @@ static t_mmp_htab_elem_s *lookup(t_mmp_htab_s *htab, char *key, int keylen)
     return NULL;
 }
 
-void *mmp_htab_lookup(t_mmp_htab_s *htab, char *key)
+/** \test mmp_htab_unittest */
+void *mmp_htab_lookup(const t_mmp_htab_s * __restrict htab,
+                                    const char * __restrict key)
 {
     t_mmp_htab_elem_s *np;
     if (htab==NULL || key==NULL) {
@@ -110,7 +119,9 @@ void *mmp_htab_lookup(t_mmp_htab_s *htab, char *key)
     return NULL;
 }
 
-void *mmp_htab_lookup_nz(t_mmp_htab_s *htab, char *key, int keylen)
+/** \todo missing unittest */
+void *mmp_htab_lookup_nz(const t_mmp_htab_s * __restrict htab,
+                                    const char * __restrict key, int keylen)
 {
     t_mmp_htab_elem_s *np;
     if (htab==NULL || key==NULL) {
@@ -122,7 +133,9 @@ void *mmp_htab_lookup_nz(t_mmp_htab_s *htab, char *key, int keylen)
     return NULL;
 }
 
-ret_t mmp_htab_install(t_mmp_htab_s *htab, char *key, void *val)
+/** \test mmp_htab_unittest */
+ret_t mmp_htab_install(t_mmp_htab_s * __restrict htab,
+                                    const char * __restrict key, void *val)
 {
     t_mmp_htab_elem_s *np;
     unsigned int hashval;
@@ -149,7 +162,9 @@ ret_t mmp_htab_install(t_mmp_htab_s *htab, char *key, void *val)
     return MMP_ERR_OK;
 }
 
-ret_t mmp_htab_delete(t_mmp_htab_s *htab, char *key)
+/** \test mmp_htab_unittest */
+ret_t mmp_htab_delete(t_mmp_htab_s * __restrict htab,
+                                    const char * __restrict key)
 {
     t_mmp_htab_elem_s *np;
     unsigned int hashval;

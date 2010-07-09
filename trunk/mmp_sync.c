@@ -31,6 +31,7 @@
 /* ***************************************************************************
  * semaphores
  * **************************************************************************/
+/** \todo missing unittest */
 t_mmp_thr_sem mmp_thr_sem_create(long initCount, long maxCount)
 {
     t_mmp_thr_sem ret;
@@ -54,6 +55,7 @@ t_mmp_thr_sem mmp_thr_sem_create(long initCount, long maxCount)
     return ret;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_sem_close(t_mmp_thr_sem *sem)
 {
     if (sem==NULL || *sem==MMP_THRSEM_INVALID)
@@ -71,6 +73,7 @@ ret_t mmp_thr_sem_close(t_mmp_thr_sem *sem)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_sem_lock(t_mmp_thr_sem sem)
 {
     if (sem==MMP_THRSEM_INVALID)
@@ -84,6 +87,7 @@ ret_t mmp_thr_sem_lock(t_mmp_thr_sem sem)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_sem_release(t_mmp_thr_sem sem)
 {
     if (sem==MMP_THRSEM_INVALID)
@@ -100,6 +104,7 @@ ret_t mmp_thr_sem_release(t_mmp_thr_sem sem)
 /* ***************************************************************************
  * mutexes
  * **************************************************************************/
+/** \todo missing unittest */
 t_mmp_thr_mtx mmp_thr_mtx_create(void)
 {
     t_mmp_thr_mtx ret;
@@ -125,6 +130,7 @@ t_mmp_thr_mtx mmp_thr_mtx_create(void)
     return ret;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_mtx_close(t_mmp_thr_mtx *mtx)
 {
     if (mtx==NULL || *mtx==MMP_THRMTX_INVALID)
@@ -142,6 +148,7 @@ ret_t mmp_thr_mtx_close(t_mmp_thr_mtx *mtx)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_mtx_lock(t_mmp_thr_mtx mtx)
 {
     if (mtx==MMP_THRMTX_INVALID)
@@ -155,6 +162,7 @@ ret_t mmp_thr_mtx_lock(t_mmp_thr_mtx mtx)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_mtx_release(t_mmp_thr_mtx mtx)
 {
     if (mtx==MMP_THRMTX_INVALID)
@@ -171,6 +179,7 @@ ret_t mmp_thr_mtx_release(t_mmp_thr_mtx mtx)
 /* ***************************************************************************
  * events
  * **************************************************************************/
+/** \todo missing unittest */
 t_mmp_thr_evt mmp_thr_evt_create()
 {
     t_mmp_thr_evt ret;
@@ -194,6 +203,7 @@ t_mmp_thr_evt mmp_thr_evt_create()
     return ret;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_evt_close(t_mmp_thr_evt *evt)
 {
     if (evt==NULL || *evt==MMP_THREVT_INVALID)
@@ -210,6 +220,7 @@ ret_t mmp_thr_evt_close(t_mmp_thr_evt *evt)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_evt_signal(t_mmp_thr_evt evt)
 {
     if (evt==MMP_THREVT_INVALID)
@@ -223,6 +234,7 @@ ret_t mmp_thr_evt_signal(t_mmp_thr_evt evt)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_thr_evt_wait(t_mmp_thr_evt evt)
 {
     if (evt==MMP_THREVT_INVALID)

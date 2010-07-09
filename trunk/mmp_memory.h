@@ -16,6 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with MMP.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** \file   mmp_memory.h
+ * \brief   malloc/calloc/realloc/free wrappers
+ * \author  FtM
+ * \date    2010-Jul-08
+ */
 #ifndef H_MMP_MEMORY_H
 #define H_MMP_MEMORY_H
 

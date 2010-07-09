@@ -18,6 +18,7 @@
 */
 #include "mmp_files.h"
 
+/** \todo missing unittest */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
 {
 #ifndef _WIN32

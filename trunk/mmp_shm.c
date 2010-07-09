@@ -18,8 +18,8 @@
 */
 #include "mmp_shm.h"
 
-/* detach the shared memory from the current thread */
-void mmp_shm_detach(t_mmp_shm_s ** __restrict map)
+/** \todo missing unittest */
+void mmp_shm_detach(t_mmp_shm_s **map)
 {
     if (map==NULL || *map==NULL) return;
 #ifdef _WIN32
@@ -39,8 +39,8 @@ void mmp_shm_detach(t_mmp_shm_s ** __restrict map)
     *map = NULL;
 }
 
-/* attach a shared memory to the current process */
-t_mmp_shm_s *mmp_shm_attach(const char * __restrict name, size_t size)
+/** \todo missing unittest */
+t_mmp_shm_s *mmp_shm_attach(const char *name, size_t size)
 {
     t_mmp_shm_s * __restrict ret;
 #ifdef _WIN32
@@ -95,7 +95,7 @@ badexit:
     return NULL;
 }
 
-static __inline int is_shm_valid(const t_mmp_shm_s * __restrict shm)
+static __inline int is_shm_valid(const t_mmp_shm_s *shm)
 {
 #ifdef _WIN32
     if (shm==NULL || shm->base==NULL || shm->len<=0 || shm->map==NULL)
@@ -106,14 +106,11 @@ static __inline int is_shm_valid(const t_mmp_shm_s * __restrict shm)
     return 1;
 }
 
-/* read from the shared memory */
-ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, void * __restrict dst, size_t from, size_t len)
+/** \todo missing unittest */
+ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
+                        void * __restrict dst, size_t from, size_t len)
 {
-    if (!is_shm_valid(shm) || dst==NULL || len==0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
-    if ((from+len)>=shm->len) {
+    if (!is_shm_valid(shm) || dst==NULL || len==0 || ((from+len)>=shm->len)) {
         mmp_setError(MMP_ERR_PARAMS);
         return MMP_ERR_PARAMS;
     }
@@ -121,14 +118,11 @@ ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm, void * __restrict dst,
     return MMP_ERR_OK;
 }
 
-/* write to the shared memory */
-ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm, const void * __restrict src, size_t from, size_t len)
+/** \todo missing unittest */
+ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
+                        const void * __restrict src, size_t from, size_t len)
 {
-    if (!is_shm_valid(shm) || src==NULL || len==0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
-    if ((from+len)>=shm->len) {
+    if (!is_shm_valid(shm) || src==NULL || len==0 || ((from+len)>=shm->len)) {
         mmp_setError(MMP_ERR_PARAMS);
         return MMP_ERR_PARAMS;
     }
