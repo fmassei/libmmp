@@ -55,6 +55,11 @@ __inline void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize);
  *          otherwise. */
 ret_t mmp_parse_date(const char * __restrict date,time_t * __restrict t);
 
+/** \brief get timezone */
+char *mmp_get_tm_zone(void);
+/** \brief set timezone */
+void mmp_set_tm_zone(char *zone);
+
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"
 /** date unit testing */

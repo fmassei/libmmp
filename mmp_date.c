@@ -565,22 +565,25 @@ __inline char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
 }
 #endif
 
-/** \todo missing unittest */
+/** \test mmp_date_unittest */
 __inline void mmp_time_1123_format(time_t t, char * datestr, size_t strsize)
 {
+    if (datestr==NULL || strsize==0) return;
     strftime(datestr, strsize, "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
 }
 
-/** \todo missing unittest */
+/** \test mmp_date_unittest */
 __inline void mmp_time_1036_format(time_t t, char * datestr, size_t strsize)
 {
+    if (datestr==NULL || strsize==0) return;
     strftime(datestr, strsize, "%A, %d-%b-%y %H:%M:%S GMT", gmtime(&t));
 }
 
-/** \todo missing unittest */
+/** \test mmp_date_unittest */
 __inline void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize)
 {
     struct tm tt;
+    if (datestr==NULL || strsize==0) return;
 #ifndef _WIN32
     gmtime_r(&t, &tt);
     asctime_r(&tt, datestr);
@@ -588,6 +591,8 @@ __inline void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize)
     gmtime_s(&tt, &t);
     asctime_s(datestr, strsize, &tt);
 #endif
+    if (strlen(datestr)>0)
+        datestr[strlen(datestr)-1] = '\0';
 }
 
 /* try to parse a RFC-1123 (old 822) format (Sun, 06 Nov 1994 08:49:37 GMT) */
@@ -641,10 +646,87 @@ ret_t mmp_parse_date(const char * __restrict date, time_t * __restrict t)
     return MMP_ERR_PARSE;
 }
 
-#ifdef UNIT_TESTING
-static enum mmp_tap_result_e test_fmt(void)
+/** \test mmp_date_unittest */
+char *mmp_get_tm_zone(void)
 {
-    return MMP_TAP_UNTESTED;
+    return getenv("TZ");
+}
+
+/** \test mmp_date_unittest */
+void mmp_set_tm_zone(char *zone)
+{
+    if (zone!=NULL)
+        setenv("TZ", zone, 1);
+    else
+        unsetenv("TZ");
+    tzset();
+}
+
+#ifdef UNIT_TESTING
+static struct tm *get_test_tm(void)
+{
+    struct tm *ret;
+    if ((ret = xmalloc(sizeof(*ret)))==NULL)
+        return NULL;
+    ret->tm_sec = 0;
+    ret->tm_min = 1;
+    ret->tm_hour = 2;
+    ret->tm_mday = 10;
+    ret->tm_mon = 6;
+    ret->tm_year = 110;
+    ret->tm_isdst = 0;
+    return ret;
+}
+static enum mmp_tap_result_e test_1123(void)
+{
+    char buf[100];
+    char *tz;
+    struct tm *mtm;
+    time_t mtt;
+    tz = mmp_get_tm_zone();
+    mmp_set_tm_zone("");
+    mtm = get_test_tm();
+    mtt = mktime(mtm);
+    xfree(mtm);
+    mmp_set_tm_zone(tz);
+    mmp_time_1123_format(mtt, buf, sizeof(buf));
+    if (!strcmp(buf, "Sat, 10 Jul 2010 02:01:00 GMT"))
+        return MMP_TAP_PASSED;
+    return MMP_TAP_FAILED;
+}
+static enum mmp_tap_result_e test_1036(void)
+{
+    char buf[100];
+    char *tz;
+    struct tm *mtm;
+    time_t mtt;
+    tz = mmp_get_tm_zone();
+    mmp_set_tm_zone("");
+    mtm = get_test_tm();
+    mtt = mktime(mtm);
+    xfree(mtm);
+    mmp_time_1036_format(mtt, buf, sizeof(buf));
+    mmp_set_tm_zone(tz);
+    if (!strcmp(buf, "Saturday, 10-Jul-10 02:01:00 GMT"))
+        return MMP_TAP_PASSED;
+    return MMP_TAP_FAILED;
+}
+static enum mmp_tap_result_e test_asctime(void)
+{
+    char buf[100];
+    char *tz;
+    struct tm *mtm;
+    time_t mtt;
+    tz = mmp_get_tm_zone();
+    mmp_set_tm_zone("GMT");
+    mtm = get_test_tm();
+    mtt = mktime(mtm);
+    xfree(mtm);
+    mmp_set_tm_zone(tz);
+    mmp_time_asctime_format(mtt, buf, sizeof(buf));
+    if (!strcmp(buf, "Sat Jul 10 02:01:00 2010"))
+        return MMP_TAP_PASSED;
+    return MMP_TAP_FAILED;
 }
 static enum mmp_tap_result_e test_parse(void)
 {
@@ -653,9 +735,15 @@ static enum mmp_tap_result_e test_parse(void)
 ret_t mmp_date_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
-    if ((ret=mmp_tap_test(cycle, "datefmt", NULL, test_fmt()))!=MMP_ERR_OK)
+    if ((ret = mmp_tap_test(cycle, "date 1123", NULL, test_1123()))!=MMP_ERR_OK)
         return ret;
-    if ((ret=mmp_tap_test(cycle, "dateparse", NULL, test_parse()))!=MMP_ERR_OK)
+    if ((ret = mmp_tap_test(cycle, "date 1036", NULL, test_1036()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret = mmp_tap_test(cycle, "date asctime", NULL, test_asctime()))
+                                                                !=MMP_ERR_OK)
+        return ret;
+    if ((ret = mmp_tap_test(cycle, "dateparse", NULL, test_parse()))
+                                                                !=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }
