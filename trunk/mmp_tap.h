@@ -27,24 +27,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/** tap results */
+/** \brief tap results */
 typedef enum mmp_tap_result_e {
     MMP_TAP_PASSED,
     MMP_TAP_FAILED,
     MMP_TAP_UNTESTED
 } t_mmp_tap_result_e;
 
-/** a tap entry */
+/** \brief a tap entry */
 typedef struct mmp_tap_entry_s {
-    t_mmp_tap_result_e result;
-    char *desc;
-    char *comment;
+    t_mmp_tap_result_e result;      /**< result of the test */
+    char *desc;                     /**< description on the test */
+    char *comment;                  /**< additional comments */
 } t_mmp_tap_entry_s;
 
-/** a tap testing cycle */
+/** \brief a tap testing cycle */
 typedef struct mmp_tap_cycle_s {
-    char *name;
-    struct mmp_list_s *tests;
+    char *name;                     /**< name of the test cycle */
+    struct mmp_list_s *tests;       /**< list of test entries */
 } t_mmp_tap_cycle_s;
 
 #include "mmp_memory.h"
@@ -52,28 +52,28 @@ typedef struct mmp_tap_cycle_s {
 #include "mmp_list.h"
 #include "mmp_trace.h"
 
-/** start a tap cycle */
+/** \brief start a tap cycle */
 t_mmp_tap_cycle_s *mmp_tap_startcycle(const char *name);
-/** do a test */
+/** \brief do a test */
 ret_t mmp_tap_test(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment, t_mmp_tap_result_e res);
-/** the test passed */
+/** \brief the test passed */
 ret_t mmp_tap_test_passed(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
-/** the test failed */
+/** \brief the test failed */
 ret_t mmp_tap_test_failed(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
-/** the test was skipped */
+/** \brief the test was skipped */
 ret_t mmp_tap_test_skipped(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
-/** free the cycle results */
+/** \brief free the cycle results */
 void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle);
 
-/** print results */
+/** \brief print results */
 ret_t mmp_tap_print(t_mmp_tap_cycle_s *cycle, FILE *out);
 
 #endif /* H_MMP_TAP_H */

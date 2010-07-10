@@ -34,10 +34,10 @@
 #   include <memory.h>
     typedef HANDLE t_mmp_shm_mapf;
 #else
+#   include <unistd.h>
 #   include <sys/types.h>
 #   include <sys/mman.h>
 #   include <sys/stat.h>
-#   include <unistd.h>
 #   include <fcntl.h>
     typedef int t_mmp_shm_mapf;
 #endif

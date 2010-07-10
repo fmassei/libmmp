@@ -42,7 +42,7 @@ void mmp_shm_detach(t_mmp_shm_s **map)
 /** \todo missing unittest */
 t_mmp_shm_s *mmp_shm_attach(const char *name, size_t size)
 {
-    t_mmp_shm_s * __restrict ret;
+    t_mmp_shm_s *ret;
 #ifdef _WIN32
     int is_first = 0;
 #endif

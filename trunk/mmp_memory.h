@@ -27,9 +27,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** \brief malloc wrapper */
 #define xmalloc(_S)         malloc((_S))
+/** \brief callc wrapper */
 #define xcalloc(_N, _S)     calloc((_N), (_S))
+/** \brief free wrapper */
 #define xfree(_P)           free((_P))
+/** \brief realloc wrapper */
 #define xrealloc(_P, _S)    realloc((_P), (_S))
 
 #endif /* H_MMP_MEMORY_H */
