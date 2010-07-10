@@ -50,33 +50,39 @@
 #   define SOCKET_INVALID   INVALID_SOCKET
     /* socket error is defined */
 #endif
+/** \def SOCKET_INVALID
+ * \brief invalid socket constant */
+/** \def SOCKET_ERROR
+ * \brief error on socket operation */
+/** \typedef t_socket
+ * \brief mmp socket type */
 
 #include "mmp_compat.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
 
-/** initialize socket subsystem */
+/** \brief initialize socket subsystem */
 ret_t mmp_socket_initSystem(void);
-/** finalize socket subsystem */
+/** \brief finalize socket subsystem */
 ret_t mmp_socket_finiSystem(void);
-/** starts a socket server */
+/** \brief starts a socket server */
 ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
-/** close a socket */
+/** \brief close a socket */
 ret_t mmp_socket_close(t_socket *sock, int shut);
-/** accept a socket */
+/** \brief accept a socket */
 ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
                                         t_socket * __restrict out, char **ip);
-/** multiplex sockets */
+/** \brief multiplex sockets */
 int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
-                                const struct timeval * __restrict to);
-/** read from a socket */
+                                            struct timeval * __restrict to);
+/** \brief read from a socket */
 int mmp_socket_read(const t_socket * __restrict sock,
                                 void * __restrict buf, size_t len);
-/** write to a socket */
+/** \brief write to a socket */
 int mmp_socket_write(const t_socket * __restrict sock,
                                 const void * __restrict buf, size_t len);
-/** was the last error an EWOULDBLOCK error? */
+/** \brief was the last error an EWOULDBLOCK error? */
 int mmp_socket_is_block_last_error(void);
 
 #endif /* H_MMP_SOCKET_H */

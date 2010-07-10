@@ -38,6 +38,7 @@
 #   define MMP_THRMTX_INVALID INVALID_HANDLE_VALUE
 #   define MMP_THREVT_INVALID INVALID_HANDLE_VALUE
 #else
+#   define _XOPEN_SOURCE 500        /* for pthread_mutexattr_settype */
 #   include <pthread.h>
 #   include <semaphore.h>
     /** semaphore type */

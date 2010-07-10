@@ -27,25 +27,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _WIN32
+#   include <strings.h>
+#endif
 #include "mmp_error.h"
 #include "mmp_memory.h"
 
-/** unix strdup() */
+/** \brief unix strdup() */
 char *xstrdup(const char *s);
-/** unix index() */
+/** \brief unix index() */
 char *xindex(const char *s, char c);
-/** unix strncasecmp() */
+/** \brief unix strncasecmp() */
 int xstrncasecmp(const char *s1, const char *s2, size_t n);
-/** GNU strtok_r() */
+/** \brief GNU strtok_r() */
 char *xstrtok_r(char *str, const char *delim, char **ctx);
 
-/** is a character "trimmable"? */
+/** \brief is a character "trimmable"? */
 int mmp_str_is_trimmable(char c);
-/** left trim */
+/** \brief left trim */
 char *mmp_str_ltrim(const char *str);
-/** right trim */
+/** \brief right trim */
 char *mmp_str_rtrim(char *str);
-/** left and right trim */
+/** \brief left and right trim */
 char *mmp_str_trim(char *str);
 
 #ifdef UNIT_TESTING

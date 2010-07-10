@@ -131,7 +131,7 @@ ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
 
 /** \todo missing unittest */
 int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
-                             const struct timeval * __restrict to)
+                                            struct timeval * __restrict to)
 {
     int ret;
 #ifndef _WIN32
