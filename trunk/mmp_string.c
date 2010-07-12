@@ -40,7 +40,7 @@ char *xindex(const char *str, char c)
     return NULL;
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 int xstrncasecmp(const char *s1, const char *s2, size_t n)
 {
 #ifdef _WIN32
@@ -50,7 +50,7 @@ int xstrncasecmp(const char *s1, const char *s2, size_t n)
 #endif
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 char *xstrtok_r(char *str, const char *delim, char **ctx)
 {
 #ifdef _WIN32
@@ -60,13 +60,13 @@ char *xstrtok_r(char *str, const char *delim, char **ctx)
 #endif
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 int mmp_str_is_trimmable(char c)
 {
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 char *mmp_str_ltrim(const char * str)
 {
     if (str==NULL) return NULL;
@@ -75,7 +75,7 @@ char *mmp_str_ltrim(const char * str)
     return (char*)str;
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 char *mmp_str_rtrim(char *str)
 {
     int i;
@@ -86,36 +86,109 @@ char *mmp_str_rtrim(char *str)
     return (char*)str;
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 char *mmp_str_trim(char *str)
 {
     return mmp_str_rtrim(mmp_str_ltrim(str));
 }
 
 #ifdef UNIT_TESTING
-static enum mmp_tap_result_e test_xstrdup(void)
+static t_mmp_tap_result_e test_xstrdup(void)
 {
-    return MMP_TAP_UNTESTED;
+    char *p;
+    if ((p = xstrdup("test"))==NULL)
+        return MMP_TAP_FAILED;
+    if (strcmp(p, "test")!=0)
+        return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
 }
-static enum mmp_tap_result_e test_xindex(void)
+static t_mmp_tap_result_e test_xindex(void)
 {
     char *p = "pippo";
     if (xindex(p, 'i')==p+1)
         return MMP_TAP_PASSED;
     return MMP_TAP_FAILED;
 }
-static enum mmp_tap_result_e test_xstrtok_r(void)
+static t_mmp_tap_result_e test_xstrncasecmp(void)
 {
-    return MMP_TAP_UNTESTED;
+    char *s0 = "test";
+    char *s1 = "test2";
+    char *s2 = "Test";
+    if (xstrncasecmp(s0, s1, strlen(s0))!=0)
+        return MMP_TAP_FAILED;
+    if (xstrncasecmp(s1, s2, strlen(s1))==0)
+        return MMP_TAP_FAILED;
+    if (xstrncasecmp(s0, s2, strlen(s0))!=0)
+        return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
 }
-ret_t mmp_string_unittest(struct mmp_tap_cycle_s *cycle)
+/* taken from strtok_r man page */
+static t_mmp_tap_result_e test_xstrtok_r(void)
+{
+    char test[80], blah[80], mix[80];
+    char *sep = "\\/:;=-";
+    char *word, *phrase, *brkt, *brkb;
+    char *res[] = { "This:blah", "This:blat", "This:blab", "This:blag",
+            "is.a:blah", "is.a:blat", "is.a:blab", "is.a:blag", "test:blah",
+            "test:blat", "test:blab", "test:blag", "of:blah", "of:blat",
+            "of:blab", "of:blag", "the:blah", "the:blat", "the:blab",
+            "the:blag", "string:blah", "string:blat", "string:blab",
+            "string:blag", "tokenizer:blah", "tokenizer:blat",
+            "tokenizer:blab", "tokenizer:blag", "function.:blah",
+            "function.:blat", "function.:blab", "function.:blag" };
+    int i;
+    strcpy(test, "This;is.a:test:of=the/string\\tokenizer-function.");
+    for (   word = xstrtok_r(test, sep, &brkt);
+            word;
+            word = xstrtok_r(NULL, sep, &brkt)) {
+        strcpy(blah, "blah:blat:blab:blag");
+        for (   phrase = xstrtok_r(blah, sep, &brkb);
+                phrase;
+                phrase = xstrtok_r(NULL, sep, &brkb)) {
+            sprintf(mix, "%s:%s", word, phrase);
+            if (i>=(sizeof(res)/sizeof(res[0])))
+                return MMP_TAP_FAILED;
+            if (strcmp(mix, res[i++])!=0)
+                return MMP_TAP_FAILED;
+        }
+    }
+    return MMP_TAP_PASSED;
+}
+static t_mmp_tap_result_e test_str_is_trimmable(void)
+{
+    char p[0xff] = {0};
+    int i;
+    p[' '] = p['\t'] = p['\n'] = p['\r'] = 1;
+    for (i=0; i<0xff; ++i)
+        if (mmp_str_is_trimmable((char)i)!=p[i])
+            return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
+}
+static t_mmp_tap_result_e test_str_trim(void)
+{
+    char *p = " test \n  \t\n";
+    if (strcmp(mmp_str_trim(p), "test")!=0)
+        return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
+}
+ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret=mmp_tap_test(cycle, "xstrdup", NULL, test_xstrdup()))!=MMP_ERR_OK)
         return ret;
     if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xindex()))!=MMP_ERR_OK)
         return ret;
-    if ((ret=mmp_tap_test(cycle, "xstrtok", NULL, test_xstrtok_r()))!=MMP_ERR_OK)
+    if ((ret=mmp_tap_test(cycle, "xstrncasecmp", NULL, test_xstrncasecmp()))
+                                                                !=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "xstrtok", NULL, test_xstrtok_r()))
+                                                                !=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "str_is_trimmable", NULL,
+                                        test_str_is_trimmable()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "str_trim", NULL,
+                                        test_str_trim()))!=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }

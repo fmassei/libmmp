@@ -655,11 +655,22 @@ char *mmp_get_tm_zone(void)
 /** \test mmp_date_unittest */
 void mmp_set_tm_zone(char *zone)
 {
+#ifndef _WIN32
     if (zone!=NULL)
         setenv("TZ", zone, 1);
     else
         unsetenv("TZ");
+#else
+    if (zone!=NULL)
+        _putenv_s("TZ", zone);
+    else
+        _putenv_s("TZ", "");
+#endif
+#ifndef _WIN32
     tzset();
+#else
+    _tzset();
+#endif
 }
 
 #ifdef UNIT_TESTING
@@ -684,7 +695,7 @@ static enum mmp_tap_result_e test_1123(void)
     struct tm *mtm;
     time_t mtt;
     tz = mmp_get_tm_zone();
-    mmp_set_tm_zone("");
+    mmp_set_tm_zone("GMT");
     mtm = get_test_tm();
     mtt = mktime(mtm);
     xfree(mtm);
@@ -701,7 +712,7 @@ static enum mmp_tap_result_e test_1036(void)
     struct tm *mtm;
     time_t mtt;
     tz = mmp_get_tm_zone();
-    mmp_set_tm_zone("");
+    mmp_set_tm_zone("GMT");
     mtm = get_test_tm();
     mtt = mktime(mtm);
     xfree(mtm);
