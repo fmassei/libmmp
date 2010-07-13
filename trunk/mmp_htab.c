@@ -56,7 +56,7 @@ void mmp_htab_destroy(t_mmp_htab_s **ptr)
     *ptr = NULL;
 }
 
-/** \todo missing unittest */
+/** \test mmp_htab_unittest */
 void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr, void(*datadel)(void**))
 {
     t_mmp_htab_elem_s *p, *q;
@@ -119,7 +119,7 @@ void *mmp_htab_lookup(const t_mmp_htab_s * __restrict htab,
     return NULL;
 }
 
-/** \todo missing unittest */
+/** \test mmp_htab_unittest */
 void *mmp_htab_lookup_nz(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key, int keylen)
 {
@@ -201,17 +201,42 @@ static t_mmp_tap_result_e test_insert_delete(void)
     if ((htab = mmp_htab_create(101))==NULL)
         return MMP_TAP_FAILED;
     if (
-            (mmp_htab_install(htab, "key1", "paperino")!=MMP_ERR_OK) ||
-            (mmp_htab_install(htab, "key2", "pluto")!=MMP_ERR_OK) ||
-            (mmp_htab_install(htab, "key2", "pippo")!=MMP_ERR_OK)   )
+            (mmp_htab_install(htab, "key1", "value1")!=MMP_ERR_OK) ||
+            (mmp_htab_install(htab, "key2", "value2")!=MMP_ERR_OK) ||
+            (mmp_htab_install(htab, "key2", "value3")!=MMP_ERR_OK)   )
         return MMP_TAP_FAILED;
-    if (strcmp("pippo", (char*)mmp_htab_lookup(htab, "key2")))
+    if (strcmp("value3", (char*)mmp_htab_lookup(htab, "key2")))
         return MMP_TAP_FAILED;
     if (mmp_htab_delete(htab, "key2")!=MMP_ERR_OK)
         return MMP_TAP_FAILED;
     if (mmp_htab_lookup(htab, "key2")!=NULL)
         return MMP_TAP_FAILED;
     mmp_htab_destroy(&htab);
+    if (htab!=NULL)
+        return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
+}
+
+static void free_test_data_v(void **ptr)
+{
+    xfree(*ptr);
+    *ptr = NULL;
+}
+static t_mmp_tap_result_e test_insert_delete_2(void)
+{
+    t_mmp_htab_s *htab;
+    if ((htab = mmp_htab_create(101))==NULL)
+        return MMP_TAP_FAILED;
+    if (
+            (mmp_htab_install(htab, "key1", xstrdup("value1"))!=MMP_ERR_OK) ||
+            (mmp_htab_install(htab, "key2", xstrdup("value2"))!=MMP_ERR_OK) ||
+            (mmp_htab_install(htab, "key2", xstrdup("value3"))!=MMP_ERR_OK)   )
+        return MMP_TAP_FAILED;
+    if (strcmp("value3", (char*)mmp_htab_lookup(htab, "key2")))
+        return MMP_TAP_FAILED;
+    if (mmp_htab_lookup_nz(htab, "key2", 3)!=NULL)
+        return MMP_TAP_FAILED;
+    mmp_htab_destroy_with_data(&htab, free_test_data_v);
     if (htab!=NULL)
         return MMP_TAP_FAILED;
     return MMP_TAP_PASSED;
@@ -224,8 +249,10 @@ ret_t mmp_htab_unittest(t_mmp_tap_cycle_s *cycle)
     if (
             ((ret = mmp_tap_test(cycle, "htab create and delete", NULL,
                                  test_create_destroy()))!=MMP_ERR_OK) ||
-            ((ret = mmp_tap_test(cycle, "htab create and delete", NULL,
-                                 test_insert_delete()))!=MMP_ERR_OK)
+            ((ret = mmp_tap_test(cycle, "htab insert and delete", NULL,
+                                 test_insert_delete()))!=MMP_ERR_OK) ||
+            ((ret = mmp_tap_test(cycle, "htab insert and delete 2", NULL,
+                                 test_insert_delete_2()))!=MMP_ERR_OK)
         )
         return ret;
     return MMP_ERR_OK;

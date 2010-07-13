@@ -98,8 +98,11 @@ static t_mmp_tap_result_e test_xstrdup(void)
     char *p;
     if ((p = xstrdup("test"))==NULL)
         return MMP_TAP_FAILED;
-    if (strcmp(p, "test")!=0)
+    if (strcmp(p, "test")!=0) {
+        xfree(p);
         return MMP_TAP_FAILED;
+    }
+    xfree(p);
     return MMP_TAP_PASSED;
 }
 static t_mmp_tap_result_e test_xindex(void)
@@ -136,7 +139,7 @@ static t_mmp_tap_result_e test_xstrtok_r(void)
             "string:blag", "tokenizer:blah", "tokenizer:blat",
             "tokenizer:blab", "tokenizer:blag", "function.:blah",
             "function.:blat", "function.:blab", "function.:blag" };
-    int i;
+    int i = 0;
     strcpy(test, "This;is.a:test:of=the/string\\tokenizer-function.");
     for (   word = xstrtok_r(test, sep, &brkt);
             word;
@@ -166,9 +169,14 @@ static t_mmp_tap_result_e test_str_is_trimmable(void)
 }
 static t_mmp_tap_result_e test_str_trim(void)
 {
-    char *p = " test \n  \t\n";
-    if (strcmp(mmp_str_trim(p), "test")!=0)
+    char *p;
+    if ((p = xstrdup(" test \n  \t\n"))==NULL)
         return MMP_TAP_FAILED;
+    if (strcmp(mmp_str_trim(p), "test")!=0) {
+        xfree(p);
+        return MMP_TAP_FAILED;
+    }
+    xfree(p);
     return MMP_TAP_PASSED;
 }
 ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
