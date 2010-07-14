@@ -35,6 +35,11 @@ unittestscmp: $(OBJS)
 debug: GCCFLAG += -g
 debug: all
 
+install:
+	install -m 755 -d /usr/include/mmp
+	install -m 644 $(SRCDIR)/*.h /usr/include/mmp
+	install -m 644 $(FINAME) /usr/lib/
+
 unittests: GCCFLAG = -g -Wall -ansi -pedantic -DUNIT_TESTING
 unittests: unittestscmp
 
