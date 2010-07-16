@@ -1,4 +1,4 @@
-#summary How to build lilbmmp
+﻿#summary How to build lilbmmp
 #labels Featured,Phase-Deploy
 
 = Introduction =
@@ -11,6 +11,7 @@ In the folder named "linux" you will find the Makefile.
   * *make debug* will build the debug version
   * *make all* will build the relase version
   * *make unittests* will build an application (named unittest) that will test the library and print out a TAP formatted report.
+  * *make install* run as superuser, will install include files in /usr/include/mmp and the library file in /usr/lib/.
 
 = Windows =
 
