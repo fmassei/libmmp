@@ -29,14 +29,18 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #ifndef _WIN32
 #   include <unistd.h>
 #else
 #   include <windows.h>
+#   include <io.h>
+#   include <share.h>
 #endif
 
 #include "mmp_compat.h"
+#include "mmp_h_utils.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
@@ -49,8 +53,15 @@
     typedef struct _stat t_mmp_stat_s;
 #endif
 
+/** unix open */
+int mmp_open(const char *path, int flags, int mode);
+/** unix close */
+int mmp_close(int fd);
+
 /** unix stat */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr);
+/** unix fstat */
+int mmp_fstat(int fd, t_mmp_stat_s * stat_ptr);
 
 #ifdef UNIT_TESTING
 #   include "mmp_tap.h"
