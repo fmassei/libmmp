@@ -19,12 +19,46 @@
 #include "mmp_files.h"
 
 /** \todo missing unittest */
+int mmp_open(const char *path, int flags, int mode)
+{
+#ifndef _WIN32
+    return open(path, flags, mode);
+#else
+    int fd;
+    if (_sopen_s(&fd, path, flags, _SH_DENYNO, _S_IREAD|_S_IWRITE)!=0)
+        fd = -1;
+    return fd;
+    UNREFERENCED_PARAM(mode);
+#endif
+}
+
+/** \todo missing unittest */
+int mmp_close(int fd)
+{
+#ifndef _WIN32
+    return close(fd);
+#else
+    return _close(fd);
+#endif
+}
+
+/** \todo missing unittest */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
 {
 #ifndef _WIN32
     return stat(path, stat_ptr);
 #else
     return _stat(path, stat_ptr);
+#endif
+}
+
+/** \todo missing unittest */
+int mmp_fstat(int fd, t_mmp_stat_s * stat_ptr)
+{
+#ifndef _WIN32
+    return fstat(fd, stat_ptr);
+#else
+    return _fstat(fd, stat_ptr);
 #endif
 }
 

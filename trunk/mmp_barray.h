@@ -29,13 +29,15 @@
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
+#include "mmp_mmap.h"
+#include "mmp_files.h"
 
 typedef unsigned int t_mmp_barray_idx;
 
 typedef struct mmp_barray_rec_s {
     uint8_t present:1;
     t_mmp_barray_idx idx:(sizeof(t_mmp_barray_idx)*8-1);
-    void *data;
+    unsigned char *data;
 } t_mmp_barray_rec_s;
 
 typedef struct mmp_barray_page_s {
@@ -48,14 +50,15 @@ typedef struct mmp_barray_page_s {
 typedef struct mmp_barray_s {
     int fd;
     t_mmp_barray_page_s **pages;
-    unsigned int n_pages, page_len, recs_per_page;
+    unsigned int n_pages, page_len, data_size, rec_size, recs_per_page;
 } t_mmp_barray_s;
 
-t_mmp_barray_st *mmp_barray_create(const char *fname);
+t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
+                                    unsigned int data_size);
 ret_t mmp_barray_insert(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        void *data);
+                        unsigned char *data);
 ret_t mmp_barray_search(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        void *data);
+                        unsigned char *data);
 ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx);
 void mmp_barray_destroy(t_mmp_barray_s **barray);
 

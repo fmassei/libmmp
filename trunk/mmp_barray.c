@@ -1,77 +1,91 @@
 #include "mmp_barray.h"
 
-#define LASTPAGE(_B) ((_B)->pages[(_B)->npages-1])
+#define MMP_BARRAY_INVALID_IDX ((t_mmp_barray_idx)(-1))
+#define LASTPAGE(_B) ((_B)->pages[(_B)->n_pages-1])
 
 static t_mmp_barray_page_s *create_page(t_mmp_barray_s *barray)
 {
     t_mmp_barray_page_s *ret;
+    if (barray==NULL) {
+        mmp_setError(MMP_ERR_PARAMS);
+        return NULL;
+    }
     if ((ret = xmalloc(sizeof(*ret)))==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
         return NULL;
     }
-    page->d = 1;
-    page->n_data = 0;
-    page->start = page->end = -1;
-    page->rec = NULL;
+    ret->dirty = 1;
+    ret->n_data = 0;
+    ret->start = ret->end = MMP_BARRAY_INVALID_IDX;
+    ret->records = NULL;
     return ret;
 }
 
 static void destroy_page(t_mmp_barray_page_s **page, t_mmp_barray_s *barray)
 {
     if (page==NULL || *page==NULL) return;
-    if ((*page)->records!=NULL)
-        munmap((*page)->records, barray->page_len);
+    if ((*page)->records!=NULL && barray!=NULL)
+        mmp_munmap((*page)->records, barray->page_len);
     xfree(*page);
     *page = NULL;
 }
 
-static t_mmp_barray_s *create_barray(void)
+static t_mmp_barray_s *create_barray(unsigned int page_size,
+                                        unsigned int data_size)
 {
     t_mmp_barray_s *ret;
     if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        set_mmpError(MMP_ERR_ENOMEM);
+        mmp_setError(MMP_ERR_ENOMEM);
         return NULL;
     }
     ret->fd = -1;
     ret->pages = NULL;
     ret->n_pages = 0;
-    ret->page_len = sysconf(_SC_PAGESIZE);
-    ret->recs_per_page = ret->page_len/sizeof(*ret->pages);
+    ret->page_len = page_size;
+    ret->data_size = data_size;
+    ret->rec_size = sizeof(t_mmp_barray_rec_s)-sizeof(unsigned char*)+data_size;
+    ret->recs_per_page = ret->page_len/ret->rec_size;
     return ret;
 }
 
-static destroy_barray(t_mmp_barray_s **barray)
+static void destroy_barray(t_mmp_barray_s **barray)
 {
     unsigned int i;
     if (barray==NULL || *barray==NULL) return;
     if ((*barray)->pages)
         for (i=0; i<(*barray)->n_pages; ++i)
             if ((*barray)->pages[i]!=NULL)
-                destroy_page(&(*barray)->pages[i]);
+                destroy_page(&(*barray)->pages[i], *barray);
     if ((*barray)->fd>=0)
-        close((*barray)->fd);
+        mmp_close((*barray)->fd);
     xfree(*barray);
     *barray = NULL;
 }
 
 void mmp_barray_destroy(t_mmp_barray_s **barray)
 {
+    if (barray==NULL || *barray==NULL) return;
     destroy_barray(barray);
 }
 
-t_mmp_barray_s *mmp_barray_create(const char *fname)
+t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
+                                    unsigned int data_size)
 {
     t_mmp_barray_s *ret;
     t_mmp_barray_page_s *page;
     t_mmp_barray_rec_s *rec;
-    struct stat sb;
+    t_mmp_stat_s sb;
     unsigned int i, j;
-    if ((ret = create_barray())==NULL) {
+    if (fname==NULL || *fname=='\0') {
+        mmp_setError(MMP_ERR_PARAMS);
+        return NULL;
+    }
+    if ((ret = create_barray(page_size, data_size))==NULL) {
         mmp_setError(MMP_ERR_GENERIC);
         return NULL;
     }
-    if (    ((ret->fd = open(fname, O_RDWR|O_CREAT, 0666))<0) ||
-            (fstat(ret->fd, &sb)==-1)    ) {
+    if (    ((ret->fd = mmp_open(fname, O_RDWR|O_CREAT, 0666))<0) ||
+            (mmp_fstat(ret->fd, &sb)==-1)    ) {
         mmp_setError(MMP_ERR_FILE);
         goto badexit;
     }
@@ -84,25 +98,25 @@ t_mmp_barray_s *mmp_barray_create(const char *fname)
         for (i=0; i<ret->n_pages; ++i) {
             if ((page = xmalloc(sizeof(*page)))==NULL) {
                 mmp_setError(MMP_ERR_ENOMEM);
-                goto bad_exit;
+                goto badexit;
             }
-            if ((rec = mmap(NULL, ret->page_len, PROT_READ, MAP_PRIVATE,
+            if ((rec = mmp_mmap(NULL, ret->page_len, PROT_READ, MAP_PRIVATE,
                                     ret->fd, i*ret->page_len))==MAP_FAILED) {
                 mmp_setError(MMP_ERR_FILE);
-                goto bad_exit;
+                goto badexit;
             }
             page->n_data = 0;
-            page->start = page->end = -1;
+            page->start = page->end = MMP_BARRAY_INVALID_IDX;
             for (j=0; j<ret->recs_per_page; ++j) {
-                if (rec[j].p==0) continue;
+                if (rec[j].present==0) continue;
                 ++page->n_data;
-                if (page->start==-1)
+                if (page->start==MMP_BARRAY_INVALID_IDX)
                     page->start = rec[j].idx;
                 page->end = rec[j].idx;
             }
-            munmap(rec, ret->page_len);
+            mmp_munmap(rec, ret->page_len);
             page->records = NULL;
-            page->d = 0;
+            page->dirty = 0;
             ret->pages[i] = page;
         }
     }
@@ -115,6 +129,10 @@ badexit:
 static ret_t insert_new_page(t_mmp_barray_s *barray)
 {
     t_mmp_barray_page_s *page, **rll;
+    if (barray==NULL) {
+        mmp_setError(MMP_ERR_PARAMS);
+        return MMP_ERR_PARAMS;
+    }
     if ((page = create_page(barray))==NULL) {
         mmp_setError(MMP_ERR_GENERIC);
         return MMP_ERR_GENERIC;
@@ -144,7 +162,7 @@ static ret_t map_page(t_mmp_barray_s *barray, unsigned int page_n)
         mmp_setError(MMP_ERR_PARAMS);
         return MMP_ERR_PARAMS;
     }
-    if ((barray->pages[page_n]->records = mmap(NULL, barray->page_len,
+    if ((barray->pages[page_n]->records = mmp_mmap(NULL, barray->page_len,
             PROT_READ|PROT_WRITE, MAP_SHARED, barray->fd,
             page_n*barray->page_len))==MAP_FAILED) {
         mmp_setError(MMP_ERR_FILE);
@@ -154,11 +172,16 @@ static ret_t map_page(t_mmp_barray_s *barray, unsigned int page_n)
 }
 
 ret_t mmp_barray_insert(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        void *data)
+                        unsigned char *data)
 {
     t_mmp_barray_page_s *page;
     ret_t i_ret;
-    if (    (barray->n_pages==0) ||
+    if (barray==NULL || data==NULL) {
+        mmp_setError(MMP_ERR_PARAMS);
+        return MMP_ERR_PARAMS;
+    }
+    if (    (barray->n_pages==0) || (barray->pages==NULL) ||
+            (LASTPAGE(barray)==NULL) ||
             (LASTPAGE(barray)->n_data>=barray->recs_per_page) ) {
         if ((i_ret = insert_new_page(barray))!=MMP_ERR_OK) {
             mmp_setError(MMP_ERR_GENERIC);
@@ -166,7 +189,7 @@ ret_t mmp_barray_insert(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
         }
     }
     page = LASTPAGE(barray);
-    if ((idx<=page->end) && (page->end!=-1)) {
+    if ((idx<=page->end) && (page->end!=MMP_BARRAY_INVALID_IDX)) {
         mmp_setError(MMP_ERR_PARAMS);
         return MMP_ERR_PARAMS;
     }
@@ -176,11 +199,11 @@ ret_t mmp_barray_insert(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
             return i_ret;
         }
     page->records[page->n_data].idx = idx;
-    memcpy(page->records[pages->n_data].data, data, sizeof(data));
-    page->records[page->n_data].p = 1;
-    page->d = 1;
+    memcpy(page->records[page->n_data].data, data, barray->data_size);
+    page->records[page->n_data].present = 1;
+    page->dirty = 1;
     page->end = idx;
-    if (page->start==-1)
+    if (page->start==MMP_BARRAY_INVALID_IDX)
         page->start = idx;
     ++page->n_data;
     return MMP_ERR_OK;
@@ -190,10 +213,10 @@ static unsigned int search_page(t_mmp_barray_idx idx, t_mmp_barray_s *barray)
 {
     unsigned int beg, mid, end;
     if (barray->n_pages==0)
-        return -1;
+        return UINT_MAX;
     beg = 0;
     end = barray->n_pages;
-    while (beg<=end && end!=-1) {
+    while (beg<=end && end!=MMP_BARRAY_INVALID_IDX) {
         mid = (end+beg)/2;
         if (idx<barray->pages[mid]->start) end=mid-1;
         else if (idx>barray->pages[mid]->end) beg=mid+1;
@@ -214,7 +237,7 @@ static t_mmp_barray_rec_s *search_in_page(t_mmp_barray_idx idx,
     if (page->records==NULL)
         if ((i_ret = map_page(barray, page_n))!=MMP_ERR_OK) {
             mmp_setError(MMP_ERR_GENERIC);
-            return i_ret;
+            return NULL;
         }
     beg = 0;
     end = page->n_data-1;
@@ -230,16 +253,21 @@ static t_mmp_barray_rec_s *search_in_page(t_mmp_barray_idx idx,
 }
 
 ret_t mmp_barray_search(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        void *data)
+                        unsigned char *data)
 {
     unsigned int page_n;
     t_mmp_barray_rec_s *rec;
-    if (
-            ((page_n = search_page(idx, barray))==-1) ||
+    if (barray==NULL || data==NULL) {
+        mmp_setError(MMP_ERR_PARAMS);
+        return MMP_ERR_PARAMS;
+    }
+    if (    ((page_n = search_page(idx, barray))==UINT_MAX) ||
             ((rec = search_in_page(idx, page_n, barray))==NULL) ||
-            (rec->p==0) )
+            (rec->present==0) ) {
+        mmp_setError(MMP_ERR_GENERIC);
         return MMP_ERR_GENERIC;
-    memcpy(data, &rec->data, sizeof(data));
+    }
+    memcpy(data, rec->data, barray->data_size);
     return MMP_ERR_OK;
 }
 
@@ -248,12 +276,18 @@ ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx)
     unsigned int page_n;
     t_mmp_barray_rec_s *rec;
     if (
-            ((page_n = search_page(idx, barray))==-1) ||
+            ((page_n = search_page(idx, barray))==UINT_MAX) ||
             ((rec = search_in_page(idx, page_n, barray))==NULL) ||
-            (rec->p==0) )
+            (rec->present==0) )
         return MMP_ERR_GENERIC;
-    rec->p = 0;
-    barray->pages[page_n]->d = 1;
+    rec->present = 0;
+    barray->pages[page_n]->dirty = 1;
     return MMP_ERR_OK;
 }
 
+#ifdef UNIT_TESTING
+ret_t mmp_barray_unittest(t_mmp_tap_cycle_s *cycle)
+{
+    return MMP_ERR_OK;
+}
+#endif /* UNIT_TESTING */
