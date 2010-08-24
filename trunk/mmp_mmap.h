@@ -27,6 +27,8 @@
 #include <stdio.h>
 #ifndef _WIN32
 #   include <unistd.h>
+#   include <sys/mman.h>
+#   include <limits.h>
 #else
 #   include <windows.h>
 #   include <io.h>
