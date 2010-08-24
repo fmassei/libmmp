@@ -29,11 +29,12 @@
 #   include <unistd.h>
 #else
 #   include <windows.h>
+#   include <io.h>
 #   define MAP_FAILED NULL
 /*  some defines that are not used anyway... */
 /** \todo define this ones.. */
-#   define PROT_READ    0
-#   define PROT_WRITE   0
+#   define PROT_READ    PAGE_READONLY
+#   define PROT_WRITE   PAGE_READWRITE
 #   define MAP_PRIVATE  0
 #   define MAP_SHARED   0
 #endif

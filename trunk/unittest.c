@@ -29,6 +29,7 @@
 #include "mmp_thread.h"
 #include "mmp_files.h"
 #include "mmp_date.h"
+#include "mmp_barray.h"
 
 int main(void)
 {
@@ -45,6 +46,7 @@ int main(void)
             (mmp_thread_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_files_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_date_unittest(cycle)!=MMP_ERR_OK) ||
+            (mmp_barray_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_tap_print(cycle, stdout)!=MMP_ERR_OK) ) {
         mmp_trace_print(stdout);
         return EXIT_FAILURE;

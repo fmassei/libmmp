@@ -58,6 +58,9 @@ int mmp_open(const char *path, int flags, int mode);
 /** unix close */
 int mmp_close(int fd);
 
+/** unix pwrite */
+int mmp_pwrite(int fd, const void *buf, size_t nbyte, long offset);
+
 /** unix stat */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr);
 /** unix fstat */
