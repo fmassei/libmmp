@@ -43,6 +43,21 @@ int mmp_close(int fd)
 }
 
 /** \todo missing unittest */
+int mmp_pwrite(int fd, const void *buf, size_t nbyte, long offset)
+{
+#ifndef _WIN32
+    return pwrite(fd, buf, nbyte, offset);
+#else
+    long pos, ret;
+    pos = _tell(fd);
+    _lseek(fd, offset, SEEK_SET);
+    ret = _write(fd, buf, nbyte);
+    _lseek(fd, pos, SEEK_SET);
+    return ret;
+#endif
+}
+
+/** \todo missing unittest */
 int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
 {
 #ifndef _WIN32

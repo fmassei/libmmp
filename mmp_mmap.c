@@ -16,39 +16,32 @@ static int slrelease(long *sl)
 }
 #endif
 
-/** \todo missing unittest */
+/** \todo this is WRONG! */
 void *mmp_mmap(void *ptr, size_t size, int prot, int flags, int fd,
                                                                 long offset)
 {
 #ifndef _WIN32
     return mmap(ptr, size, prot, flags, fd, offset);
 #else
-    slwait(&g_sl);
-    ptr = VirtualAlloc(ptr, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN,
-                        PAGE_READWRITE);
-    if (ptr==NULL)
-        ptr = MAP_FAILED;
-    slrelease(&g_sl);
-    return ptr;
-    UNREFERENCED_PARAM(prot);
-    UNREFERENCED_PARAM(flags);
-    UNREFERENCED_PARAM(fd);
-    UNREFERENCED_PARAM(offset);
+    HANDLE hfile, hmap;
+    void *map;
+    if ((hfile = (HANDLE)_get_osfhandle(fd))==INVALID_HANDLE_VALUE)
+        return NULL;
+    if ((hmap = CreateFileMapping(hfile, NULL, PAGE_READWRITE, 0, size+offset, NULL))==NULL)
+        return NULL;
+    if ((map = MapViewOfFile(hmap, FILE_MAP_WRITE, 0, offset, size))==NULL)
+        return NULL;
+    return map;
 #endif
 }
 
-/** \todo missing unittest */
+/** \todo this is WRONG! */
 int mmp_munmap(void *start, size_t length)
 {
 #ifndef _WIN32
     return munmap(start, length);
 #else
-    int ret = 0;
-    slwait(&g_sl);
-    if (!VirtualFree(start, 0, MEM_RELEASE))
-        ret = -1;
-    slrelease(&g_sl);
-    return ret;
+    return UnmapViewOfFile(start);
     UNREFERENCED_PARAM(length);
 #endif
 }

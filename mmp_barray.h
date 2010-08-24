@@ -35,15 +35,15 @@
 typedef unsigned int t_mmp_barray_idx;
 
 typedef struct mmp_barray_rec_s {
-    uint8_t present:1;
-    t_mmp_barray_idx idx:(sizeof(t_mmp_barray_idx)*8-1);
-    unsigned char *data;
+    int present:1;
+    unsigned int idx:(sizeof(t_mmp_barray_idx)*8-1);
+    /* data follows */
 } t_mmp_barray_rec_s;
 
 typedef struct mmp_barray_page_s {
     t_mmp_barray_rec_s *records;
-    uint8_t dirty:1;
-    uint16_t n_data:(sizeof(uint16_t)*8-1);
+    int dirty:1;
+    unsigned int n_data:(sizeof(uint16_t)*8-1);
     t_mmp_barray_idx start, end;
 } t_mmp_barray_page_s;
 
@@ -55,10 +55,10 @@ typedef struct mmp_barray_s {
 
 t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
                                     unsigned int data_size);
-ret_t mmp_barray_insert(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        unsigned char *data);
-ret_t mmp_barray_search(t_mmp_barray_s *barray, t_mmp_barray_idx idx,
-                        unsigned char *data);
+ret_t mmp_barray_insert(t_mmp_barray_s * __restrict barray,
+                        t_mmp_barray_idx idx, const void * __restrict data);
+ret_t mmp_barray_search(t_mmp_barray_s * __restrict barray,
+                        t_mmp_barray_idx idx, void * __restrict data);
 ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx);
 void mmp_barray_destroy(t_mmp_barray_s **barray);
 
