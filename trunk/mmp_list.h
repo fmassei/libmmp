@@ -73,6 +73,12 @@ t_mmp_listelem_s *mmp_list_find_data_lambda(
                                         const t_mmp_list_s * __restrict list,
                                         const void * data,
                                         t_mmp_comparer_f comp);
+/** \brief find data in the list by comparer lambda, supposing that data is
+ * sorted */
+t_mmp_listelem_s *mmp_list_find_data_sorted(
+                                        const t_mmp_list_s * __restrict list,
+                                        const void * data,
+                                        t_mmp_comparer_f comp);
 /** \brief execute a lambda function for each element in list */
 void mmp_list_lambda_elem(t_mmp_list_s * __restrict list,
                                             void(*fnc)(t_mmp_listelem_s *));
