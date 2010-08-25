@@ -41,7 +41,7 @@ typedef struct mmp_barray_rec_s {
 } t_mmp_barray_rec_s;
 
 typedef struct mmp_barray_page_s {
-    t_mmp_barray_rec_s *records;
+    t_mmp_mmap_s *records;
     int dirty:1;
     unsigned int n_data:(sizeof(uint16_t)*8-1);
     t_mmp_barray_idx start, end;

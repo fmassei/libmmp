@@ -40,11 +40,21 @@
 #   define MAP_PRIVATE  0
 #   define MAP_SHARED   0
 #endif
-#include "mmp_system.h"
 #include "mmp_h_utils.h"
+#include "mmp_system.h"
+#include "mmp_memory.h"
+#include "mmp_trace.h"
 
-void *mmp_mmap(void *ptr, size_t size, int prot, int flags, int fd,
+typedef struct mmp_mmap_s {
+    void *ptr;
+    size_t length;
+#ifdef _WIN32
+    HANDLE hmap;
+#endif
+} t_mmp_mmap_s;
+
+t_mmp_mmap_s *mmp_mmap(void *ptr, size_t size, int prot, int flags, int fd,
                                                                 long offset);
-int mmp_munmap(void *start, size_t length);
+int mmp_munmap(t_mmp_mmap_s** map);
 
 #endif /* H_MMP_MMAP_H */
