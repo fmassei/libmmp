@@ -280,7 +280,7 @@ static t_mmp_tap_result_e test_barray(void)
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
                                                         sizeof(int)))==NULL)
         return MMP_TAP_FAILED;
-    for (i=0; i<1000000; ++i)
+    for (i=0; i<100000; ++i)
         if (mmp_barray_insert(barray, i+1, &i)!=MMP_ERR_OK) {
             mmp_trace_print(stdout);
             return MMP_TAP_FAILED;

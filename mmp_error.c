@@ -29,6 +29,9 @@ static const char * const error_strings[] = {
     "Semaphore error",
     "Shared memory error",
     "Socket error"
+    "Syncronization error",
+    "Full",
+    "Empty"
 };
 
 /** \test   mmp_error_unittest */
