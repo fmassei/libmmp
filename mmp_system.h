@@ -32,5 +32,6 @@
 #endif
 
 long mmp_system_getPageSize(void);
+long mmp_system_getPageAlignment(void);
 
 #endif /* H_MMP_SYSTEM_H */
