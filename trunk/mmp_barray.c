@@ -301,10 +301,10 @@ static t_mmp_tap_result_e test_barray(void)
     int i;
     remove("test.ba");
     /* first write and insert */
-    if ((barray = mmp_barray_create("test.ba", mmp_system_getPageSize(),
+    if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
                                                         sizeof(int)))==NULL)
         return MMP_TAP_FAILED;
-    for (i=0; i<100000; ++i)
+    for (i=0; i<1000000; ++i)
         if (mmp_barray_insert(barray, i+1, &i)!=MMP_ERR_OK) {
             mmp_trace_print(stdout);
             return MMP_TAP_FAILED;
@@ -313,7 +313,7 @@ static t_mmp_tap_result_e test_barray(void)
     if (barray!=NULL)
         return MMP_TAP_FAILED;
     /* re-read and search */
-    if ((barray = mmp_barray_create("test.ba", mmp_system_getPageSize(),
+    if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
                                                         sizeof(int)))==NULL)
         return MMP_TAP_FAILED;
     if (mmp_barray_search(barray, 2, &i)!=MMP_ERR_OK)
