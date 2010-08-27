@@ -52,4 +52,11 @@ void mmp_trace_print(FILE *out);
 /** \brief reset the trace stack */
 void mmp_trace_reset(void);
 
+/** \brief assert()-like macro for parameter check */
+#define MMP_CHECK_OR_RETURN(_COND, _RET) \
+    if (!(_COND)) { \
+        mmp_setError(MMP_ERR_PARAMS); \
+        return (_RET); \
+    }
+
 #endif /* H_MMP_TRACE_H */

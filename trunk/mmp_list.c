@@ -22,10 +22,7 @@
 t_mmp_list_s *mmp_list_create(void)
 {
     t_mmp_list_s * __restrict ret;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     ret->nelems = 0;
     ret->head = ret->tail = NULL;
     return ret;
@@ -41,8 +38,7 @@ void mmp_list_delete(t_mmp_list_s **list)
         q = p->next;
         xfree(p);
     }
-    xfree(*list);
-    *list = NULL;
+    MMP_XFREE_AND_NULL(*list);
 }
 
 /** \test mmp_list_unittest */
@@ -56,22 +52,15 @@ void mmp_list_delete_withdata(t_mmp_list_s **list, void(*cback)(void**))
         cback(&p->data);
         xfree(p);
     }
-    xfree(*list);
-    *list = NULL;
+    MMP_XFREE_AND_NULL(*list);
 }
 
 /** \test mmp_list_unittest */
 ret_t mmp_list_add_data(t_mmp_list_s * __restrict list, void * data)
 {
     t_mmp_listelem_s *nu;
-    if (list==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
-    if ((nu = xmalloc(sizeof(*nu)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return MMP_ERR_ENOMEM;
-    }
+    MMP_CHECK_OR_RETURN((list!=NULL), MMP_ERR_PARAMS);
+    MMP_XMALLOC_OR_RETURN(nu, MMP_ERR_ENOMEM);
     nu->data = data;
     nu->prev = NULL;
     nu->next = list->head;
@@ -89,16 +78,10 @@ ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
                                                         t_mmp_comparer_f comp)
 {
     t_mmp_listelem_s *nu, *p;
-    if (list==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((list!=NULL), MMP_ERR_PARAMS);
     if (list->head==NULL)
         return mmp_list_add_data(list, data);
-    if ((nu = xmalloc(sizeof(*nu)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return MMP_ERR_ENOMEM;
-    }
+    MMP_XMALLOC_OR_RETURN(nu, MMP_ERR_ENOMEM);
     nu->data = data;
     for (p=list->head; p!=NULL; p=p->next) {
         if (comp(p->data, nu->data)<=0)
@@ -126,10 +109,7 @@ void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
                                                     t_mmp_listelem_s **elem)
 {
     void *ret;
-    if (list==NULL || elem==NULL || *elem==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((list!=NULL && elem!=NULL && *elem!=NULL), NULL);
     if ((*elem)->prev)
         (*elem)->prev->next = (*elem)->next;
     else
@@ -138,8 +118,7 @@ void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
     ret = (*elem)->data;
     if (list->tail==*elem)
         list->tail = (*elem)->prev;
-    xfree(*elem);
-    *elem = NULL;
+    MMP_XFREE_AND_NULL(*elem);
     --list->nelems;
     return ret;
 }
@@ -271,8 +250,7 @@ void mmp_list_sort_by_data(t_mmp_list_s * __restrict list,
 #ifdef UNIT_TESTING
 /* generic deleter callback */
 static void gen_deleter(void **data) {
-    xfree(*data);
-    *data = NULL;
+    MMP_XFREE_AND_NULL(*data);
 }
 /* create an example list and fill it with some integers */
 static t_mmp_list_s *create_dummy_filled_list(int num)

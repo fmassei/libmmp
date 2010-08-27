@@ -30,11 +30,8 @@ void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
 {
     HANDLE handle;
     void *ret;
-    if (filename==NULL || filename[0]=='\0' || 
-            getfnc_name==NULL || getfnc_name[0]=='\0') {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((filename!=NULL && filename[0]!='\0' && 
+                        getfnc_name!=NULL && getfnc_name[0]!='\0'), NULL);
 #ifndef _WIN32
     if ((handle = dlopen(filename, RTLD_NOW | RTLD_GLOBAL))==NULL) {
         mmp_setError_ext(MMP_ERR_DL, dlerror());

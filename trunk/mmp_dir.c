@@ -21,8 +21,7 @@
 
 static __inline void freeres(void **res)
 {
-    xfree(*res);
-    *res=NULL;
+    MMP_XFREE_AND_NULL(*res);
 }
 
 /** \todo missing unittest */
@@ -45,10 +44,7 @@ t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname)
     WIN32_FIND_DATA FindFileData;
     char *dirpatt;
 #endif
-    if (dirname==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((dirname!=NULL), NULL);
     if ((ret = mmp_list_create())==NULL) {
         mmp_setError(MMP_ERR_GENERIC);
         return NULL;

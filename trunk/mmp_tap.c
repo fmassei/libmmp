@@ -23,8 +23,7 @@ static void freetest(t_mmp_tap_entry_s **entry)
     if (entry==NULL || *entry==NULL) return;
     if ((*entry)->desc) xfree((*entry)->desc);
     if ((*entry)->comment) xfree((*entry)->comment);
-    xfree(*entry);
-    *entry = NULL;
+    MMP_XFREE_AND_NULL(*entry);
 }
 static void freetestv(void **ptr)
 {
@@ -37,8 +36,7 @@ void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle)
     if ((*cycle)->name) xfree((*cycle)->name);
     if ((*cycle)->tests)
         mmp_list_delete_withdata(&((*cycle)->tests), freetestv);
-    xfree(*cycle);
-    *cycle = NULL;
+    MMP_XFREE_AND_NULL(*cycle);
 }
 
 t_mmp_tap_cycle_s *mmp_tap_startcycle(const char *name)
@@ -79,10 +77,7 @@ ret_t mmp_tap_test(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict comment, t_mmp_tap_result_e res)
 {
     t_mmp_tap_entry_s * __restrict entry;
-    if (cycle==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((cycle!=NULL), MMP_ERR_PARAMS);
     if ((entry = create_test(desc, comment, res))==NULL) {
         mmp_setError(MMP_ERR_GENERIC);
         return MMP_ERR_GENERIC;
@@ -116,10 +111,7 @@ ret_t mmp_tap_print(t_mmp_tap_cycle_s *cycle, FILE *out)
     t_mmp_listelem_s *el;
     t_mmp_tap_entry_s *entry;
     int i;
-    if (cycle==NULL || out==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((cycle!=NULL && out!=NULL), MMP_ERR_PARAMS);
     fprintf(out, "1..%d\n", cycle->tests->nelems);
     i = 1;
     for (el = cycle->tests->head; el!=NULL; el=el->next) {

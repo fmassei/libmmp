@@ -677,8 +677,7 @@ void mmp_set_tm_zone(char *zone)
 static struct tm *get_test_tm(void)
 {
     struct tm *ret;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL)
-        return NULL;
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     ret->tm_sec = 0;
     ret->tm_min = 1;
     ret->tm_hour = 2;
