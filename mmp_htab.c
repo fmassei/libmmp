@@ -23,10 +23,7 @@ t_mmp_htab_s *mmp_htab_create(size_t size)
 {
     t_mmp_htab_s * __restrict ret;
     size_t i;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     ret->size = size;
     if ((ret->ptrs = xmalloc(sizeof(*ret->ptrs)*size))==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
@@ -52,8 +49,7 @@ void mmp_htab_destroy(t_mmp_htab_s **ptr)
             xfree(p);
         }
     }
-    xfree(*ptr);
-    *ptr = NULL;
+    MMP_XFREE_AND_NULL(*ptr);
 }
 
 /** \test mmp_htab_unittest */
@@ -75,8 +71,7 @@ void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr, void(*datadel)(void**))
         }
     }
     xfree((*ptr)->ptrs);
-    xfree(*ptr);
-    *ptr = NULL;
+    MMP_XFREE_AND_NULL(*ptr);
 }
 
 /** \test mmp_htab_unittest */
@@ -95,10 +90,7 @@ static t_mmp_htab_elem_s *lookup(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key, int keylen)
 {
     t_mmp_htab_elem_s *np;
-    if (htab==NULL || key==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((htab!=NULL && key!=NULL), NULL);
     for (np=htab->ptrs[mmp_htab_hash(htab, key, keylen)];np!=NULL;np=np->next)
         if (!strcmp(key, np->key))
             return np;
@@ -110,10 +102,7 @@ void *mmp_htab_lookup(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key)
 {
     t_mmp_htab_elem_s *np;
-    if (htab==NULL || key==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((htab!=NULL && key!=NULL), NULL);
     if ((np = lookup(htab, key, UINT_MAX))!=NULL)
         return np->val;
     return NULL;
@@ -124,10 +113,7 @@ void *mmp_htab_lookup_nz(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key, int keylen)
 {
     t_mmp_htab_elem_s *np;
-    if (htab==NULL || key==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((htab!=NULL && key!=NULL), NULL);
     if ((np = lookup(htab, key, keylen))!=NULL)
         return np->val;
     return NULL;
@@ -139,15 +125,9 @@ ret_t mmp_htab_install(t_mmp_htab_s * __restrict htab,
 {
     t_mmp_htab_elem_s *np;
     unsigned int hashval;
-    if (htab==NULL || key==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((htab!=NULL && key!=NULL), MMP_ERR_PARAMS);
     if ((np = lookup(htab, key, UINT_MAX))==NULL) {
-        if ((np = xmalloc(sizeof(*np)))==NULL) {
-            mmp_setError(MMP_ERR_ENOMEM);
-            return MMP_ERR_ENOMEM;
-        }
+        MMP_XMALLOC_OR_RETURN(np, MMP_ERR_ENOMEM);
         hashval = mmp_htab_hash(htab, key, UINT_MAX);
         np->key = xstrdup(key);
         np->val = val;
@@ -168,10 +148,7 @@ ret_t mmp_htab_delete(t_mmp_htab_s * __restrict htab,
 {
     t_mmp_htab_elem_s *np;
     unsigned int hashval;
-    if (htab==NULL || key==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((htab!=NULL && key!=NULL), MMP_ERR_PARAMS);
     if ((np = lookup(htab, key, UINT_MAX))!=NULL) {
         hashval = mmp_htab_hash(htab, key, UINT_MAX);
         if (np->next!=NULL) np->next->prev = np->prev;
@@ -219,8 +196,7 @@ static t_mmp_tap_result_e test_insert_delete(void)
 
 static void free_test_data_v(void **ptr)
 {
-    xfree(*ptr);
-    *ptr = NULL;
+    MMP_XFREE_AND_NULL(*ptr);
 }
 static t_mmp_tap_result_e test_insert_delete_2(void)
 {

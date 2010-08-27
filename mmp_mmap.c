@@ -8,10 +8,7 @@ t_mmp_mmap_s *mmp_mmap(void *ptr, size_t size, int prot, int flags, int fd,
 #ifdef _WIN32
     HANDLE hfile;
 #endif
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
 #ifndef _WIN32
     if ((ret->ptr = mmap(ptr, size, prot, flags, fd, offset))==NULL) {
         xfree(ret);
@@ -73,10 +70,8 @@ static void adjust_prot_flags(int *prot, int *flags)
 
 static ret_t map_area(t_area_s *area, int prot, int flags, int fd)
 {
-    if (area==NULL || area->ptr!=NULL || fd<0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((area!=NULL && area->ptr==NULL && fd>=0),
+                        MMP_ERR_PARAMS);
     adjust_prot_flags(&prot, &flags);
     area->ptr = mmap(NULL, area->len, prot, flags, fd, area->file_offset);
     if (area->ptr==NULL) {
@@ -88,10 +83,7 @@ static ret_t map_area(t_area_s *area, int prot, int flags, int fd)
 
 static ret_t unmap_area(t_area_s *area)
 {
-    if (area==NULL || area->ptr==NULL) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((area!=NULL && area->ptr!=NULL), MMP_ERR_PARAMS);
     if (munmap(area->ptr, area->len)!=0)
         return MMP_ERR_FILE;
     return MMP_ERR_OK;
@@ -100,10 +92,7 @@ static ret_t unmap_area(t_area_s *area)
 static t_map_s *create_map(void)
 {
     t_map_s *ret;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     if ((ret->areas = mmp_list_create())==NULL) {
         xfree(ret);
         mmp_setError(MMP_ERR_GENERIC);
@@ -127,16 +116,13 @@ static void destroy_map(t_map_s **map)
     if (map==NULL || *map==NULL) return;
     if ((*map)->areas)
         mmp_list_destroy_withdata((*map)->areas, destroy_area_unmapping_v);
-    xfree(*map);
-    *map = NULL;
+    MMP_XFREE_AND_NULL(*map);
 }
 
 static ret_t insert_and_map_area(t_map_s *map, t_area_s **area, int prot, int flags)
 {
-    if (map==NULL || area==NULL || *area==NULL || map->fd<0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((map!=NULL && area!=NULL && *area!=NULL && map->fd>=0),
+                        MMP_ERR_PARAMS);
     if (insert_area(*map, *area)!=MMP_ERR_OK) {
         mmp_setError(MMP_ERR_GENERIC);
         destroy_area_s(area);
@@ -153,10 +139,8 @@ static ret_t insert_and_map_area(t_map_s *map, t_area_s **area, int prot, int fl
 ret_t mmp_unmap(t_map_s **map, void *ptr, size_t length)
 {
     t_area_s *area;
-    if (map==NULL || *map==NULL || ptr==NULL || length=0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((map!=NULL && *map!=NULL && ptr!=NULL && length!=0),
+                        MMP_ERR_PARAMS);
     area = search_area_by_ptr(map, ptr);
     if (area==NULL || ptr+length>AEND(area)) {
         mmp_setError(MMP_ERR_FILE);
@@ -178,10 +162,7 @@ void *mmp_mmap(t_map_s **map, size_t length, int prot, int flags, int fd, size_t
 {
     t_area_s *nu, *pr;
     size_t noff, nlen;
-    if (length==0 || fd<0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((length!=0 && fd>=0), NULL);
     if (*map==NULL)
         if ((*map = create_map())==NULL) {
             mmp_setError(MMP_ERR_GENERIC);
@@ -288,10 +269,7 @@ static void adjust_area(size_t *offset, size_t *len)
 static t_area_s *create_area_s(void *ptr, size_t offset, size_t len)
 {
     t_area_s *ret;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     ret->offset = offset;
     ret->ptr = ptr;
     ret->len = len;
@@ -301,7 +279,6 @@ static t_area_s *create_area_s(void *ptr, size_t offset, size_t len)
 static void destroy_area_s(t_area_s **area)
 {
     if (area==NULL || *area==NULL) return;
-    xfree(*area);
-    *area = NULL;
+    MMP_XFREE_AND_NULL(*area);
 }
  */

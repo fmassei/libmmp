@@ -36,4 +36,16 @@
 /** \brief realloc wrapper */
 #define xrealloc(_P, _S)    realloc((_P), (_S))
 
+/* utility macros */
+/** \brief try to malloc, set ENOMEM and return _RET on failure */
+#define MMP_XMALLOC_OR_RETURN(_PTR, _RET)  \
+    if (((_PTR) = xmalloc(sizeof(*(_PTR))))==NULL) { \
+        mmp_setError(MMP_ERR_ENOMEM); \
+        return (_RET); \
+    }
+/** \brief free _PTR and set it to NULL */
+#define MMP_XFREE_AND_NULL(_PTR)    \
+    xfree(_PTR); \
+    (_PTR) = NULL;
+
 #endif /* H_MMP_MEMORY_H */

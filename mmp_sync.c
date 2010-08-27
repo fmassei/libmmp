@@ -42,10 +42,7 @@ t_mmp_thr_sem mmp_thr_sem_create(long initCount, long maxCount)
         return MMP_THRSEM_INVALID;
     }
 #else
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     if (sem_init(ret, 0, initCount)!=0) {
         mmp_setError(MMP_ERR_SYNC);
         xfree(ret);
@@ -116,10 +113,7 @@ t_mmp_thr_mtx mmp_thr_mtx_create(void)
     }
 #else
     pthread_mutexattr_t mutexattr;
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return MMP_THRMTX_INVALID;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, MMP_THRMTX_INVALID);
     pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
     if (pthread_mutex_init(ret, &mutexattr)!=0) {
         mmp_setError(MMP_ERR_SYNC);
@@ -190,10 +184,7 @@ t_mmp_thr_evt mmp_thr_evt_create()
         return MMP_THREVT_INVALID;
     }
 #else
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return MMP_THREVT_INVALID;
-    }
+    MMP_XMALLOC_OR_RETURN(ret, MMP_THREVT_INVALID);
     if (sem_init(ret, 0, 0)!=0) {
         mmp_setError(MMP_ERR_SYNC);
         xfree(ret);

@@ -35,8 +35,7 @@ void mmp_shm_detach(t_mmp_shm_s **map)
 #endif
     if ((*map)->filename!=NULL)
         xfree((*map)->filename);
-    xfree(*map);
-    *map = NULL;
+    MMP_XFREE_AND_NULL(*map);
 }
 
 /** \todo missing unittest */
@@ -46,14 +45,8 @@ t_mmp_shm_s *mmp_shm_attach(const char *name, size_t size)
 #ifdef _WIN32
     int is_first = 0;
 #endif
-    if (name==NULL || *name=='\0' || size<=0) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return NULL;
-    }
-    if ((ret = xmalloc(sizeof(*ret)))==NULL) {
-        mmp_setError(MMP_ERR_ENOMEM);
-        return NULL;
-    }
+    MMP_CHECK_OR_RETURN((name!=NULL && *name!='\0' && size>0), NULL);
+    MMP_XMALLOC_OR_RETURN(ret, NULL);
     if ((ret->filename = xstrdup(name))==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
         goto badexit;
@@ -110,10 +103,8 @@ static __inline int is_shm_valid(const t_mmp_shm_s *shm)
 ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
                         void * __restrict dst, size_t from, size_t len)
 {
-    if (!is_shm_valid(shm) || dst==NULL || len==0 || ((from+len)>=shm->len)) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((is_shm_valid(shm) && dst!=NULL && len!=0 &&
+                        ((from+len)<shm->len)), MMP_ERR_PARAMS);
     memcpy(dst, ((unsigned char *)shm->base)+from, len);
     return MMP_ERR_OK;
 }
@@ -122,10 +113,8 @@ ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
 ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
                         const void * __restrict src, size_t from, size_t len)
 {
-    if (!is_shm_valid(shm) || src==NULL || len==0 || ((from+len)>=shm->len)) {
-        mmp_setError(MMP_ERR_PARAMS);
-        return MMP_ERR_PARAMS;
-    }
+    MMP_CHECK_OR_RETURN((is_shm_valid(shm) && src!=NULL && len!=0 &&
+                        ((from+len)<shm->len)), MMP_ERR_PARAMS);
     memcpy(((unsigned char *)shm->base)+from, src, len);
     return MMP_ERR_OK;
 }
