@@ -60,6 +60,7 @@ void mmp_barray_destroy(t_mmp_barray_s **barray)
     destroy_barray(barray);
 }
 
+/** \test test_barray */
 t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
                                     unsigned int data_size)
 {
@@ -156,6 +157,7 @@ static ret_t map_page(t_mmp_barray_s *barray, unsigned int page_n)
     return MMP_ERR_OK;
 }
 
+/** \test test_barray */
 ret_t mmp_barray_insert(t_mmp_barray_s * __restrict barray,
                         t_mmp_barray_idx idx, const void * __restrict data)
 {
@@ -237,19 +239,20 @@ static t_mmp_barray_rec_s *search_in_page(t_mmp_barray_idx idx,
     return NULL;
 }
 
+/** \test test_barray */
 ret_t mmp_barray_search(t_mmp_barray_s * __restrict barray,
-                        t_mmp_barray_idx idx, void * __restrict data)
+                        t_mmp_barray_idx idx, void ** __restrict data)
 {
     unsigned int page_n;
     t_mmp_barray_rec_s *rec;
-    MMP_CHECK_OR_RETURN((barray!=NULL && data!=NULL), MMP_ERR_PARAMS);
+    MMP_CHECK_OR_RETURN((barray!=NULL && (*data)!=NULL), MMP_ERR_PARAMS);
     if (    ((page_n = search_page(idx, barray))==UINT_MAX) ||
             ((rec = search_in_page(idx, page_n, barray))==NULL) ||
             (rec->present==0) ) {
-        mmp_setError(MMP_ERR_GENERIC);
-        return MMP_ERR_GENERIC;
+        *data = NULL;
+        return MMP_ERR_OK;
     }
-    memcpy(data, rec+1, barray->data_size);
+    *data = rec+1;
     return MMP_ERR_OK;
 }
 
@@ -271,7 +274,7 @@ ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx)
 static t_mmp_tap_result_e test_barray(void)
 {
     t_mmp_barray_s *barray;
-    int i;
+    int i, *dt;
     remove("test.ba");
     /* first write and insert */
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
@@ -289,12 +292,12 @@ static t_mmp_tap_result_e test_barray(void)
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
                                                         sizeof(int)))==NULL)
         return MMP_TAP_FAILED;
-    if (mmp_barray_search(barray, 2, &i)!=MMP_ERR_OK)
+    if (mmp_barray_search(barray, 2, &dt)!=MMP_ERR_OK)
         return MMP_TAP_FAILED;
-    if (i!=1) return MMP_TAP_FAILED;
-    if (mmp_barray_search(barray, 23452, &i)!=MMP_ERR_OK)
+    if (dt==NULL || *dt!=1) return MMP_TAP_FAILED;
+    if (mmp_barray_search(barray, 23452, &dt)!=MMP_ERR_OK)
         return MMP_TAP_FAILED;
-    if (i!=23451) return MMP_TAP_FAILED;
+    if (dt==NULL || *dt!=23451) return MMP_TAP_FAILED;
     mmp_barray_destroy(&barray);
     if (barray!=NULL)
         return MMP_TAP_FAILED;

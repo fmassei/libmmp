@@ -31,7 +31,9 @@
 #   include <windows.h>
 #endif
 
+/** \brief get the system page size */
 long mmp_system_getPageSize(void);
+/** \brief get the system page alignment */
 long mmp_system_getPageAlignment(void);
 
 #endif /* H_MMP_SYSTEM_H */
