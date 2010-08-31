@@ -27,10 +27,17 @@ static void destroy_page(t_mmp_barray_page_s **page)
 }
 
 static t_mmp_barray_s *create_barray(unsigned int page_size,
-                                        unsigned int data_size)
+                                        unsigned int data_size,
+                                        unsigned int max_cache_entries)
 {
     t_mmp_barray_s *ret;
     MMP_XMALLOC_OR_RETURN(ret, NULL);
+    ret->map_cache = xmalloc(sizeof(*ret->map_cache)*max_cache_entries);
+    if (ret->map_cache==NULL) {
+        mmp_setError(MMP_ERR_ENOMEM);
+        xfree(ret);
+        return NULL;
+    }
     ret->fd = -1;
     ret->pages = NULL;
     ret->n_pages = 0;
@@ -38,6 +45,8 @@ static t_mmp_barray_s *create_barray(unsigned int page_size,
     ret->data_size = data_size;
     ret->rec_size = sizeof(t_mmp_barray_rec_s)+data_size;
     ret->recs_per_page = ret->page_len/ret->rec_size;
+    ret->map_cache_n = 0;
+    ret->max_map_cache_n = max_cache_entries;
     return ret;
 }
 
@@ -51,6 +60,8 @@ static void destroy_barray(t_mmp_barray_s **barray)
                 destroy_page(&(*barray)->pages[i]);
     if ((*barray)->fd>=0)
         mmp_close((*barray)->fd);
+    if ((*barray)->map_cache!=NULL)
+        xfree((*barray)->map_cache);
     MMP_XFREE_AND_NULL(*barray);
 }
 
@@ -62,15 +73,17 @@ void mmp_barray_destroy(t_mmp_barray_s **barray)
 
 /** \test test_barray */
 t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
-                                    unsigned int data_size)
+                                    unsigned int data_size,
+                                    unsigned int max_cache_entries)
 {
     t_mmp_barray_s *ret;
     t_mmp_barray_page_s *page;
     t_mmp_barray_rec_s *rec_p;
     t_mmp_stat_s sb;
     unsigned int i, j;
-    MMP_CHECK_OR_RETURN((fname!=NULL && *fname!='\0'), NULL);
-    if ((ret = create_barray(page_size, data_size))==NULL) {
+    MMP_CHECK_OR_RETURN((fname!=NULL && *fname!='\0' && max_cache_entries>0),
+                                                                        NULL);
+    if ((ret = create_barray(page_size, data_size, max_cache_entries))==NULL) {
         mmp_setError(MMP_ERR_GENERIC);
         return NULL;
     }
@@ -143,17 +156,83 @@ static ret_t insert_new_page(t_mmp_barray_s *barray)
     return MMP_ERR_OK;
 }
 
+/* ************************** map cache functions ************************** */
+
+static int is_map_limit_ok(t_mmp_barray_s *barray)
+{
+    if (barray->map_cache_n<barray->max_map_cache_n)
+        return 1;
+    return 0;
+}
+static unsigned int get_cache_idx_from_page(t_mmp_barray_s *barray,
+                                            unsigned int page_n)
+{
+    unsigned int i;
+    for (i=0; i<barray->map_cache_n; ++i)
+        if (barray->map_cache[i].page_n == page_n)
+            return i;
+    return UINT_MAX;
+}
+static int is_cached(t_mmp_barray_s *barray, unsigned int page_n)
+{
+    if (get_cache_idx_from_page(barray, page_n)!=UINT_MAX)
+            return 1;
+    return 0;
+}
+static ret_t cache_get_less_hit(t_mmp_barray_s *barray)
+{
+    unsigned int i, lidx=0, min = UINT_MAX;
+    for (i=0; i<barray->map_cache_n; ++i)
+        if (barray->map_cache[i].hit_count<min) {
+            min = barray->map_cache[i].hit_count;
+            lidx = i;
+        }
+    return barray->map_cache[lidx].page_n;
+}
+static ret_t cache_remove(t_mmp_barray_s *barray, unsigned int page_n)
+{
+    unsigned int idx, i;
+    if ((idx = get_cache_idx_from_page(barray, page_n))==UINT_MAX)
+        return MMP_ERR_OK;
+    for (i=idx; i<barray->map_cache_n-1; ++i) {
+        barray->map_cache[i].page_n = barray->map_cache[i+1].page_n;
+        barray->map_cache[i].hit_count = barray->map_cache[i+1].hit_count;
+    }
+    --barray->map_cache_n;
+    return MMP_ERR_OK;
+}
+static ret_t cache_hit(t_mmp_barray_s *barray, unsigned int page_n)
+{
+    unsigned int idx;
+    if ((idx = get_cache_idx_from_page(barray, page_n))==UINT_MAX) {
+        idx = barray->map_cache_n++;
+        barray->map_cache[idx].page_n = page_n;
+        barray->map_cache[idx].hit_count = 0;
+    }
+    ++barray->map_cache[idx].hit_count;
+    return MMP_ERR_OK;
+}
+
+/* *********************** end of map cache functions ********************** */
+
 static ret_t map_page(t_mmp_barray_s *barray, unsigned int page_n)
 {
     MMP_CHECK_OR_RETURN((barray!=NULL && barray->pages!=NULL &&
                         barray->n_pages>page_n && barray->pages[page_n]!=NULL),
                         MMP_ERR_PARAMS);
+    if (!is_map_limit_ok(barray) && !is_cached(barray, page_n)) {
+        unsigned int idx;
+        idx = cache_get_less_hit(barray);
+        cache_remove(barray, idx);
+        mmp_munmap(&barray->pages[idx]->records);
+    }
     if ((barray->pages[page_n]->records = mmp_mmap(NULL, barray->page_len,
             PROT_READ|PROT_WRITE, MAP_SHARED, barray->fd,
             page_n*barray->page_len))==MAP_FAILED) {
         mmp_setError(MMP_ERR_FILE);
         return MMP_ERR_FILE;
     }
+    cache_hit(barray, page_n);
     return MMP_ERR_OK;
 }
 
@@ -278,7 +357,7 @@ static t_mmp_tap_result_e test_barray(void)
     remove("test.ba");
     /* first write and insert */
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
-                                                        sizeof(int)))==NULL)
+                                                        sizeof(int), 20))==NULL)
         return MMP_TAP_FAILED;
     for (i=0; i<100000; ++i)
         if (mmp_barray_insert(barray, i+1, &i)!=MMP_ERR_OK) {
@@ -290,7 +369,7 @@ static t_mmp_tap_result_e test_barray(void)
         return MMP_TAP_FAILED;
     /* re-read and search */
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
-                                                        sizeof(int)))==NULL)
+                                                        sizeof(int), 20))==NULL)
         return MMP_TAP_FAILED;
     if (mmp_barray_search(barray, 2, &dt)!=MMP_ERR_OK)
         return MMP_TAP_FAILED;

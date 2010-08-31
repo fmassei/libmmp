@@ -51,6 +51,12 @@ typedef struct mmp_barray_page_s {
     t_mmp_barray_idx end;                           /**< last index */
 } t_mmp_barray_page_s;
 
+/** \brief internal cache hit count (DO NOT USE!) */
+typedef struct mmp_barray_hitcache_s {
+    unsigned int page_n;                            /**< page number */
+    unsigned int hit_count;                         /**< hit count */
+} t_mmp_barray_hitcache_s;
+
 /** \brief barray struct */
 typedef struct mmp_barray_s {
     int fd;                                         /**< underlaying file */
@@ -60,11 +66,15 @@ typedef struct mmp_barray_s {
     unsigned int data_size;                         /**< record data size */
     unsigned int rec_size;                          /**< record size */
     unsigned int recs_per_page;                     /**< records per page */
+    t_mmp_barray_hitcache_s *map_cache;             /**< mmap cache */
+    unsigned int map_cache_n;                       /**< # of cache entries */
+    unsigned int max_map_cache_n;                   /**< max mmap entries */
 } t_mmp_barray_s;
 
 /** \brief create a barray */
 t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
-                                    unsigned int data_size);
+                                    unsigned int data_size,
+                                    unsigned int max_cache_entries);
 /** \brief insert data into a barray */
 ret_t mmp_barray_insert(t_mmp_barray_s * __restrict barray,
                         t_mmp_barray_idx idx, const void * __restrict data);
