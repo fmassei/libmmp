@@ -31,7 +31,8 @@ static const char * const error_strings[] = {
     "Socket error"
     "Syncronization error",
     "Full",
-    "Empty"
+    "Empty",
+    "Not found"
 };
 
 /** \test   mmp_error_unittest */

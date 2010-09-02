@@ -45,7 +45,8 @@ typedef enum mmp_error_e {
     MMP_ERR_SOCKET,
     MMP_ERR_SYNC,
     MMP_ERR_FULL,
-    MMP_ERR_EMPTY
+    MMP_ERR_EMPTY,
+    MMP_ERR_NOTFOUND
 } t_mmp_error_e;
 
 /** mmp internal error type */
