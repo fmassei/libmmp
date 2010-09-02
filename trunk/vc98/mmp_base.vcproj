@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_btree.c"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_date.c"
 				>
 			</File>
@@ -330,6 +334,10 @@
 			>
 			<File
 				RelativePath="..\mmp_barray.h"
+				>
+			</File>
+			<File
+				RelativePath="..\mmp_btree.h"
 				>
 			</File>
 			<File

@@ -1,10 +1,46 @@
 #include "mmp_barray.h"
 
+/** internal barray record */
+typedef struct mmp_barray_rec_s {
+    int present:1;                                  /* record present? */
+    unsigned int idx:(sizeof(t_mmp_barray_idx)*8-1);/* record index */
+    /* data follows */
+} t_mmp_barray_rec_s;
+
+/** internal barray page */
+typedef struct mmp_barray_page_s {
+    t_mmp_mmap_s *records;                          /* ptr to records */
+    int dirty:1;                                    /* page dirty? */
+    unsigned int n_data:(sizeof(uint16_t)*8-1);     /* number of records */
+    t_mmp_barray_idx start;                         /* first index */
+    t_mmp_barray_idx end;                           /* last index */
+} t_mmp_barray_page_s;
+
+/** internal cache hit count */
+typedef struct mmp_barray_hitcache_s {
+    unsigned int page_n;                            /* page number */
+    unsigned int hit_count;                         /* hit count */
+} t_mmp_barray_hitcache_s;
+
+/** barray struct */
+struct mmp_barray_s {
+    int fd;                                         /* underlaying file */
+    t_mmp_barray_page_s **pages;                    /* pages */
+    unsigned int n_pages;                           /* number of pages */
+    unsigned int page_len;                          /* page length */
+    unsigned int data_size;                         /* record data size */
+    unsigned int rec_size;                          /* record size */
+    unsigned int recs_per_page;                     /* records per page */
+    t_mmp_barray_hitcache_s *map_cache;             /* mmap cache */
+    unsigned int map_cache_n;                       /* # of cache entries */
+    unsigned int max_map_cache_n;                   /* max mmap entries */
+};
+
 #define MMP_BARRAY_INVALID_IDX ((t_mmp_barray_idx)(-1))
 #define MMP_BARRAY_LASTPAGE(_B) ((_B)->pages[(_B)->n_pages-1])
 #define MMP_BARRAY_RECORD(_BARRAY, _PAGE, _IDX) ( \
     (t_mmp_barray_rec_s*) \
-        (((unsigned char*)(_PAGE)->records->ptr)+(_IDX)*(_BARRAY)->rec_size) ) \
+        (((unsigned char*)(_PAGE)->records->ptr)+(_IDX)*(_BARRAY)->rec_size) )
 
 static t_mmp_barray_page_s *create_page(t_mmp_barray_s *barray)
 {

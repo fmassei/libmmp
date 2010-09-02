@@ -13,7 +13,7 @@ TSTNAME = unittests
 OBJS   = mmp_dl.o mmp_error.o mmp_trace.o mmp_list.o mmp_string.o mmp_dir.o \
 	mmp_shm.o mmp_tap.o mmp_htab.o mmp_socket.o mmp_thread.o \
 	mmp_sync.o mmp_files.o mmp_date.o mmp_getopt.o mmp_barray.o \
-	mmp_system.o mmp_mmap.o mmp_stack.o \
+	mmp_system.o mmp_mmap.o mmp_stack.o mmp_btree.o \
 	unittest.o
 OBJWD  = echo $(OBJDIR)/$(OBJS) | sed 's/\ /\ \.\//g'
 

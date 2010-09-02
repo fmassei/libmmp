@@ -35,41 +35,8 @@
 /** \brief barray index datatype */
 typedef unsigned int t_mmp_barray_idx;
 
-/** \brief internal barray record (DO NOT USE!) */
-typedef struct mmp_barray_rec_s {
-    int present:1;                                  /**< record present? */
-    unsigned int idx:(sizeof(t_mmp_barray_idx)*8-1);/**< record index */
-    /* data follows */
-} t_mmp_barray_rec_s;
-
-/** \brief internal barray page (DO NOT USE!) */
-typedef struct mmp_barray_page_s {
-    t_mmp_mmap_s *records;                          /**< ptr to records */
-    int dirty:1;                                    /**< page dirty? */
-    unsigned int n_data:(sizeof(uint16_t)*8-1);     /**< number of records */
-    t_mmp_barray_idx start;                         /**< first index */
-    t_mmp_barray_idx end;                           /**< last index */
-} t_mmp_barray_page_s;
-
-/** \brief internal cache hit count (DO NOT USE!) */
-typedef struct mmp_barray_hitcache_s {
-    unsigned int page_n;                            /**< page number */
-    unsigned int hit_count;                         /**< hit count */
-} t_mmp_barray_hitcache_s;
-
 /** \brief barray struct */
-typedef struct mmp_barray_s {
-    int fd;                                         /**< underlaying file */
-    t_mmp_barray_page_s **pages;                    /**< pages */
-    unsigned int n_pages;                           /**< number of pages */
-    unsigned int page_len;                          /**< page length */
-    unsigned int data_size;                         /**< record data size */
-    unsigned int rec_size;                          /**< record size */
-    unsigned int recs_per_page;                     /**< records per page */
-    t_mmp_barray_hitcache_s *map_cache;             /**< mmap cache */
-    unsigned int map_cache_n;                       /**< # of cache entries */
-    unsigned int max_map_cache_n;                   /**< max mmap entries */
-} t_mmp_barray_s;
+typedef struct mmp_barray_s t_mmp_barray_s;
 
 /** \brief create a barray */
 t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
