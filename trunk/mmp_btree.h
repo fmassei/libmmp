@@ -31,6 +31,7 @@
 #include "mmp_memory.h"
 #include "mmp_trace.h"
 #include "mmp_files.h"
+#include "mmp_mmap.h"
 
 /** \brief btree key type */
 typedef int t_mmp_btkey;
@@ -51,6 +52,7 @@ void mmp_bt_destroy(t_mmp_bt_s **bt);
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"
+#include "mmp_system.h"
 ret_t mmp_btree_unittest(t_mmp_tap_cycle_s *cycle);
 #endif /* UNIT_TESTING */
 

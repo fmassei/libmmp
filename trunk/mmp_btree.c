@@ -12,6 +12,7 @@ typedef struct rec_s {
 
 typedef struct pg_s {
     t_rec_s *recs;          /* ptr to secondary storage after mmap() */
+    t_mmp_mmap_s *mm;       /* mapped memory structure */
     int n_el;               /* number of present elements */
     struct pg_s *parent;    /* ptr to parent page */
     t_mmp_btoff off;        /* file offset */
@@ -26,19 +27,67 @@ struct mmp_bt_s {
     int fd;                 /* underlaying file */
 };
 
-static ret_t insert_pg_in_bt(t_mmp_bt_s *bt, t_pg_s *pg)
+static ret_t check_mapped(t_mmp_bt_s *bt, int n_mp, ...)
+{
+    va_list va;
+    t_pg_s *pg;
+    int i;
+    va_start(va, n_mp);
+    for (i=0; i<n_mp; ++i) {
+        pg = va_arg(va, t_pg_s*);
+        if (pg->recs==NULL) {
+            if ((pg->mm = mmp_mmap(NULL, bt->pgsize, PROT_READ|PROT_WRITE,
+                                MAP_SHARED, bt->fd, pg->off))==MAP_FAILED) {
+                mmp_setError(MMP_ERR_FILE);
+                return MMP_ERR_FILE;
+            }
+            pg->recs = pg->mm->ptr;
+        }
+    }
+    va_end(va);
+    return MMP_ERR_OK;
+}
+
+static ret_t initialize_page(t_mmp_bt_s *bt, t_pg_s *pg)
+{
+    int i;
+    MMP_CHECK_OR_RETURN((bt!=NULL && pg!=NULL), MMP_ERR_PARAMS);
+    if (check_mapped(bt, 1, pg)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return MMP_ERR_GENERIC;
+    }
+    for (i=0; i<bt->R+1; ++i)
+        pg->recs[i].off = INVALID_OFF;
+    return MMP_ERR_OK;
+}
+
+static ret_t insert_pg_into_bt(t_mmp_bt_s *bt, t_pg_s *pg)
 {
     t_pg_s **npgoff;
     MMP_CHECK_OR_RETURN((bt!=NULL && pg!=NULL), MMP_ERR_PARAMS);
+    if (mmp_pwrite(bt->fd, "\0", 1, (bt->n_pgoff+1)*bt->pgsize-1)!=1) {
+        mmp_setError(MMP_ERR_FILE);
+        return MMP_ERR_FILE;
+    }
     npgoff = xrealloc(bt->pgoff, (bt->n_pgoff+1)*sizeof(*bt->pgoff));
     if (npgoff==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
         return MMP_ERR_ENOMEM;
     }
+    pg->off = bt->n_pgoff*bt->pgsize;
     bt->pgoff = npgoff;
     bt->pgoff[bt->n_pgoff] = pg;
     ++bt->n_pgoff;
-    return MMP_ERR_OK;
+    return initialize_page(bt, pg);
+}
+
+static void destroy_pg(t_pg_s **pg)
+{
+    if (pg==NULL || *pg==NULL) return;
+    if ((*pg)->recs!=NULL)
+        mmp_munmap(&((*pg)->mm));
+    xfree(*pg);
+    *pg = NULL;
 }
 
 static t_pg_s *create_empty_pg(void)
@@ -49,6 +98,7 @@ static t_pg_s *create_empty_pg(void)
     ret->n_el = 0;
     ret->parent = NULL;
     ret->off = INVALID_OFF;
+    ret->mm = NULL;
     return ret;
 }
 
@@ -59,14 +109,23 @@ static int get_R_from_pgsize(int pgsize)
     return ret;
 }
 
+/** \test test_bt */
 void mmp_bt_destroy(t_mmp_bt_s **bt)
 {
+    int i;
     if (bt==NULL || *bt==NULL) return;
+    if ((*bt)->pgoff!=NULL) {
+        for (i=0; i<(*bt)->n_pgoff; ++i)
+            destroy_pg(&((*bt)->pgoff[i]));
+        xfree((*bt)->pgoff);
+    }
+    if ((*bt)->fd>=0)
+        mmp_close((*bt)->fd);
     xfree(*bt);
     *bt = NULL;
 }
 
-/** \todo missing unittest */
+/** \test test_bt */
 t_mmp_bt_s *mmp_bt_create(const char *fname, int page_size)
 {
     t_mmp_bt_s *ret;
@@ -86,6 +145,8 @@ t_mmp_bt_s *mmp_bt_create(const char *fname, int page_size)
         ret->root = NULL;
         ret->pgoff = NULL;
         ret->n_pgoff = 0;
+        ret->root = create_empty_pg();
+        insert_pg_into_bt(ret, ret->root);
     }
     return ret;
 badexit:
@@ -110,16 +171,7 @@ static t_pg_s *page_from_off(t_mmp_bt_s *bt, t_mmp_btoff off)
     return bt->pgoff[off_to_idx(bt, off)];
 }
 
-static ret_t check_mapped(int n_mp, ...)
-{
-    va_list va;
-    va_start(va, n_mp);
-    /* TODO */
-    va_end(va);
-    return MMP_ERR_OK;
-}
-
-/** \todo missing unittest */
+/** \test test_bt */
 ret_t mmp_bt_search(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval *val)
 {
     t_pg_s *pg;
@@ -129,7 +181,10 @@ ret_t mmp_bt_search(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval *val)
 reloop:
     if (pg==NULL)
         return MMP_ERR_NOTFOUND;
-    check_mapped(1, pg);
+    if (check_mapped(bt, 1, pg)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return MMP_ERR_GENERIC;
+    }
     for (i=0; i<pg->n_el; ++i) {
         inkey = pg->recs[i].key;
         if (inkey<key) {
@@ -149,12 +204,6 @@ reloop:
 static ret_t pg_insert_in_pos(t_pg_s *pg, t_mmp_btkey key,
                 t_mmp_btval val, t_mmp_btoff off1, t_mmp_btoff off2, int pos)
 {
-    /*pg->recs[pg->el+1].off = pg->recs[pg->el].off;
-    for (j=pg->n_el; j>pos; --j) {
-        pg->recs[j].key = pg->recs[j-1].key;
-        pg->recs[j].off = pg->recs[j-1].off;
-        pg->recs[j].val = pg->recs[j-1].val;
-    }*/
     memmove(pg->recs+pos+1, pg->recs+pos, sizeof(*pg->recs)*(pg->n_el-pos));
     pg->recs[pos].key = key;
     pg->recs[pos].val = val;
@@ -193,27 +242,25 @@ static t_pg_s *pg_split(t_mmp_bt_s *bt, t_pg_s *pg)
     sp = pg->n_el/2;
     if (par==NULL) { /* root split */
         par = create_empty_pg();
+        insert_pg_into_bt(bt, par);
         bt->root = par;
     }
     nu_bro = create_empty_pg();
-    check_mapped(3, pg, par, nu_bro);
+    insert_pg_into_bt(bt, nu_bro);
+    if (check_mapped(bt, 3, pg, par, nu_bro)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return NULL;
+    }
     pg_insert(par, pg->recs[sp].key, pg->recs[sp].val, pg->off,nu_bro->off);
     pg->parent = par;
     nu_bro->parent = par;
-    /*for (i=sp+1; i<pg->n_el; ++i) {
-        nu_bro->recs[i-sp-1].key = pg->recs[i].key;
-        nu_bro->recs[i-sp-1].val = pg->recs[i].off;
-        nu_bro->recs[i-sp-1].off = pg->recs[i].off;
-    }
-    nu_bro->recs[i-sp-1].off = pg->recs[i].off;
-    nu_bro->n_el = i-sp-1;*/
     memcpy(nu_bro->recs, pg->recs+sp+1, (pg->n_el-(sp+1))*sizeof(*pg->recs));
     nu_bro->n_el = pg->n_el-(sp+1);
     pg->n_el = sp;
     return par;
 }
 
-/** \todo missing unittest */
+/** \test test_bt */
 ret_t mmp_bt_insert(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval val)
 {
     t_pg_s *pg;
@@ -224,7 +271,10 @@ ret_t mmp_bt_insert(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval val)
 reloop:
     if (pg->n_el>=bt->R)
         pg = pg_split(bt, pg);
-    check_mapped(1, pg);
+    if (check_mapped(bt, 1, pg)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return MMP_ERR_GENERIC;
+    }
     for (i=0; i<pg->n_el; ++i) {
         inkey = pg->recs[i].key;
         if (inkey<key) {
@@ -255,7 +305,24 @@ reloop:
 #ifdef UNIT_TESTING
 static t_mmp_tap_result_e test_bt(void)
 {
-    return MMP_TAP_FAILED;
+    t_mmp_bt_s *bt;
+    int i;
+    remove("test.bt");
+    if ((bt = mmp_bt_create("test.bt", mmp_system_getPageAlignment()))==NULL)
+        return MMP_TAP_FAILED;
+    for (i=0; i<100000; ++i) {
+        if (mmp_bt_insert(bt, i, (i+1))!=MMP_ERR_OK) {
+            mmp_trace_print(stdout);
+            return MMP_TAP_FAILED;
+        }
+    }
+    if (mmp_bt_search(bt, 2345, &i)!=MMP_ERR_OK) return MMP_TAP_FAILED;
+    if (i!=2346) return MMP_TAP_FAILED;
+    mmp_bt_destroy(&bt);
+    if (bt!=NULL)
+        return MMP_TAP_FAILED;
+    remove("test.bt");
+    return MMP_TAP_PASSED;
 }
 ret_t mmp_btree_unittest(t_mmp_tap_cycle_s *cycle)
 {
