@@ -74,11 +74,15 @@ static ret_t insert_pg_into_bt(t_mmp_bt_s *bt, t_pg_s *pg)
         mmp_setError(MMP_ERR_ENOMEM);
         return MMP_ERR_ENOMEM;
     }
-    pg->off = bt->n_pgoff*bt->pgsize;
     bt->pgoff = npgoff;
+    pg->off = bt->n_pgoff*bt->pgsize;
+    if (initialize_page(bt, pg)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return MMP_ERR_GENERIC;
+    }
     bt->pgoff[bt->n_pgoff] = pg;
     ++bt->n_pgoff;
-    return initialize_page(bt, pg);
+    return MMP_ERR_OK;
 }
 
 static void destroy_pg(t_pg_s **pg)
@@ -99,6 +103,22 @@ static t_pg_s *create_empty_pg(void)
     ret->parent = NULL;
     ret->off = INVALID_OFF;
     ret->mm = NULL;
+    return ret;
+}
+
+static t_pg_s *create_and_insert_pg(t_mmp_bt_s *bt)
+{
+    t_pg_s *ret;
+    MMP_CHECK_OR_RETURN((bt!=NULL), NULL);
+    if ((ret = create_empty_pg())==NULL) {
+        mmp_setError(MMP_ERR_GENERIC);
+        return NULL;
+    }
+    if (insert_pg_into_bt(bt, ret)!=MMP_ERR_OK) {
+        mmp_setError(MMP_ERR_GENERIC);
+        destroy_pg(&ret);
+        return NULL;
+    }
     return ret;
 }
 
@@ -145,8 +165,10 @@ t_mmp_bt_s *mmp_bt_create(const char *fname, int page_size)
         ret->root = NULL;
         ret->pgoff = NULL;
         ret->n_pgoff = 0;
-        ret->root = create_empty_pg();
-        insert_pg_into_bt(ret, ret->root);
+        if ((ret->root = create_and_insert_pg(ret))==NULL) {
+            mmp_setError(MMP_ERR_GENERIC);
+            goto badexit;
+        }
     }
     return ret;
 badexit:
@@ -177,6 +199,7 @@ ret_t mmp_bt_search(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval *val)
     t_pg_s *pg;
     t_mmp_btkey inkey;
     int i;
+    MMP_CHECK_OR_RETURN((bt!=NULL && val!=NULL), MMP_ERR_PARAMS);
     pg = bt->root;
 reloop:
     if (pg==NULL)
@@ -204,6 +227,7 @@ reloop:
 static ret_t pg_insert_in_pos(t_pg_s *pg, t_mmp_btkey key,
                 t_mmp_btval val, t_mmp_btoff off1, t_mmp_btoff off2, int pos)
 {
+    MMP_CHECK_OR_RETURN((pg!=NULL), MMP_ERR_PARAMS);
     memmove(pg->recs+pos+1, pg->recs+pos, sizeof(*pg->recs)*(pg->n_el-pos));
     pg->recs[pos].key = key;
     pg->recs[pos].val = val;
@@ -218,6 +242,7 @@ static ret_t pg_insert(t_pg_s *pg, t_mmp_btkey key,
 {
     int i;
     t_mmp_btkey inkey;
+    MMP_CHECK_OR_RETURN((pg!=NULL), MMP_ERR_PARAMS);
     for (i=0; i<pg->n_el; ++i) {
         inkey = pg->recs[i].key;
         if (inkey<key) {
@@ -234,23 +259,20 @@ static ret_t pg_insert(t_pg_s *pg, t_mmp_btkey key,
 static t_pg_s *pg_split(t_mmp_bt_s *bt, t_pg_s *pg)
 {
     int sp;
-    t_pg_s *par, *nu_bro;
+    t_pg_s *par=NULL, *nu_bro=NULL, *old_root;
     par = pg->parent;
-    if (pg->n_el<bt->R || (par!=NULL && par->n_el>=bt->R))
-        //return MMP_ERR_PARAMS;
+    if (pg->n_el<bt->R || (par!=NULL && par->n_el>=bt->R)) {
+        mmp_setError(MMP_ERR_PARAMS);
         return NULL;
+    }
     sp = pg->n_el/2;
+    old_root = bt->root;
     if (par==NULL) { /* root split */
-        par = create_empty_pg();
-        insert_pg_into_bt(bt, par);
+        if ((par = create_and_insert_pg(bt))==NULL) goto badexit;
         bt->root = par;
     }
-    nu_bro = create_empty_pg();
-    insert_pg_into_bt(bt, nu_bro);
-    if (check_mapped(bt, 3, pg, par, nu_bro)!=MMP_ERR_OK) {
-        mmp_setError(MMP_ERR_GENERIC);
-        return NULL;
-    }
+    if ((nu_bro = create_and_insert_pg(bt))==NULL) goto badexit;
+    if (check_mapped(bt, 3, pg, par, nu_bro)!=MMP_ERR_OK) goto badexit;
     pg_insert(par, pg->recs[sp].key, pg->recs[sp].val, pg->off,nu_bro->off);
     pg->parent = par;
     nu_bro->parent = par;
@@ -258,6 +280,17 @@ static t_pg_s *pg_split(t_mmp_bt_s *bt, t_pg_s *pg)
     nu_bro->n_el = pg->n_el-(sp+1);
     pg->n_el = sp;
     return par;
+badexit:
+    if (par!=NULL && bt->root==par) { /* tried to root-split, but failed */
+        mmp_setError(MMP_ERR_GENERIC);
+        destroy_pg(&par);
+        bt->root = old_root;
+    }
+    if (nu_bro!=NULL) {
+        mmp_setError(MMP_ERR_GENERIC);
+        destroy_pg(&nu_bro);
+    }
+    return NULL;
 }
 
 /** \test test_bt */
@@ -267,10 +300,14 @@ ret_t mmp_bt_insert(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval val)
     t_mmp_btkey inkey;
     t_mmp_btoff inoff;
     int i;
+    MMP_CHECK_OR_RETURN((bt!=NULL), MMP_ERR_PARAMS);
     pg = bt->root;
 reloop:
     if (pg->n_el>=bt->R)
-        pg = pg_split(bt, pg);
+        if ((pg = pg_split(bt, pg))==NULL) {
+            mmp_setError(MMP_ERR_GENERIC);
+            return MMP_ERR_GENERIC;
+        }
     if (check_mapped(bt, 1, pg)!=MMP_ERR_OK) {
         mmp_setError(MMP_ERR_GENERIC);
         return MMP_ERR_GENERIC;
@@ -306,7 +343,7 @@ reloop:
 static t_mmp_tap_result_e test_bt(void)
 {
     t_mmp_bt_s *bt;
-    int i;
+    int i, r, rv;
     remove("test.bt");
     if ((bt = mmp_bt_create("test.bt", mmp_system_getPageAlignment()))==NULL)
         return MMP_TAP_FAILED;
@@ -316,8 +353,11 @@ static t_mmp_tap_result_e test_bt(void)
             return MMP_TAP_FAILED;
         }
     }
-    if (mmp_bt_search(bt, 2345, &i)!=MMP_ERR_OK) return MMP_TAP_FAILED;
-    if (i!=2346) return MMP_TAP_FAILED;
+    for (i=0; i<100; ++i) {
+        r = (int)(100000*(rand()/(RAND_MAX+1.0)));
+        if (mmp_bt_search(bt, r, &rv)!=MMP_ERR_OK) return MMP_TAP_FAILED;
+        if (rv!=r+1) return MMP_TAP_FAILED;
+    }
     mmp_bt_destroy(&bt);
     if (bt!=NULL)
         return MMP_TAP_FAILED;
