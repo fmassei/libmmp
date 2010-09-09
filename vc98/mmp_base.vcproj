@@ -243,6 +243,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\mmp_2tree.c"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_barray.c"
 				>
 			</File>
@@ -332,6 +336,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\mmp_2tree.h"
+				>
+			</File>
 			<File
 				RelativePath="..\mmp_barray.h"
 				>
