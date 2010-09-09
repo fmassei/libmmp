@@ -17,8 +17,10 @@
  * It also contains:
  * - TAP testing functions
  * - Error tracking
- * - A nice list implementation
- * - A simple hash table (implemented the K & R way) 
+ * - Basic containers
+ *  - Nice list, stack, binary tree, B-tree implementation
+ *  - A simple hash table (implemented the K & R way) 
+ *  - An interessant B-array data-structure
  *
  * \section build_sec Building libmmp
  *
