@@ -32,6 +32,7 @@
 #include "mmp_barray.h"
 #include "mmp_stack.h"
 #include "mmp_btree.h"
+#include "mmp_2tree.h"
 
 int main(void)
 {
@@ -51,6 +52,7 @@ int main(void)
             (mmp_barray_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_stack_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_btree_unittest(cycle)!=MMP_ERR_OK) ||
+            (mmp_2tree_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_tap_print(cycle, stdout)!=MMP_ERR_OK) ) {
         mmp_trace_print(stdout);
         return EXIT_FAILURE;
