@@ -39,30 +39,33 @@ void mmp_2tree_destroy_withdata(t_mmp_2tree_s **tree, void(*cback)(void**))
 }
 
 /** \test test_2tree */
-void mmp_2tree_visit_preorder(t_mmp_2tree_s *tree, void(*fnc)(void*))
+void mmp_2tree_visit_preorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
+                                                                void *userdata)
 {
     if (tree==NULL) return;
-    if (fnc!=NULL) fnc(tree->data);
-    if (tree->l!=NULL) mmp_2tree_visit_preorder(tree->l, fnc);
-    if (tree->r!=NULL) mmp_2tree_visit_preorder(tree->r, fnc);
+    if (fnc!=NULL) fnc(tree->data, userdata);
+    if (tree->l!=NULL) mmp_2tree_visit_preorder(tree->l, fnc, userdata);
+    if (tree->r!=NULL) mmp_2tree_visit_preorder(tree->r, fnc, userdata);
 }
 
 /** \test test_2tree */
-void mmp_2tree_visit_inorder(t_mmp_2tree_s *tree, void(*fnc)(void*))
+void mmp_2tree_visit_inorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
+                                                                void *userdata)
 {
     if (tree==NULL) return;
-    if (tree->l!=NULL) mmp_2tree_visit_inorder(tree->l, fnc);
-    if (fnc!=NULL) fnc(tree->data);
-    if (tree->r!=NULL) mmp_2tree_visit_inorder(tree->r, fnc);
+    if (tree->l!=NULL) mmp_2tree_visit_inorder(tree->l, fnc, userdata);
+    if (fnc!=NULL) fnc(tree->data, userdata);
+    if (tree->r!=NULL) mmp_2tree_visit_inorder(tree->r, fnc, userdata);
 }
 
 /** \test test_2tree */
-void mmp_2tree_visit_postorder(t_mmp_2tree_s *tree, void(*fnc)(void*))
+void mmp_2tree_visit_postorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
+								void *userdata)
 {
     if (tree==NULL) return;
-    if (tree->l!=NULL) mmp_2tree_visit_postorder(tree->l, fnc);
-    if (tree->r!=NULL) mmp_2tree_visit_postorder(tree->r, fnc);
-    if (fnc!=NULL) fnc(tree->data);
+    if (tree->l!=NULL) mmp_2tree_visit_postorder(tree->l, fnc, userdata);
+    if (tree->r!=NULL) mmp_2tree_visit_postorder(tree->r, fnc, userdata);
+    if (fnc!=NULL) fnc(tree->data, userdata);
 }
 
 #ifdef UNIT_TESTING
@@ -103,29 +106,37 @@ static void free_el(void **el)
     *el=NULL;
 }
 
-static char buf[10];
-static int buf_i;
-static void visit(void *el)
+static struct test_result_s {
+    char buf[10];
+    int buf_i;
+};
+
+static void visit(char *el, struct test_result_s *ts)
 {
-    buf[buf_i++] = ((char*)el)[0];
+    ts->buf[ts->buf_i++] = el[0];
+}
+static void visit_v(void *data, void *userdata)
+{
+    visit((char *)data, (struct test_result_s*)userdata);
 }
 
 static t_mmp_tap_result_e test_2tree(void)
 {
     t_mmp_2tree_s *tree;
+    struct test_result_s ts;
     if ((tree = build_test_tree())==NULL)
         return MMP_TAP_FAILED;
-    memset(buf, 0, sizeof(buf)/sizeof(buf[0])); buf_i = 0;
-    mmp_2tree_visit_preorder(tree, visit);
-    if (strcmp(buf, "FBADCEGIH")!=0)
+    memset(ts.buf, 0, sizeof(ts.buf)/sizeof(ts.buf[0])); ts.buf_i = 0;
+    mmp_2tree_visit_preorder(tree, visit_v, &ts);
+    if (strcmp(ts.buf, "FBADCEGIH")!=0)
         return MMP_TAP_FAILED;
-    memset(buf, 0, sizeof(buf)/sizeof(buf[0])); buf_i = 0;
-    mmp_2tree_visit_inorder(tree, visit);
-    if (strcmp(buf, "ABCDEFGHI")!=0)
+    memset(ts.buf, 0, sizeof(ts.buf)/sizeof(ts.buf[0])); ts.buf_i = 0;
+    mmp_2tree_visit_inorder(tree, visit_v, &ts);
+    if (strcmp(ts.buf, "ABCDEFGHI")!=0)
         return MMP_TAP_FAILED;
-    memset(buf, 0, sizeof(buf)/sizeof(buf[0])); buf_i = 0;
-    mmp_2tree_visit_postorder(tree, visit);
-    if (strcmp(buf, "ACEDBHIGF")!=0)
+    memset(ts.buf, 0, sizeof(ts.buf)/sizeof(ts.buf[0])); ts.buf_i = 0;
+    mmp_2tree_visit_postorder(tree, visit_v, &ts);
+    if (strcmp(ts.buf, "ACEDBHIGF")!=0)
         return MMP_TAP_FAILED;
     mmp_2tree_destroy_withdata(&tree, free_el);
     if (tree!=NULL)
