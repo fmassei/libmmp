@@ -41,6 +41,17 @@ char *xindex(const char *str, char c)
 }
 
 /** \test mmp_string_unittest */
+char *xrindex(const char *str, char c)
+{
+    size_t l;
+    if (str==NULL || *str=='\0') return NULL;
+    l = strlen(str);
+    while(str[l]!=c && l>=0) --l;
+    if (str[l]==c) return (char*)(str+l);
+    return NULL;
+}
+
+/** \test mmp_string_unittest */
 int xstrncasecmp(const char *s1, const char *s2, size_t n)
 {
 #ifdef _WIN32
@@ -109,6 +120,13 @@ static t_mmp_tap_result_e test_xindex(void)
 {
     char *p = "pippo";
     if (xindex(p, 'i')==p+1)
+        return MMP_TAP_PASSED;
+    return MMP_TAP_FAILED;
+}
+static t_mmp_tap_result_e test_xrindex(void)
+{
+    char *p = "pippo";
+    if (xrindex(p, 'p')==p+3)
         return MMP_TAP_PASSED;
     return MMP_TAP_FAILED;
 }
@@ -183,6 +201,8 @@ ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret=mmp_tap_test(cycle, "xstrdup", NULL, test_xstrdup()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "xrindex", NULL, test_xrindex()))!=MMP_ERR_OK)
         return ret;
     if ((ret=mmp_tap_test(cycle, "xindex", NULL, test_xindex()))!=MMP_ERR_OK)
         return ret;

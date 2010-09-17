@@ -37,6 +37,8 @@
 char *xstrdup(const char *s);
 /** \brief unix index() */
 char *xindex(const char *s, char c);
+/** \brief unix rindex() */
+char *xrindex(const char *s, char c);
 /** \brief unix strncasecmp() */
 int xstrncasecmp(const char *s1, const char *s2, size_t n);
 /** \brief GNU strtok_r() */
