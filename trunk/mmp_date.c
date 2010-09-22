@@ -559,28 +559,28 @@ literal:
 	return (char*)bp;
 }
 #else
-__inline char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
+char *xstrptime(const char *buf, const char *fmt, struct tm *tm)
 {
     return strptime(buf, fmt, tm);
 }
 #endif
 
 /** \test mmp_date_unittest */
-__inline void mmp_time_1123_format(time_t t, char * datestr, size_t strsize)
+void mmp_time_1123_format(time_t t, char * datestr, size_t strsize)
 {
     if (datestr==NULL || strsize==0) return;
     strftime(datestr, strsize, "%a, %d %b %Y %H:%M:%S GMT", gmtime(&t));
 }
 
 /** \test mmp_date_unittest */
-__inline void mmp_time_1036_format(time_t t, char * datestr, size_t strsize)
+void mmp_time_1036_format(time_t t, char * datestr, size_t strsize)
 {
     if (datestr==NULL || strsize==0) return;
     strftime(datestr, strsize, "%A, %d-%b-%y %H:%M:%S GMT", gmtime(&t));
 }
 
 /** \test mmp_date_unittest */
-__inline void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize)
+void mmp_time_asctime_format(time_t t, char * datestr, size_t strsize)
 {
     struct tm tt;
     if (datestr==NULL || strsize==0) return;
