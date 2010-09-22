@@ -89,3 +89,4 @@ ret_t mmp_stack_unittest(t_mmp_tap_cycle_s *cycle)
     return MMP_ERR_OK;
 }
 #endif /* UNIT_TESTING */
+
