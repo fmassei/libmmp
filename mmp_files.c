@@ -33,6 +33,26 @@ int mmp_open(const char *path, int flags, int mode)
 }
 
 /** \todo missing unittest */
+int mmp_read(int fd, void *buf, size_t count)
+{
+#ifndef _WIN32
+    return read(fd, buf, count);
+#else
+    return _read(fd, buf, count);
+#endif
+}
+
+/** \todo missing unittest */
+int mmp_write(int fd, const void *buf, size_t count)
+{
+#ifndef _WIN32
+    return write(fd, buf, count);
+#else
+    return _write(fd, buf, count);
+#endif
+}
+
+/** \todo missing unittest */
 int mmp_close(int fd)
 {
 #ifndef _WIN32

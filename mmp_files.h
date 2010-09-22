@@ -55,6 +55,10 @@
 
 /** unix open */
 int mmp_open(const char *path, int flags, int mode);
+/** unix read */
+int mmp_read(int fd, void *buf, size_t count);
+/** unix write */
+int mmp_write(int fd, const void *buf, size_t count);
 /** unix close */
 int mmp_close(int fd);
 
