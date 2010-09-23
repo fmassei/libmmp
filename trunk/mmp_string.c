@@ -103,6 +103,43 @@ char *mmp_str_trim(char *str)
     return mmp_str_rtrim(mmp_str_ltrim(str));
 }
 
+/** \test mmp_string_unittest */
+char *mmp_str_toWinPath(const char *str)
+{
+#ifndef _WIN32
+    return xstrdup(str);
+#else
+    char *ret;
+    unsigned int i, j;
+    int nsl, is_absolute;
+    is_absolute = (*str=='/') ? 1 : 0;
+    for (i=0, nsl=0; i<strlen(str); ++i)
+        if (str[i]=='/')
+            ++nsl;
+    if (nsl==0)
+        return xstrdup(str);
+    if ((ret = xmalloc(strlen(str)+nsl+(is_absolute?2:0)+1))==NULL) {
+        mmp_setError(MMP_ERR_ENOMEM);
+        return NULL;
+    }
+    i = j = 0;
+    if (is_absolute) {
+        ret[j++] = 'C'; ret[j++] = ':'; ret[j++] = '\\'; ret[j++] = '\\';
+        i++;
+    }
+    for (; i<strlen(str); ++i, ++j) {
+        if (str[i]=='/') {
+            ret[j] = ret[j+1] = '\\';
+            ++j;
+        } else {
+            ret[j] = str[i];
+        }
+    }
+    ret[j] = '\0';
+    return ret;
+#endif
+}
+
 #ifdef UNIT_TESTING
 static t_mmp_tap_result_e test_xstrdup(void)
 {
@@ -197,6 +234,25 @@ static t_mmp_tap_result_e test_str_trim(void)
     xfree(p);
     return MMP_TAP_PASSED;
 }
+static t_mmp_tap_result_e test_toWinPath(void)
+{
+    char *w;
+    if ((w = mmp_str_toWinPath("pub/beer/more"))==NULL)
+        return MMP_TAP_FAILED;
+    if (strcmp(w, "pub\\\\beer\\\\more")) {
+        xfree(w);
+        return MMP_TAP_FAILED;
+    }
+    xfree(w);
+    if ((w = mmp_str_toWinPath("/home/twinky/stuff"))==NULL)
+        return MMP_TAP_FAILED;
+    if (strcmp(w, "C:\\\\home\\\\twinky\\\\stuff")) {
+        xfree(w);
+        return MMP_TAP_FAILED;
+    }
+    xfree(w);
+    return MMP_TAP_PASSED;
+}
 ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
@@ -217,6 +273,9 @@ ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
         return ret;
     if ((ret=mmp_tap_test(cycle, "str_trim", NULL,
                                         test_str_trim()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "str_toWinPath", NULL,
+                                        test_toWinPath()))!=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }
