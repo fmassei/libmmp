@@ -1,13 +1,14 @@
 GCC =   gcc
 RM  =   rm -f
 AR	=	ar rcs
+STRIP = strip
 GCCFLAG	= -Wall -std=c99 -pedantic -fPIC
-LDFLAG	=
+LDFLAG	= -shared -Wl,-soname,$(FINAME) -lc
 INCLUDE	= -I.
 SRCDIR	= ..
 OBJDIR	= .
 BINDIR	= .
-FINAME	= libmmp_base.a
+FINAME  = libmmp_base.so.1
 TSTNAME = unittests
 
 OBJS   = mmp_dl.o mmp_error.o mmp_trace.o mmp_list.o mmp_string.o mmp_dir.o \
@@ -27,14 +28,17 @@ clean:
 	-$(RM) $(BINDIR)/$(FINAME)
 	-$(RM) $(BINDIR)/$(TSTNAME)
 
-all: $(OBJS)
-	$(AR) $(FINAME) $(OBJS)
+main: $(OBJS)
+	$(GCC) $(shell $(OBJWD)) $(LDFLAG) -o $(BINDIR)/$(FINAME)
+
+all: main
+	$(STRIP) $(FINAME)
 
 unittestscmp: $(OBJS)
 	$(GCC) $(OBJS) -o $(BINDIR)/$(TSTNAME) -ldl -lrt
 
 debug: GCCFLAG += -g
-debug: all
+debug: main
 
 install:
 	install -m 755 -d /usr/include/mmp
