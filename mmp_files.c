@@ -78,23 +78,31 @@ int mmp_pwrite(int fd, const void *buf, size_t nbyte, long offset)
 }
 
 /** \todo missing unittest */
-int mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
+ret_t mmp_stat(const char * __restrict path, t_mmp_stat_s * __restrict stat_ptr)
 {
+    int sret;
 #ifndef _WIN32
-    return stat(path, stat_ptr);
+    sret = stat(path, stat_ptr);
 #else
-    return _stat(path, stat_ptr);
+    sret = _stat(path, stat_ptr);
 #endif
+    if (sret==0)
+        return MMP_ERR_OK;
+    return MMP_ERR_FILE;
 }
 
 /** \todo missing unittest */
-int mmp_fstat(int fd, t_mmp_stat_s * stat_ptr)
+ret_t mmp_fstat(int fd, t_mmp_stat_s * stat_ptr)
 {
+    int sret;
 #ifndef _WIN32
-    return fstat(fd, stat_ptr);
+    sret = fstat(fd, stat_ptr);
 #else
-    return _fstat(fd, stat_ptr);
+    sret = _fstat(fd, stat_ptr);
 #endif
+    if (sret==0)
+        return MMP_ERR_OK;
+    return MMP_ERR_FILE;
 }
 
 #ifdef UNIT_TESTING
