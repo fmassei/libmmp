@@ -38,20 +38,32 @@ void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
         return NULL;
     }
     dlerror();
-    if ((ret = dlsym(handle, getfnc_name))==NULL)
+    if ((ret = dlsym(handle, getfnc_name))==NULL) {
         mmp_setError_ext(MMP_ERR_DL, dlerror());
+        dlclose(handle);
+    }
 #else
     if ((handle = LoadLibrary(filename))==NULL) {
-        mmp_setError(MMP_ERR_DL);
-        /*mmp_setError_ext(MMP_ERR_DL, GetLastError());*/
+        char buf[0xff];
+        FormatMessage(
+            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            buf, sizeof(buf), NULL);
+        mmp_setError_ext(MMP_ERR_DL, buf);
         return NULL;
     }
 #pragma warning(push)
 #pragma warning(disable:4152) /* disable non-standard extension warning */
-    if ((ret = GetProcAddress(handle, getfnc_name))==NULL)
+    if ((ret = GetProcAddress(handle, getfnc_name))==NULL) {
 #pragma warning(pop)
-        mmp_setError(MMP_ERR_DL);
-        /*mmp_setError_ext(MMP_ERR_DL, GetLastError());*/
+        char buf[0xff];
+        FormatMessage(
+            FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            buf, sizeof(buf), NULL);
+        mmp_setError_ext(MMP_ERR_DL, buf);
+        FreeLibrary(handle);
+    }
 #endif
     return ret;
 }
