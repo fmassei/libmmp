@@ -104,7 +104,7 @@ char *mmp_str_trim(char *str)
 }
 
 /** \test mmp_string_unittest */
-char *mmp_str_toWinPath(const char *str)
+char *mmp_str_pathUnixToSys(const char *str)
 {
 #ifndef _WIN32
     return xstrdup(str);
@@ -234,19 +234,27 @@ static t_mmp_tap_result_e test_str_trim(void)
     xfree(p);
     return MMP_TAP_PASSED;
 }
-static t_mmp_tap_result_e test_toWinPath(void)
+static t_mmp_tap_result_e test_toSysPath(void)
 {
     char *w;
-    if ((w = mmp_str_toWinPath("pub/beer/more"))==NULL)
+    if ((w = mmp_str_pathUnixToSys("pub/beer/more"))==NULL)
         return MMP_TAP_FAILED;
+#ifdef _WIN32
     if (strcmp(w, "pub\\\\beer\\\\more")) {
+#else
+    if (strcmp(w, "pub/beer/more")) {
+#endif
         xfree(w);
         return MMP_TAP_FAILED;
     }
     xfree(w);
-    if ((w = mmp_str_toWinPath("/home/twinky/stuff"))==NULL)
+    if ((w = mmp_str_pathUnixToSys("/home/twinky/stuff"))==NULL)
         return MMP_TAP_FAILED;
+#ifdef _WIN32
     if (strcmp(w, "C:\\\\home\\\\twinky\\\\stuff")) {
+#else
+    if (strcmp(w, "/home/twinky/stuff")) {
+#endif
         xfree(w);
         return MMP_TAP_FAILED;
     }
@@ -275,7 +283,7 @@ ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
                                         test_str_trim()))!=MMP_ERR_OK)
         return ret;
     if ((ret=mmp_tap_test(cycle, "str_toWinPath", NULL,
-                                        test_toWinPath()))!=MMP_ERR_OK)
+                                        test_toSysPath()))!=MMP_ERR_OK)
         return ret;
     return MMP_ERR_OK;
 }
