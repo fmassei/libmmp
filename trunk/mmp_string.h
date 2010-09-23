@@ -54,7 +54,7 @@ char *mmp_str_rtrim(char *str);
 char *mmp_str_trim(char *str);
 
 /** \brief convert to windows-style path */
-char *mmp_str_toWinPath(const char *str);
+char *mmp_str_pathUnixToSys(const char *str);
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"
