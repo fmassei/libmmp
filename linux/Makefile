@@ -1,6 +1,6 @@
 GCC =   gcc
 RM  =   rm -f
-LN	=	ln -s
+LN	=	ln -sf
 AR	=	ar rcs
 STRIP = strip
 INSTALL = install
@@ -12,6 +12,7 @@ OBJDIR	= .
 BINDIR	= .
 FINAME  = libmmp_base.so.0.1
 LNNAME	= libmmp_base.so.0
+DVNAME	= libmmp_base.so
 TSTNAME = unittests
 
 OBJS   = mmp_dl.o mmp_error.o mmp_trace.o mmp_list.o mmp_string.o mmp_dir.o \
@@ -47,7 +48,8 @@ install:
 	$(INSTALL) -m 755 -d /usr/include/mmp
 	$(INSTALL) -m 644 $(SRCDIR)/*.h /usr/include/mmp
 	$(INSTALL) -m 644 $(FINAME) /usr/lib/
-	$(LN) $(FINAME) $(LNNAME)
+	$(LN) /usr/lib/$(FINAME) /usr/lib/$(LNNAME)
+	$(LN) /usr/lib/$(LNNAME) /usr/lib/$(DVNAME)
 
 unittests: GCCFLAG = -g -Wall -std=c99 -pedantic -DUNIT_TESTING
 unittests: unittestscmp
