@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
@@ -38,20 +39,29 @@ typedef unsigned int t_mmp_barray_idx;
 /** \brief barray struct */
 typedef struct mmp_barray_s t_mmp_barray_s;
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create a barray */
-t_mmp_barray_s *mmp_barray_create(const char *fname, unsigned int page_size,
-                                    unsigned int data_size,
-                                    unsigned int max_cache_entries);
+MMP_API t_mmp_barray_s *mmp_barray_create(const char *fname,
+                                            unsigned int page_size,
+                                            unsigned int data_size,
+                                            unsigned int max_cache_entries);
+
 /** \brief insert data into a barray */
-ret_t mmp_barray_insert(t_mmp_barray_s * __restrict barray,
+MMP_API ret_t mmp_barray_insert(t_mmp_barray_s * __restrict barray,
                         t_mmp_barray_idx idx, const void * __restrict data);
+
 /** \brief search the barray for a given index */
-ret_t mmp_barray_search(t_mmp_barray_s * __restrict barray,
+MMP_API ret_t mmp_barray_search(t_mmp_barray_s * __restrict barray,
                         t_mmp_barray_idx idx, void ** __restrict data);
+
 /** \brief delete the barray data at a given index */
-ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx);
+MMP_API ret_t mmp_barray_delete(t_mmp_barray_s *barray, t_mmp_barray_idx idx);
+
 /** \brief destroy the barray */
-void mmp_barray_destroy(t_mmp_barray_s **barray);
+MMP_API void mmp_barray_destroy(t_mmp_barray_s **barray);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

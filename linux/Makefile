@@ -1,14 +1,17 @@
 GCC =   gcc
 RM  =   rm -f
+LN	=	ln -s
 AR	=	ar rcs
 STRIP = strip
+INSTALL = install
 GCCFLAG	= -Wall -std=c99 -pedantic -fPIC
-LDFLAG	= -shared -Wl,-soname,$(FINAME) -lc
+LDFLAG	= -shared -Wl,-soname,$(LNNAME) -lc
 INCLUDE	= -I.
 SRCDIR	= ..
 OBJDIR	= .
 BINDIR	= .
-FINAME  = libmmp_base.so.1
+FINAME  = libmmp_base.so.0.1
+LNNAME	= libmmp_base.so.0
 TSTNAME = unittests
 
 OBJS   = mmp_dl.o mmp_error.o mmp_trace.o mmp_list.o mmp_string.o mmp_dir.o \
@@ -35,16 +38,17 @@ all: main
 	$(STRIP) $(FINAME)
 
 unittestscmp: $(OBJS)
-	$(GCC) $(OBJS) -o $(BINDIR)/$(TSTNAME) -ldl -lrt
+	$(GCC) $(shell $(OBJWD)) -o $(BINDIR)/$(TSTNAME) -ldl -lrt
 
 debug: GCCFLAG += -g
 debug: main
 
 install:
-	install -m 755 -d /usr/include/mmp
-	install -m 644 $(SRCDIR)/*.h /usr/include/mmp
-	install -m 644 $(FINAME) /usr/lib/
+	$(INSTALL) -m 755 -d /usr/include/mmp
+	$(INSTALL) -m 644 $(SRCDIR)/*.h /usr/include/mmp
+	$(INSTALL) -m 644 $(FINAME) /usr/lib/
+	$(LN) $(FINAME) $(LNNAME)
 
-unittests: GCCFLAG = -g -Wall -ansi -pedantic -DUNIT_TESTING
+unittests: GCCFLAG = -g -Wall -std=c99 -pedantic -DUNIT_TESTING
 unittests: unittestscmp
 

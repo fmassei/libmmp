@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mmp_h_utils.h"
 
 #ifndef _WIN32
 #   include <getopt.h>
@@ -40,8 +41,12 @@
 
 #endif
 
+MMP_CEXTERN_BEGIN
+
 /** unix getopt */
-int xgetopt(const int argc, char * const *argv, char *opts);
+MMP_API int xgetopt(const int argc, char * const *argv, char *opts);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

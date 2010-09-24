@@ -31,13 +31,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_error.h"
 
+MMP_CEXTERN_BEGIN
+
 /** \brief low-level trace creator. Use the mmp_setError() macros instead!
  * \internal */
-void mmp_trace_create(const char * __restrict f, int l, ret_t ret, err_t err,
-                      const char * __restrict extramsg);
+MMP_API void mmp_trace_create(const char * __restrict f, int l, ret_t ret,
+                              err_t err, const char * __restrict extramsg);
+
+/** \brief print out the complete trace list messages */
+MMP_API void mmp_trace_print(FILE *out);
+
+/** \brief reset the trace stack */
+MMP_API void mmp_trace_reset(void);
+
+MMP_CEXTERN_END
 
 /** \brief set an error on the trace list */
 #define mmp_setError(_R)    \
@@ -45,12 +56,6 @@ void mmp_trace_create(const char * __restrict f, int l, ret_t ret, err_t err,
 /** \brief set an error on the trace list, with an extra message */
 #define mmp_setError_ext(_R, _E)    \
     mmp_trace_create(__FILE__, __LINE__, (_R), errno, (_E))
-
-/** \brief print out the complete trace list messages */
-void mmp_trace_print(FILE *out);
-
-/** \brief reset the trace stack */
-void mmp_trace_reset(void);
 
 /** \brief assert()-like macro for parameter check */
 #define MMP_CHECK_OR_RETURN(_COND, _RET) \

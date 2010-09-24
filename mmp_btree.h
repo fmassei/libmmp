@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
@@ -41,14 +42,21 @@ typedef int t_mmp_btval;
 /** \brief btree struct */
 typedef struct mmp_bt_s t_mmp_bt_s;
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create or open a btree */
-t_mmp_bt_s *mmp_bt_create(const char *fname, int page_size);
+MMP_API t_mmp_bt_s *mmp_bt_create(const char *fname, int page_size);
+
 /** \brief search the btree for a key */
-ret_t mmp_bt_search(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval *val);
+MMP_API ret_t mmp_bt_search(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval *val);
+
 /** \brief insert a key/val into the btree */
-ret_t mmp_bt_insert(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval val);
+MMP_API ret_t mmp_bt_insert(t_mmp_bt_s *bt, t_mmp_btkey key, t_mmp_btval val);
+
 /** \brief destroy the btree */
-void mmp_bt_destroy(t_mmp_bt_s **bt);
+MMP_API void mmp_bt_destroy(t_mmp_bt_s **bt);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

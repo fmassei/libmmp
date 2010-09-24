@@ -41,6 +41,7 @@
 #   include <fcntl.h>
     typedef int t_mmp_shm_mapf;
 #endif
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
@@ -57,15 +58,22 @@ typedef struct mmp_shm_s {
     t_mmp_shm_mapf map;     /**< shared map object */
 } t_mmp_shm_s;
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create and attach a shared memory */
-t_mmp_shm_s *mmp_shm_attach(const char * name, size_t size);
+MMP_API t_mmp_shm_s *mmp_shm_attach(const char * name, size_t size);
+
 /** \brief put data on the shared memory */
-ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
+MMP_API ret_t mmp_shm_getdata(const t_mmp_shm_s * __restrict shm,
                         void * __restrict dst, size_t from, size_t len);
+
 /** \brief get data from the shared memory */
-ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
+MMP_API ret_t mmp_shm_putdata(const t_mmp_shm_s * __restrict shm,
                         const void * __restrict src, size_t from, size_t len);
+
 /** \brief detach and destroy the shared memory */
-void mmp_shm_detach(t_mmp_shm_s **map);
+MMP_API void mmp_shm_detach(t_mmp_shm_s **map);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_SHM_H */
