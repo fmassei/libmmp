@@ -30,31 +30,46 @@
 #ifndef _WIN32
 #   include <strings.h>
 #endif
+#include "mmp_h_utils.h"
 #include "mmp_error.h"
 #include "mmp_memory.h"
+#include "mmp_trace.h"
+
+MMP_CEXTERN_BEGIN
 
 /** \brief unix strdup() */
-char *xstrdup(const char *s);
+MMP_API char *xstrdup(const char *s);
+
 /** \brief unix index() */
-char *xindex(const char *s, char c);
+MMP_API char *xindex(const char *s, char c);
+
 /** \brief unix rindex() */
-char *xrindex(const char *s, char c);
+MMP_API char *xrindex(const char *s, char c);
+
 /** \brief unix strncasecmp() */
-int xstrncasecmp(const char *s1, const char *s2, size_t n);
+MMP_API int xstrncasecmp(const char *s1, const char *s2, size_t n);
+
 /** \brief GNU strtok_r() */
-char *xstrtok_r(char *str, const char *delim, char **ctx);
+MMP_API char *xstrtok_r(char *str, const char *delim, char **ctx);
+
 
 /** \brief is a character "trimmable"? */
-int mmp_str_is_trimmable(char c);
+MMP_API int mmp_str_is_trimmable(char c);
+
 /** \brief left trim */
-char *mmp_str_ltrim(const char *str);
+MMP_API char *mmp_str_ltrim(const char *str);
+
 /** \brief right trim */
-char *mmp_str_rtrim(char *str);
+MMP_API char *mmp_str_rtrim(char *str);
+
 /** \brief left and right trim */
-char *mmp_str_trim(char *str);
+MMP_API char *mmp_str_trim(char *str);
+
 
 /** \brief convert to windows-style path */
-char *mmp_str_pathUnixToSys(const char *str);
+MMP_API char *mmp_str_pathUnixToSys(const char *str);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

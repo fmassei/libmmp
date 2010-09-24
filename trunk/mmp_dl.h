@@ -35,11 +35,16 @@
 #   include <windows.h>
 #endif
 
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_trace.h"
 
+MMP_CEXTERN_BEGIN
+
 /** open a dinamically loadable library */
-void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
-                              const char * __restrict getfnc_name);
+MMP_API void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
+                                      const char * __restrict getfnc_name);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_DL_H */

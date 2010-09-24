@@ -47,33 +47,43 @@ typedef struct mmp_tap_cycle_s {
     struct mmp_list_s *tests;       /**< list of test entries */
 } t_mmp_tap_cycle_s;
 
+#include "mmp_h_utils.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 
+MMP_CEXTERN_BEGIN
+
 /** \brief start a tap cycle */
-t_mmp_tap_cycle_s *mmp_tap_startcycle(const char *name);
+MMP_API t_mmp_tap_cycle_s *mmp_tap_startcycle(const char *name);
+
 /** \brief do a test */
-ret_t mmp_tap_test(t_mmp_tap_cycle_s * __restrict cycle,
+MMP_API ret_t mmp_tap_test(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment, t_mmp_tap_result_e res);
+
 /** \brief the test passed */
-ret_t mmp_tap_test_passed(t_mmp_tap_cycle_s * __restrict cycle,
+MMP_API ret_t mmp_tap_test_passed(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
+
 /** \brief the test failed */
-ret_t mmp_tap_test_failed(t_mmp_tap_cycle_s * __restrict cycle,
+MMP_API ret_t mmp_tap_test_failed(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
+
 /** \brief the test was skipped */
-ret_t mmp_tap_test_skipped(t_mmp_tap_cycle_s * __restrict cycle,
+MMP_API ret_t mmp_tap_test_skipped(t_mmp_tap_cycle_s * __restrict cycle,
                     const char * __restrict desc,
                     const char * __restrict comment);
+
 /** \brief free the cycle results */
-void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle);
+MMP_API void mmp_tap_freecycle(t_mmp_tap_cycle_s **cycle);
 
 /** \brief print results */
-ret_t mmp_tap_print(t_mmp_tap_cycle_s *cycle, FILE *out);
+MMP_API ret_t mmp_tap_print(t_mmp_tap_cycle_s *cycle, FILE *out);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_TAP_H */

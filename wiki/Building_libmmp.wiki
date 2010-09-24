@@ -2,7 +2,7 @@
 #labels Featured,Phase-Deploy
 
 = Introduction =
-At the moment libmmp comes only as a static library.
+At the moment libmmp comes only as a dynamic library.
 
 = Linux =
 

@@ -30,10 +30,16 @@
 #else
 #   include <windows.h>
 #endif
+#include "mmp_h_utils.h"
+
+MMP_CEXTERN_BEGIN
 
 /** \brief get the system page size */
-long mmp_system_getPageSize(void);
+MMP_API long mmp_system_getPageSize(void);
+
 /** \brief get the system page alignment */
-long mmp_system_getPageAlignment(void);
+MMP_API long mmp_system_getPageAlignment(void);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_SYSTEM_H */

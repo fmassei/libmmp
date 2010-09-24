@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
@@ -39,21 +40,35 @@ typedef struct mmp_2tree_s {
 /** \brief 2tree visit callback (void *data, void *userdata) */
 typedef void(*t_mmp_2tree_vcallback)(void *, void *);
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create a tree */
-t_mmp_2tree_s *mmp_2tree_create(void *data, t_mmp_2tree_s *l, t_mmp_2tree_s *r);
+MMP_API t_mmp_2tree_s *mmp_2tree_create(void *data, t_mmp_2tree_s *l,
+                                                    t_mmp_2tree_s *r);
+
 /** \brief destroy a tree */
-void mmp_2tree_destroy(t_mmp_2tree_s** tree);
+MMP_API void mmp_2tree_destroy(t_mmp_2tree_s** tree);
+
 /** \brief destroy a tree with data */
-void mmp_2tree_destroy_withdata(t_mmp_2tree_s **tree, void(*cback)(void**));
+MMP_API void mmp_2tree_destroy_withdata(t_mmp_2tree_s **tree,
+                                                    void(*cback)(void**));
+
 /** \brief visit a tree in preorder */
-void mmp_2tree_visit_preorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
-                                                                void *userdata);
+MMP_API void mmp_2tree_visit_preorder(t_mmp_2tree_s *tree,
+                                                    t_mmp_2tree_vcallback fnc,
+                                                    void *userdata);
+
 /** \brief visit a tree in inorder */
-void mmp_2tree_visit_inorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
-                                                                void *userdata);
+MMP_API void mmp_2tree_visit_inorder(t_mmp_2tree_s *tree,
+                                                    t_mmp_2tree_vcallback fnc,
+                                                    void *userdata);
+
 /** \brief visit a tree in postorder */
-void mmp_2tree_visit_postorder(t_mmp_2tree_s *tree, t_mmp_2tree_vcallback fnc,
-                                                            void *userdata);
+MMP_API void mmp_2tree_visit_postorder(t_mmp_2tree_s *tree,
+                                                    t_mmp_2tree_vcallback fnc,
+                                                    void *userdata);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

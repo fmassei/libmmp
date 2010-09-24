@@ -35,6 +35,7 @@
 #   include <windows.h>
 #endif
 
+#include "mmp_h_utils.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
@@ -44,11 +45,15 @@
 /** list of file results */
 typedef t_mmp_list_s t_mmp_dirlist_s;
 
+MMP_CEXTERN_BEGIN
+
 /** list all files in a directory */
-t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname);
+MMP_API t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname);
 
 /** free the results of a mmp_dir_listfiles */
-void mmp_dir_free_list_results(t_mmp_dirlist_s **list);
+MMP_API void mmp_dir_free_list_results(t_mmp_dirlist_s **list);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

@@ -53,8 +53,15 @@ typedef struct mmp_mmap_s {
 #endif
 } t_mmp_mmap_s;
 
-t_mmp_mmap_s *mmp_mmap(void *ptr, size_t size, int prot, int flags, int fd,
-                                                                long offset);
-int mmp_munmap(t_mmp_mmap_s** map);
+MMP_CEXTERN_BEGIN
+
+/** \brief unix mmap */
+MMP_API t_mmp_mmap_s *mmp_mmap(void *ptr, size_t size, int prot, int flags,
+                               int fd, long offset);
+
+/** \brief unix munmap */
+MMP_API int mmp_munmap(t_mmp_mmap_s** map);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_MMAP_H */

@@ -57,32 +57,44 @@
 /** \typedef t_socket
  * \brief mmp socket type */
 
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"
 
+MMP_CEXTERN_BEGIN
+
 /** \brief initialize socket subsystem */
-ret_t mmp_socket_initSystem(void);
+MMP_API ret_t mmp_socket_initSystem(void);
+
 /** \brief finalize socket subsystem */
-ret_t mmp_socket_finiSystem(void);
+MMP_API ret_t mmp_socket_finiSystem(void);
+
 /** \brief starts a socket server */
-ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
+MMP_API ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
+
 /** \brief close a socket */
-ret_t mmp_socket_close(t_socket *sock, int shut);
+MMP_API ret_t mmp_socket_close(t_socket *sock, int shut);
+
 /** \brief accept a socket */
-ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
-                                        t_socket * __restrict out, char **ip);
+MMP_API ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
+                                t_socket * __restrict out, char **ip);
 /** \brief multiplex sockets */
-int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd, fd_set *ex,
-                                            struct timeval * __restrict to);
-/** \brief read from a socket */
-int mmp_socket_read(const t_socket * __restrict sock,
+MMP_API int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd,
+                                fd_set *ex, struct timeval * __restrict to);
+
+                                            /** \brief read from a socket */
+MMP_API int mmp_socket_read(const t_socket * __restrict sock,
                                 void * __restrict buf, size_t len);
+
 /** \brief write to a socket */
-int mmp_socket_write(const t_socket * __restrict sock,
+MMP_API int mmp_socket_write(const t_socket * __restrict sock,
                                 const void * __restrict buf, size_t len);
+
 /** \brief was the last error an EWOULDBLOCK error? */
-int mmp_socket_is_block_last_error(void);
+MMP_API int mmp_socket_is_block_last_error(void);
+
+MMP_CEXTERN_END
 
 #endif /* H_MMP_SOCKET_H */

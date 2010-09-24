@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 
 /** internal type error */
@@ -55,10 +56,14 @@ typedef t_mmp_error_e ret_t;    /* mmp error */
 /** system error type */
 typedef int err_t;              /* system error */
 
+MMP_CEXTERN_BEGIN
+
 /** get internal error description */
-const char *mmp_error_ret_getdesc(ret_t ret);
+MMP_API const char *mmp_error_ret_getdesc(ret_t ret);
 /** get system error description */
-const char *mmp_error_err_getdesc(err_t err);
+MMP_API const char *mmp_error_err_getdesc(err_t err);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

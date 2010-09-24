@@ -36,6 +36,16 @@
 #   define MMP_CEXTERN_END
 #endif
 
+#ifndef _WIN32
+#   define MMP_API    extern
+#else
+#   ifdef MMP_EXPORTS
+#       define MMP_API __declspec(dllexport)
+#   else
+#       define MMP_API __declspec(dllimport)
+#   endif
+#endif
+
 /** \brief unreferenced parameter macro */
 #ifndef UNREFERENCED_PARAM
 #   define UNREFERENCED_PARAM(_P) ((void)(_P))

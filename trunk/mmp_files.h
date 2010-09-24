@@ -59,22 +59,27 @@
     typedef struct _stat t_mmp_stat_s;
 #endif
 
+MMP_CEXTERN_BEGIN
+
 /** unix open */
-int mmp_open(const char *path, int flags, int mode);
+MMP_API int mmp_open(const char *path, int flags, int mode);
 /** unix read */
-int mmp_read(int fd, void *buf, size_t count);
+MMP_API int mmp_read(int fd, void *buf, size_t count);
 /** unix write */
-int mmp_write(int fd, const void *buf, size_t count);
+MMP_API int mmp_write(int fd, const void *buf, size_t count);
 /** unix close */
-int mmp_close(int fd);
+MMP_API int mmp_close(int fd);
 
 /** unix pwrite */
-int mmp_pwrite(int fd, const void *buf, size_t nbyte, long offset);
+MMP_API int mmp_pwrite(int fd, const void *buf, size_t nbyte, long offset);
 
 /** unix stat */
-ret_t mmp_stat(const char *__restrict path, t_mmp_stat_s *__restrict stat_ptr);
+MMP_API ret_t mmp_stat(const char *__restrict path,
+                       t_mmp_stat_s *__restrict stat_ptr);
 /** unix fstat */
-ret_t mmp_fstat(int fd, t_mmp_stat_s * stat_ptr);
+MMP_API ret_t mmp_fstat(int fd, t_mmp_stat_s * stat_ptr);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #   include "mmp_tap.h"

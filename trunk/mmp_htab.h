@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include "mmp_h_utils.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
 #include "mmp_string.h"
@@ -45,27 +46,38 @@ typedef struct mmp_htab_s {
     t_mmp_htab_elem_s **ptrs;   /**< element table */
 } t_mmp_htab_s;
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create an hastable */
-t_mmp_htab_s *mmp_htab_create(size_t size);
+MMP_API t_mmp_htab_s *mmp_htab_create(size_t size);
+
 /** \brief destroy an hashtable */
-void mmp_htab_destroy(t_mmp_htab_s **ptr);
+MMP_API void mmp_htab_destroy(t_mmp_htab_s **ptr);
+
 /** \brief destroy an hashtable, deleting each element with a callback */
-void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr, void(*datadel)(void**));
+MMP_API void mmp_htab_destroy_with_data(t_mmp_htab_s **ptr,
+                                    void(*datadel)(void**));
 /** \brief hash the key */
-unsigned int mmp_htab_hash(const t_mmp_htab_s * __restrict htab,
+MMP_API unsigned int mmp_htab_hash(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict  str, int max);
+
 /** \brief lookup for a partly-defined key */
-void *mmp_htab_lookup_nz(const t_mmp_htab_s * __restrict htab,
+MMP_API void *mmp_htab_lookup_nz(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key, int keylen);
+
 /** \brief lookup for a key */
-void *mmp_htab_lookup(const t_mmp_htab_s * __restrict htab,
+MMP_API void *mmp_htab_lookup(const t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key);
+
 /** \brief install an entry */
-ret_t mmp_htab_install(t_mmp_htab_s * __restrict htab,
+MMP_API ret_t mmp_htab_install(t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key, void *val);
+
 /** \brief delete an entry */
-ret_t mmp_htab_delete(t_mmp_htab_s * __restrict htab,
+MMP_API ret_t mmp_htab_delete(t_mmp_htab_s * __restrict htab,
                                     const char * __restrict key);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"

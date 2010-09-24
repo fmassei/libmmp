@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
@@ -37,14 +38,21 @@ typedef struct mmp_stack_s {
     int n_data;     /**< current data count */
 } t_mmp_stack_s;
 
+MMP_CEXTERN_BEGIN
+
 /** \brief create a stack */
-t_mmp_stack_s *mmp_stack_create(int size);
+MMP_API t_mmp_stack_s *mmp_stack_create(int size);
+
 /** \brief push a pointer into the stack (or return MMP_ERR_FULL) */
-ret_t mmp_stack_push(t_mmp_stack_s *stack, void *elem);
+MMP_API ret_t mmp_stack_push(t_mmp_stack_s *stack, void *elem);
+
 /** \brief pop a pointer from the stack (or return MMP_ERR_EMPTY) */
-ret_t mmp_stack_pop(t_mmp_stack_s *stack, void **elem);
+MMP_API ret_t mmp_stack_pop(t_mmp_stack_s *stack, void **elem);
+
 /** \brief destroy a stack */
-void mmp_stack_destroy(t_mmp_stack_s **stack);
+MMP_API void mmp_stack_destroy(t_mmp_stack_s **stack);
+
+MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
 #include "mmp_tap.h"
