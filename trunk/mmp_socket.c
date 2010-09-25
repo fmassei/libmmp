@@ -160,6 +160,15 @@ int mmp_socket_write(const t_socket * __restrict sock,
 }
 
 /** \todo missing unittest */
+int mmp_socket_set_nonblocking(const t_socket *sock)
+{
+    int result;
+    result = fcntl(*sock, F_GETFL, NULL);
+    result |= O_NONBLOCK;
+    return fcntl(*sock, F_SETFL, result);
+}
+
+/** \todo missing unittest */
 int mmp_socket_is_block_last_error(void)
 {
 #ifdef _WIN32

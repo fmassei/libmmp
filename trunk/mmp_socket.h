@@ -84,13 +84,16 @@ MMP_API ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
 MMP_API int mmp_socket_server_select(int nfds, fd_set *rd, fd_set *wd,
                                 fd_set *ex, struct timeval * __restrict to);
 
-                                            /** \brief read from a socket */
+/** \brief read from a socket */
 MMP_API int mmp_socket_read(const t_socket * __restrict sock,
                                 void * __restrict buf, size_t len);
 
 /** \brief write to a socket */
 MMP_API int mmp_socket_write(const t_socket * __restrict sock,
                                 const void * __restrict buf, size_t len);
+
+/** \brief set socket as non-blocking */
+MMP_API int mmp_socket_set_nonblocking(const t_socket *sock);
 
 /** \brief was the last error an EWOULDBLOCK error? */
 MMP_API int mmp_socket_is_block_last_error(void);
