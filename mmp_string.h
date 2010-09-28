@@ -40,6 +40,9 @@ MMP_CEXTERN_BEGIN
 /** \brief unix strdup() */
 MMP_API char *xstrdup(const char *s);
 
+/** \brief strdup() with n characters */
+MMP_API char *xstrdupn(const char *s, size_t n);
+
 /** \brief unix index() */
 MMP_API char *xindex(const char *s, char c);
 

@@ -31,6 +31,23 @@ char *xstrdup(const char *s)
     return ret;
 }
 
+/** \todo missing unittest */
+char *xstrdupn(const char *s, size_t n)
+{
+    char * __restrict ret;
+    size_t tc;
+    if (s==NULL) return NULL;
+    tc = n<=strlen(s) ? n : strlen(s);
+    if ((ret = xmalloc(tc + 1))==NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
+    if (tc>0)
+        memcpy(ret, s, tc);
+    ret[tc] = '\0';
+    return ret;
+}
+
 /** \test mmp_string_unittest */
 char *xindex(const char *str, char c)
 {
