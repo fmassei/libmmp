@@ -162,10 +162,15 @@ int mmp_socket_write(const t_socket * __restrict sock,
 /** \todo missing unittest */
 int mmp_socket_set_nonblocking(const t_socket *sock)
 {
+#ifdef _WIN32
+    unsigned long mode = 1;
+    return ioctlsocket(*sock, FIONBIO, &mode);
+#else
     int result;
     result = fcntl(*sock, F_GETFL, NULL);
     result |= O_NONBLOCK;
     return fcntl(*sock, F_SETFL, result);
+#endif
 }
 
 /** \todo missing unittest */
