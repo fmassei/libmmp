@@ -31,13 +31,13 @@ char *xstrdup(const char *s)
     return ret;
 }
 
-/** \todo missing unittest */
+/** \test mmp_string_unittest */
 char *xstrdupn(const char *s, size_t n)
 {
     char * __restrict ret;
     size_t tc;
     if (s==NULL) return NULL;
-    tc = n<=strlen(s) ? n : strlen(s);
+    tc = (n<=strlen(s)) ? n : strlen(s);
     if ((ret = xmalloc(tc + 1))==NULL) {
         errno = ENOMEM;
         return NULL;
@@ -170,6 +170,18 @@ static t_mmp_tap_result_e test_xstrdup(void)
     xfree(p);
     return MMP_TAP_PASSED;
 }
+static t_mmp_tap_result_e test_xstrdupn(void)
+{
+    char *p;
+    if ((p = xstrdupn("test_and_test", 4))==NULL)
+        return MMP_TAP_FAILED;
+    if (strcmp(p, "test")!=0) {
+        xfree(p);
+        return MMP_TAP_FAILED;
+    }
+    xfree(p);
+    return MMP_TAP_PASSED;
+}
 static t_mmp_tap_result_e test_xindex(void)
 {
     char *p = "pippo";
@@ -282,6 +294,8 @@ ret_t mmp_string_unittest(t_mmp_tap_cycle_s *cycle)
 {
     ret_t ret;
     if ((ret=mmp_tap_test(cycle, "xstrdup", NULL, test_xstrdup()))!=MMP_ERR_OK)
+        return ret;
+    if ((ret=mmp_tap_test(cycle, "xstrdupn", NULL, test_xstrdupn()))!=MMP_ERR_OK)
         return ret;
     if ((ret=mmp_tap_test(cycle, "xrindex", NULL, test_xrindex()))!=MMP_ERR_OK)
         return ret;
