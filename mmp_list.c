@@ -104,7 +104,7 @@ ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
     return MMP_ERR_OK;
 }
 
-/** \todo missing unittest */
+/** \test mmp_list_unittest */
 void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
                                                     t_mmp_listelem_s **elem)
 {
@@ -122,7 +122,7 @@ void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
     return NULL;
 }
 
-/** \todo missing unittest */
+/** \test mmp_list_unittest */
 void* mmp_list_del_elem_by_data(t_mmp_list_s * __restrict list,
                                                             const void * data)
 {
@@ -131,7 +131,7 @@ void* mmp_list_del_elem_by_data(t_mmp_list_s * __restrict list,
     return mmp_list_del_elem(list, &p);
 }
 
-/** \todo missing unittest */
+/** \test mmp_list_unittest */
 t_mmp_listelem_s *mmp_list_find_data(const t_mmp_list_s * __restrict list,
                                                             const void * data)
 {
@@ -304,6 +304,30 @@ static t_mmp_tap_result_e test_add_check(void)
     mmp_list_delete_withdata(&list, gen_deleter);
     return ret;
 }
+/* creates and delete a list, checking during the operation */
+static t_mmp_tap_result_e test_delete(void)
+{
+    t_mmp_list_s *list;
+    int i1=42, i2=43;
+    if ((list = create_dummy_filled_list(10))==NULL)
+        return MMP_TAP_FAILED;
+    if (mmp_list_add_data(list, &i1)!=MMP_ERR_OK)
+        return MMP_TAP_FAILED;
+    if (mmp_list_add_data(list, &i2)!=MMP_ERR_OK)
+        return MMP_TAP_FAILED;
+    if (list->nelems!=12)
+        return MMP_TAP_FAILED;
+    mmp_list_del_elem_by_data(list, &i2);
+    if (mmp_list_find_data(list, &i2)!=NULL ||
+            mmp_list_find_data(list, &i1)==NULL)
+        return MMP_TAP_FAILED;
+    if (list->nelems!=11)
+        return MMP_TAP_FAILED;
+    mmp_list_del_elem_by_data(list, &i1);
+    if (list->nelems!=10)
+        return MMP_TAP_FAILED;
+    return MMP_TAP_PASSED;
+}
 /* do the tests */
 ret_t mmp_list_unittest(t_mmp_tap_cycle_s *cycle)
 {
@@ -311,6 +335,8 @@ ret_t mmp_list_unittest(t_mmp_tap_cycle_s *cycle)
     if (
             ((ret=mmp_tap_test(cycle, "list_create and mmp_list_delete", NULL,
                                         test_create_delete()))!=MMP_ERR_OK) ||
+            ((ret=mmp_tap_test(cycle, "list deletion", NULL,
+                                        test_delete()))!=MMP_ERR_OK) ||
             ((ret=mmp_tap_test(cycle, "list add and check", NULL,
                                         test_add_check()))!=MMP_ERR_OK)
 
