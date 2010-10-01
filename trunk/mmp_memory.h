@@ -27,14 +27,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/** \brief malloc wrapper */
-#define xmalloc(_S)         malloc((_S))
-/** \brief callc wrapper */
-#define xcalloc(_N, _S)     calloc((_N), (_S))
-/** \brief free wrapper */
-#define xfree(_P)           free((_P))
-/** \brief realloc wrapper */
-#define xrealloc(_P, _S)    realloc((_P), (_S))
+#ifndef NO_MMP_ALLOCATOR
+#   include "mmp_h_utils.h"
+
+    MMP_CEXTERN_BEGIN
+
+    /** \brief malloc wrapper */
+    MMP_API void *xmalloc(size_t size);
+
+    /** \brief malloc wrapper */
+    MMP_API void *xcalloc(size_t count, size_t size);
+
+    /** \brief malloc wrapper */
+    MMP_API void xfree(void *ptr);
+
+    /** \brief malloc wrapper */
+    MMP_API void *xrealloc(void *ptr, size_t size);
+    
+    MMP_CEXTERN_END
+#else
+    /** \brief malloc wrapper */
+#   define xmalloc(_S)         malloc((_S))
+
+    /** \brief callc wrapper */
+#   define xcalloc(_N, _S)     calloc((_N), (_S))
+
+    /** \brief free wrapper */
+#   define xfree(_P)           free((_P))
+
+    /** \brief realloc wrapper */
+#   define xrealloc(_P, _S)    realloc((_P), (_S))
+#endif
 
 /* utility macros */
 /** \brief try to malloc, set ENOMEM and return _RET on failure */
@@ -47,5 +70,11 @@
 #define MMP_XFREE_AND_NULL(_PTR)    \
     xfree(_PTR); \
     (_PTR) = NULL;
+
+#ifdef UNIT_TESTING
+#include "mmp_error.h"
+#include "mmp_tap.h"
+ret_t mmp_allocator_unittest(t_mmp_tap_cycle_s *cycle);
+#endif /* UNIT_TESTING */
 
 #endif /* H_MMP_MEMORY_H */
