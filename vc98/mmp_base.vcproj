@@ -339,6 +339,10 @@
 			<File
 				RelativePath="..\mmp_trace.c"
 				>
+            </File>
+            <File
+				RelativePath="..\mmp_memory.c"
+				>
 			</File>
 			<File
 				RelativePath="..\unittest.c"

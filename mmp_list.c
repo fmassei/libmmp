@@ -108,19 +108,18 @@ ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
 void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
                                                     t_mmp_listelem_s **elem)
 {
-    void *ret;
     MMP_CHECK_OR_RETURN((list!=NULL && elem!=NULL && *elem!=NULL), NULL);
-    if ((*elem)->prev)
+    if ((*elem)->prev!=NULL)
         (*elem)->prev->next = (*elem)->next;
-    else
-        list->head = ((*elem)->next) ? (*elem)->next : NULL;
-    if ((*elem)->next) (*elem)->next->prev = (*elem)->prev;
-    ret = (*elem)->data;
+    if ((*elem)->next!=NULL)
+        (*elem)->next->prev = (*elem)->prev;
+    if (list->head==*elem)
+        list->head = (*elem)->next;
     if (list->tail==*elem)
         list->tail = (*elem)->prev;
     MMP_XFREE_AND_NULL(*elem);
     --list->nelems;
-    return ret;
+    return NULL;
 }
 
 /** \todo missing unittest */
