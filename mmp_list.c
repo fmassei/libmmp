@@ -73,7 +73,7 @@ ret_t mmp_list_add_data(t_mmp_list_s * __restrict list, void * data)
     return MMP_ERR_OK;
 }
 
-/** \todo missing unittest */
+/** \test mmp_list_unittest */
 ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
                                                         t_mmp_comparer_f comp)
 {
@@ -90,13 +90,17 @@ ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
     if (p==NULL) {
         nu->prev = list->tail;
         nu->next = NULL;
+        list->tail->next = nu;
         list->tail = nu;
     } else if (p==list->head) {
         nu->prev = NULL;
         nu->next = list->head;
+        list->head->prev = nu;
         list->head = nu;
     } else {
         nu->prev = p->prev;
+        if (p->prev)
+            p->prev->next = nu;
         p->prev = nu;
         nu->next = p;
     }
@@ -328,6 +332,35 @@ static t_mmp_tap_result_e test_delete(void)
         return MMP_TAP_FAILED;
     return MMP_TAP_PASSED;
 }
+/* test sorted lists */
+static int sortcomp(const void *v1, const void *v2)
+{
+    if (v1>v2) return -1;
+    if (v1<v2) return 1;
+    return 0;
+}
+static t_mmp_tap_result_e test_sorted(void)
+{
+    t_mmp_list_s *list;
+    t_mmp_listelem_s *p;
+    int i, v[] = { 23, 12, 6, 22, 54 }, t[] = { 6, 12, 22, 23, 54 };
+    if ((list = mmp_list_create())==NULL)
+        return MMP_TAP_FAILED;
+    for (i=0; i<sizeof(v)/sizeof(v[0]); ++i)
+        if (mmp_list_add_data_sorted(list, (void*)v[i], sortcomp)!=MMP_ERR_OK)
+            return MMP_TAP_FAILED;
+    for (p=list->head, i=0; p!=NULL; p=p->next, ++i)
+        if (((int)p->data)!=t[i])
+            return MMP_TAP_FAILED;
+    mmp_list_del_elem_by_data(list, (void*)t[2]);
+    mmp_list_del_elem_by_data(list, (void*)t[4]);
+    mmp_list_del_elem_by_data(list, (void*)t[3]);
+    mmp_list_del_elem_by_data(list, (void*)t[0]);
+    if (((int)list->head->data)!=t[1])
+        return MMP_TAP_FAILED;
+    mmp_list_delete(&list);
+    return MMP_TAP_PASSED;
+}
 /* do the tests */
 ret_t mmp_list_unittest(t_mmp_tap_cycle_s *cycle)
 {
@@ -337,6 +370,8 @@ ret_t mmp_list_unittest(t_mmp_tap_cycle_s *cycle)
                                         test_create_delete()))!=MMP_ERR_OK) ||
             ((ret=mmp_tap_test(cycle, "list deletion", NULL,
                                         test_delete()))!=MMP_ERR_OK) ||
+            ((ret=mmp_tap_test(cycle, "list sorted", NULL,
+                                        test_sorted()))!=MMP_ERR_OK) ||
             ((ret=mmp_tap_test(cycle, "list add and check", NULL,
                                         test_add_check()))!=MMP_ERR_OK)
 
