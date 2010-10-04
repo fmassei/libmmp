@@ -67,9 +67,10 @@
         return (_RET); \
     }
 /** \brief free _PTR and set it to NULL */
-#define MMP_XFREE_AND_NULL(_PTR)    \
-    xfree(_PTR); \
-    (_PTR) = NULL;
+#define MMP_XFREE_AND_NULL(_PTR)    do {\
+        xfree(_PTR); \
+        (_PTR) = NULL; \
+    } while(0)
 
 #ifdef UNIT_TESTING
 #include "mmp_error.h"
