@@ -317,6 +317,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_table.c"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_string.c"
 				>
 			</File>
@@ -424,6 +428,10 @@
 			</File>
 			<File
 				RelativePath="..\mmp_stack.h"
+				>
+			</File>
+			<File
+				RelativePath="..\mmp_table.h"
 				>
 			</File>
 			<File
