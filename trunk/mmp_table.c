@@ -9,6 +9,17 @@ void mmp_table_destroy(t_mmp_table_s **table)
     MMP_XFREE_AND_NULL(*table);
 }
 
+/** \todo missing unittest */
+void mmp_table_destroy_withdata(t_mmp_table_s **table, void(*cback)(void**))
+{
+    int i;
+    if (table==NULL || *table==NULL) return;
+    for (i=0; i<(*table)->n_data; ++i)
+        if (cback!=NULL)
+            cback(&(*table)->data[i]);
+    mmp_table_destroy(table);
+}
+
 /** \test test_table */
 t_mmp_table_s *mmp_table_create(int size)
 {

@@ -56,6 +56,10 @@ MMP_API void *mmp_table_del(t_mmp_table_s *table, t_mmp_table_id id);
 /** \brief destroy a table */
 MMP_API void mmp_table_destroy(t_mmp_table_s **table);
 
+/** \brief destroy a table, and containing data too */
+MMP_API void mmp_table_destroy_withdata(t_mmp_table_s **table,
+                                                    void(*cback)(void**));
+
 MMP_CEXTERN_END
 
 #ifdef UNIT_TESTING
