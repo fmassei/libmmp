@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 #ifndef _WIN32
 #   include <strings.h>
 #endif
@@ -39,6 +40,9 @@ MMP_CEXTERN_BEGIN
 
 /** \brief unix strdup() */
 MMP_API char *xstrdup(const char *s);
+
+/** \brief gnu wcsdup() */
+MMP_API wchar_t *xwcsdup(const wchar_t *s);
 
 /** \brief strdup() with n characters */
 MMP_API char *xstrdupn(const char *s, size_t n);

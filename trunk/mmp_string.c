@@ -31,6 +31,19 @@ char *xstrdup(const char *s)
     return ret;
 }
 
+/** \todo missing unittest */
+wchar_t *xwcsdup(const wchar_t *s)
+{
+    wchar_t * __restrict ret;
+    if (s==NULL) return NULL;
+    if ((ret = xmalloc((wcslen(s) + 1)*sizeof(*ret)))==NULL) {
+        errno = ENOMEM;
+        return NULL;
+    }
+    wcscpy(ret, s);
+    return ret;
+}
+
 /** \test mmp_string_unittest */
 char *xstrdupn(const char *s, size_t n)
 {
