@@ -54,6 +54,7 @@
 				WarnAsError="false"
 				DebugInformationFormat="3"
 				CompileAs="1"
+				DisableSpecificWarnings="4127"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -132,6 +133,7 @@
 				WarnAsError="false"
 				DebugInformationFormat="0"
 				CompileAs="1"
+				DisableSpecificWarnings="4127"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -210,6 +212,7 @@
 				WarnAsError="false"
 				DebugInformationFormat="3"
 				CompileAs="1"
+				DisableSpecificWarnings="4127"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -289,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_funclist.c"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_getopt.c"
 				>
 			</File>
@@ -298,6 +305,10 @@
 			</File>
 			<File
 				RelativePath="..\mmp_list.c"
+				>
+			</File>
+			<File
+				RelativePath="..\mmp_memory.c"
 				>
 			</File>
 			<File
@@ -317,10 +328,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\mmp_table.c"
-				>
-			</File>
-			<File
 				RelativePath="..\mmp_string.c"
 				>
 			</File>
@@ -333,6 +340,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_table.c"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_tap.c"
 				>
 			</File>
@@ -342,14 +353,6 @@
 			</File>
 			<File
 				RelativePath="..\mmp_trace.c"
-				>
-            </File>
-            <File
-				RelativePath="..\mmp_memory.c"
-				>
-			</File>
-			<File
-				RelativePath="..\mmp_funclist.c"
 				>
 			</File>
 			<File
@@ -399,6 +402,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_funclist.h"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_getopt.h"
 				>
 			</File>
@@ -435,10 +442,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\mmp_table.h"
-				>
-			</File>
-			<File
 				RelativePath="..\mmp_string.h"
 				>
 			</File>
@@ -451,6 +454,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_table.h"
+				>
+			</File>
+			<File
 				RelativePath="..\mmp_tap.h"
 				>
 			</File>
@@ -460,10 +467,6 @@
 			</File>
 			<File
 				RelativePath="..\mmp_trace.h"
-				>
-			</File>
-			<File
-				RelativePath="..\mmp_funclist.h"
 				>
 			</File>
 		</Filter>
