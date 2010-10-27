@@ -349,6 +349,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\mmp_funclist.c"
+				>
+			</File>
+			<File
 				RelativePath="..\unittest.c"
 				>
 			</File>
@@ -456,6 +460,10 @@
 			</File>
 			<File
 				RelativePath="..\mmp_trace.h"
+				>
+			</File>
+			<File
+				RelativePath="..\mmp_funclist.h"
 				>
 			</File>
 		</Filter>

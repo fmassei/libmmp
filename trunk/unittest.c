@@ -34,6 +34,7 @@
 #include "mmp_btree.h"
 #include "mmp_2tree.h"
 #include "mmp_table.h"
+#include "mmp_funclist.h"
 
 int main(void)
 {
@@ -56,6 +57,7 @@ int main(void)
             (mmp_2tree_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_allocator_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_table_unittest(cycle)!=MMP_ERR_OK) ||
+            (mmp_funclist_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_tap_print(cycle, stdout)!=MMP_ERR_OK) ) {
         mmp_trace_print(stdout);
         return EXIT_FAILURE;
