@@ -37,7 +37,7 @@ main: $(OBJS)
 	$(GCC) $(shell $(OBJWD)) $(LDFLAG) -o $(BINDIR)/$(FINAME)
 
 all: main
-	$(STRIP) $(FINAME)
+#	$(STRIP) $(FINAME)
 
 unittestscmp: $(OBJS)
 	$(GCC) $(shell $(OBJWD)) -o $(BINDIR)/$(TSTNAME) -ldl -lrt
