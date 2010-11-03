@@ -15,7 +15,7 @@ In the folder named "linux" you will find the Makefile.
 
 = Windows =
 
-In the folder named "vc98" you will find a Visual Studio 98 solution and project.
+In the folder named "vs10" you will find a Visual Studio Express 2010 solution and project.
 Said project has tree build configuration:
   * *debug* will build the debug version
   * *release* will build the release version
