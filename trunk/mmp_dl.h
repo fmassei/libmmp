@@ -37,11 +37,12 @@
 #include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_trace.h"
+#include "mmp_funclist.h" /* for t_mmp_fp def */
 
 MMP_CEXTERN_BEGIN
 
 /** open a dinamically loadable library */
-MMP_API void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
+MMP_API t_mmp_fp mmp_dl_open_and_get_fnc(const char * __restrict filename,
                                       const char * __restrict getfnc_name);
 
 MMP_CEXTERN_END
