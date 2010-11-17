@@ -25,11 +25,11 @@
 #endif
 
 /** \todo missing unittest */
-void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
+t_mmp_fp mmp_dl_open_and_get_fnc(const char * __restrict filename,
                               const char * __restrict getfnc_name)
 {
     HANDLE handle;
-    void *ret;
+    t_mmp_fp ret;
     MMP_CHECK_OR_RETURN((filename!=NULL && filename[0]!='\0' && 
                         getfnc_name!=NULL && getfnc_name[0]!='\0'), NULL);
 #ifndef _WIN32
@@ -38,7 +38,7 @@ void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
         return NULL;
     }
     dlerror();
-    if ((ret = dlsym(handle, getfnc_name))==NULL) {
+    if ((ret = (t_mmp_fp)dlsym(handle, getfnc_name))==NULL) {
         mmp_setError_ext(MMP_ERR_DL, dlerror());
         dlclose(handle);
     }
@@ -54,7 +54,7 @@ void *mmp_dl_open_and_get_fnc(const char * __restrict filename,
     }
 #pragma warning(push)
 #pragma warning(disable:4152) /* disable non-standard extension warning */
-    if ((ret = GetProcAddress(handle, getfnc_name))==NULL) {
+    if ((ret = (t_mmp_fp)GetProcAddress(handle, getfnc_name))==NULL) {
 #pragma warning(pop)
         char buf[0xff];
         FormatMessage(
