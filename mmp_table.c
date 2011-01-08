@@ -67,7 +67,6 @@ t_mmp_table_id mmp_table_add(t_mmp_table_s *table, void *elem)
         }
         table->data = tmp;
         ++table->n_alloc;
-        return MMP_ERR_FULL;
     }
     table->data[table->n_data] = elem;
     ++table->n_data;
