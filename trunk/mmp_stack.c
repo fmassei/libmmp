@@ -69,6 +69,7 @@ static t_mmp_tap_result_e test_stack(void)
     t_mmp_stack_s *stack;
     ret_t res;
     int i = 0, *dt;
+    void *pdt;
     if ((stack = mmp_stack_create(10))==NULL)
         return MMP_TAP_FAILED;
     for (i=1; ; ++i) {
@@ -83,8 +84,9 @@ static t_mmp_tap_result_e test_stack(void)
         else return MMP_TAP_FAILED;
     }
     for (i=10; i>0; --i) {
-        res = mmp_stack_pop(stack, &dt);
-        if (*((int*)dt)!=i)
+        res = mmp_stack_pop(stack, &pdt);
+        dt = (int*)pdt;
+        if (*dt!=i)
             return MMP_TAP_FAILED;
         xfree(dt);
     }

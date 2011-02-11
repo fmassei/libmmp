@@ -124,7 +124,7 @@ static void free_el(void **el)
     *el=NULL;
 }
 
-static struct test_result_s {
+struct test_result_s {
     char buf[10];
     int buf_i;
 };

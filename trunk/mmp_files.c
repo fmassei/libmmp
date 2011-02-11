@@ -63,7 +63,7 @@ int mmp_close(int fd)
 }
 
 /** \todo missing unittest */
-int mmp_pread(int fd, const void *buf, size_t nbyte, off_t offset)
+int mmp_pread(int fd, void *buf, size_t nbyte, off_t offset)
 {
 #ifndef _WIN32
     return pread(fd, buf, nbyte, offset);
