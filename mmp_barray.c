@@ -408,6 +408,7 @@ static t_mmp_tap_result_e test_barray(void)
 {
     t_mmp_barray_s *barray;
     int i, *dt;
+    void *pdt;
     remove("test.ba");
     /* first write and insert */
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
@@ -425,11 +426,13 @@ static t_mmp_tap_result_e test_barray(void)
     if ((barray = mmp_barray_create("test.ba", mmp_system_getPageAlignment(),
                                                         sizeof(int), 20))==NULL)
         return MMP_TAP_FAILED;
-    if (mmp_barray_search(barray, 2, &dt)!=MMP_ERR_OK)
+    if (mmp_barray_search(barray, 2, &pdt)!=MMP_ERR_OK)
         return MMP_TAP_FAILED;
+    dt = (int*)pdt;
     if (dt==NULL || *dt!=1) return MMP_TAP_FAILED;
-    if (mmp_barray_search(barray, 23452, &dt)!=MMP_ERR_OK)
+    if (mmp_barray_search(barray, 23452, &pdt)!=MMP_ERR_OK)
         return MMP_TAP_FAILED;
+    dt = (int*)pdt;
     if (dt==NULL || *dt!=23451) return MMP_TAP_FAILED;
     mmp_barray_destroy(&barray);
     if (barray!=NULL)

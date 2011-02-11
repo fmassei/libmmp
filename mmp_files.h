@@ -71,7 +71,7 @@ MMP_API int mmp_write(int fd, const void *buf, size_t count);
 MMP_API int mmp_close(int fd);
 
 /** unix pread */
-MMP_API int mmp_pread(int fd, const void *buf, size_t nbyte, off_t offset);
+MMP_API int mmp_pread(int fd, void *buf, size_t nbyte, off_t offset);
 /** unix pwrite */
 MMP_API int mmp_pwrite(int fd, const void *buf, size_t nbyte, off_t offset);
 
