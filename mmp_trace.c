@@ -87,3 +87,8 @@ void mmp_trace_reset(void)
     m_trace_num = 0;
 }
 
+/** \todo missing unittest */
+FILE *mmp_trace_getInternalStdout(void)
+{
+    return stdout;
+}

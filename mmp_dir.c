@@ -70,7 +70,7 @@ t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname)
     }
     strcpy(dirpatt, dirname);
     strcat(dirpatt, "\\*");
-    if ((hFind = FindFirstFile(dirpatt, &FindFileData))==INVALID_HANDLE_VALUE) {
+    if ((hFind = FindFirstFileA(dirpatt, &FindFileData))==INVALID_HANDLE_VALUE) {
         mmp_setError_ext(MMP_ERR_FILE, dirname);
         goto badexit;
     }
