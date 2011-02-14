@@ -43,9 +43,9 @@ t_mmp_fp mmp_dl_open_and_get_fnc(const char * __restrict filename,
         dlclose(handle);
     }
 #else
-    if ((handle = LoadLibrary(filename))==NULL) {
+    if ((handle = LoadLibraryA(filename))==NULL) {
         char buf[0xff];
-        FormatMessage(
+        FormatMessageA(
             FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
             NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             buf, sizeof(buf), NULL);
@@ -57,7 +57,7 @@ t_mmp_fp mmp_dl_open_and_get_fnc(const char * __restrict filename,
     if ((ret = (t_mmp_fp)GetProcAddress(handle, getfnc_name))==NULL) {
 #pragma warning(pop)
         char buf[0xff];
-        FormatMessage(
+        FormatMessageA(
             FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
             NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
             buf, sizeof(buf), NULL);

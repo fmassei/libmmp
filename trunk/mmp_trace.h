@@ -48,6 +48,10 @@ MMP_API void mmp_trace_print(FILE *out);
 /** \brief reset the trace stack */
 MMP_API void mmp_trace_reset(void);
 
+/** \brief get the internal rapresentation of the stdout FILE*. FIXME: this
+ * is an hack for win32 platforms, and has to be removed somehow. */
+MMP_API FILE *mmp_trace_getInternalStdout(void);
+
 MMP_CEXTERN_END
 
 /** \brief set an error on the trace list */
