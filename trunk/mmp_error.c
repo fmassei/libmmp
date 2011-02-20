@@ -28,7 +28,7 @@ static const char * const error_strings[] = {
     "Parsing error",
     "Semaphore error",
     "Shared memory error",
-    "Socket error"
+    "Socket error",
     "Syncronization error",
     "Full",
     "Empty",
