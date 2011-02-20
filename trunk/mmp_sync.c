@@ -114,7 +114,7 @@ t_mmp_thr_mtx mmp_thr_mtx_create(void)
 #else
     pthread_mutexattr_t mutexattr;
     MMP_XMALLOC_OR_RETURN(ret, MMP_THRMTX_INVALID);
-    pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_RECURSIVE_NP);
+    pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_ERRORCHECK);
     if (pthread_mutex_init(ret, &mutexattr)!=0) {
         mmp_setError(MMP_ERR_SYNC);
         xfree(ret);

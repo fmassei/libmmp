@@ -122,7 +122,10 @@ ret_t mmp_socket_server_accept(const t_socket * __restrict listen_sock,
 {
     struct sockaddr_in addr;
     socklen_t addrlen = sizeof(addr);
-    *out = accept(*listen_sock, (struct sockaddr *)&addr, &addrlen);
+    if ((*out = accept(*listen_sock, (struct sockaddr *)&addr, &addrlen))<0) {
+        mmp_setError(MMP_ERR_SOCKET);
+        return MMP_ERR_SOCKET;
+    }
     if ((*ip = xstrdup(inet_ntoa(addr.sin_addr)))==NULL) {
         /** \todo do nothing? */
     }
