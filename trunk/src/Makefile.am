@@ -25,3 +25,10 @@ if WITHSOCKETS
 libmmp_base_la_SOURCES += mmp_socket.c
 libmmp_HEADERS +=         mmp_socket.h
 endif
+
+check_PROGRAMS = test_stack test_table
+test_stack_SOURCES = test_mmp_stack.c
+test_stack_LDFLAGS = -lmmp_base
+test_table_SOURCES = test_mmp_table.c
+test_table_LDFLAGS = -lmmp_base
+TESTS = $(check_PROGRAMS)
