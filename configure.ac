@@ -45,7 +45,7 @@ fi
 ###############################################################################
 # threads support
 ###############################################################################
-AC_MSG_CHECKING([whether to build with container functions])
+AC_MSG_CHECKING([whether to build with threads functions])
 AC_ARG_ENABLE([threads],
               [AS_HELP_STRING([--enable-threads],
                               [enable threads functions (def=yes)])],
