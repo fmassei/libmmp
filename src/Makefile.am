@@ -26,6 +26,9 @@ libmmp_base_la_SOURCES += mmp_socket.c
 libmmp_HEADERS +=         mmp_socket.h
 endif
 
+libmmp_base_la_LDFLAGS = -version-info 0:0:0
+libmmp_base_la_CFLAGS = $(AM_CFLAGS)
+
 check_PROGRAMS = test_stack test_table
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
