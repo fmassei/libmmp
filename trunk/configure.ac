@@ -43,8 +43,8 @@ if test x"$debugit" = x"yes"; then
     AM_CFLAGS="$AM_CFLAGS -g -Wall -Werror -O0"
 else
     AC_DEFINE([NDEBUG],[],[No-debug Mode])
-    AM_CXXFLAGS="$AM_CXXFLAGS -O3 -save-temps"
-    AM_CFLAGS="$AM_CFLAGS -O3 -save-temps"
+    AM_CXXFLAGS="$AM_CXXFLAGS -O3"
+    AM_CFLAGS="$AM_CFLAGS -O3"
 fi
 AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_CFLAGS])
