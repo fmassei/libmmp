@@ -30,12 +30,15 @@
 /** \def __restrict
  * \brief compiler restrict directive, activated if possible */
 #if __GNUC__ > 2
-#   if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901
-#       define __restrict
-#       define __inline
+#   if defined(__GNUC_GNU_INLINE__)
 #   else
-#       define __restrict   restrict
-#       define __inline     inline
+#      if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901
+#           define __restrict
+#           define __inline
+#      else
+#           define __restrict   restrict
+#           define __inline     inline
+#      endif
 #   endif
 #endif
 
