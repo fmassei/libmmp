@@ -2,20 +2,28 @@
 #labels Featured,Phase-Deploy
 
 = Introduction =
-At the moment libmmp comes only as a dynamic library.
+libmmp is build like any other automake package
 
 = Linux =
 
-In the folder named "linux" you will find the Makefile.
-  * *make clean* will clean existing files
-  * *make debug* will build the debug version
-  * *make all* will build the relase version
-  * *make unittests* will build an application (named unittest) that will test the library and print out a TAP formatted report.
-  * *make install* run as superuser, will install include files in /usr/include/mmp and the library file in /usr/lib/.
+== From the downloaded package ==
+ * *configure* has some useful options, like
+  * *--disable-threads* to disable threads' functions wrapper
+  * *--disable-sockets* to disable sockets' functions wrapper
+  * *--disable-dl* to disable the dynamic loader wrapper
+  * *--enable-debug* to enable the debug library version
+ * *make*
+ * *make check* to run the tests
+ * *make install* (you will probably need to be root)
+Note: The user's CFLAGS will be added to the package compiler options, so choose them wisely!
+
+== From trunk ==
+ * autoreconf --install
+ * follow the above rules :)
 
 = Windows =
 
-In the folder named "vs10" you will find a Visual Studio Express 2010 solution and project.
+In the folder named "vs10" you will find a Visual Studio Express 2010 solution and project (the windows project files cannot be updated to the latest versions).
 Said project has tree build configuration:
   * *debug* will build the debug version
   * *release* will build the release version
