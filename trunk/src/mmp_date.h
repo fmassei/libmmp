@@ -28,11 +28,15 @@
 #   ifndef _XOPEN_SOURCE
 #      define _XOPEN_SOURCE
 #   endif
+#   ifndef _POSIX_C_SOURCE
+#       define _POSIX_C_SOURCE 200112L
+#   endif
 #endif
+
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_trace.h"
 

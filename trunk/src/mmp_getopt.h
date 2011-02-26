@@ -24,9 +24,9 @@
 #ifndef H_MMP_GETOPT_H
 #define H_MMP_GETOPT_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "mmp_h_utils.h"
 
 #ifndef _WIN32
 #   include <getopt.h>

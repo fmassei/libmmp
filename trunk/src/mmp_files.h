@@ -24,6 +24,7 @@
 #ifndef H_MMP_FILES_H
 #define H_MMP_FILES_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -46,7 +47,6 @@
 #include <sys/stat.h>
 
 #include "mmp_compat.h"
-#include "mmp_h_utils.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"

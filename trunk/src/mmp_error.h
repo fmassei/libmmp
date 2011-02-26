@@ -25,11 +25,11 @@
  * \date    2010-Jul-08
  * */
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 
 /** internal type error */

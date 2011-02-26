@@ -24,6 +24,7 @@
 #ifndef H_MMP_THREAD_H
 #define H_MMP_THREAD_H
 
+#include "mmp_h_utils.h"
 #ifndef _WIN32
 #   include <pthread.h>
     typedef pthread_t t_mmp_thread;
@@ -37,7 +38,6 @@
 /** \typedef t_mmp_thread
  * \brief mmp thread type */
 
-#include "mmp_h_utils.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
 

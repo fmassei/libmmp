@@ -24,6 +24,7 @@
 #ifndef H_MMP_STRING_H
 #define H_MMP_STRING_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +32,6 @@
 #ifndef _WIN32
 #   include <strings.h>
 #endif
-#include "mmp_h_utils.h"
 #include "mmp_error.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"

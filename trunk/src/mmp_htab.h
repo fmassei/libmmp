@@ -24,10 +24,10 @@
 #ifndef H_MMP_HTAB_H
 #define H_MMP_HTAB_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "mmp_h_utils.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"
 #include "mmp_string.h"

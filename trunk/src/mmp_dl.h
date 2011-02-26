@@ -24,6 +24,7 @@
 #ifndef H_MMP_DL_H
 #define H_MMP_DL_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,7 +35,6 @@
 #   include <windows.h>
 #endif
 
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_trace.h"
 #include "mmp_funclist.h" /* for t_mmp_fp def */

@@ -24,13 +24,13 @@
 #ifndef H_MMP_SYSTEM_H
 #define H_MMP_SYSTEM_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #ifndef _WIN32
 #   include <unistd.h>
 #else
 #   include <windows.h>
 #endif
-#include "mmp_h_utils.h"
 
 MMP_CEXTERN_BEGIN
 
