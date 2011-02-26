@@ -24,9 +24,9 @@
 #ifndef H_MMP_LIST_H
 #define H_MMP_LIST_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"

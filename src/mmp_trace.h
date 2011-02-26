@@ -28,10 +28,10 @@
 #ifndef H_MMP_TRACE_H
 #define H_MMP_TRACE_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_error.h"
 

@@ -24,10 +24,10 @@
 #ifndef H_MMP_BTREE_H
 #define H_MMP_BTREE_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"

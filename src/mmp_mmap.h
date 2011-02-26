@@ -24,6 +24,7 @@
 #ifndef H_MMP_MMAP_H
 #define H_MMP_MMAP_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #ifndef _WIN32
 #   include <unistd.h>
@@ -40,7 +41,6 @@
 #   define MAP_PRIVATE  0
 #   define MAP_SHARED   0
 #endif
-#include "mmp_h_utils.h"
 #include "mmp_system.h"
 #include "mmp_memory.h"
 #include "mmp_trace.h"

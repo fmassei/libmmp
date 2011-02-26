@@ -24,6 +24,7 @@
 #ifndef H_MMP_TAP_H
 #define H_MMP_TAP_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 

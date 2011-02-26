@@ -24,6 +24,7 @@
 #ifndef H_MMP_DIR_H
 #define H_MMP_DIR_H
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,7 +35,6 @@
 #   include <windows.h>
 #endif
 
-#include "mmp_h_utils.h"
 #include "mmp_list.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"

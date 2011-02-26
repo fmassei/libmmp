@@ -26,6 +26,7 @@
 
 /* shared memory functions */
 
+#include "mmp_h_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
@@ -41,7 +42,6 @@
 #   include <fcntl.h>
     typedef int t_mmp_shm_mapf;
 #endif
-#include "mmp_h_utils.h"
 #include "mmp_compat.h"
 #include "mmp_memory.h"
 #include "mmp_string.h"

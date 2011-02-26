@@ -29,6 +29,7 @@
 #ifndef H_MMP_SYNC_H
 #define H_MMP_SYNC_H
 
+#include "mmp_h_utils.h"
 #ifdef _WIN32
 #   include <windows.h>
     typedef HANDLE t_mmp_thr_sem;
@@ -61,7 +62,6 @@
 /** \def MMP_THREVT_INVALID
  * \brief invalid event constant */
 
-#include "mmp_h_utils.h"
 #include "mmp_trace.h"
 #include "mmp_memory.h"
 

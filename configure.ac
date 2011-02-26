@@ -5,6 +5,27 @@ AC_PROG_CC
 LT_INIT([shared static])
 AC_CONFIG_HEADERS([config.h])
 
+# Checks for libraries.
+# Replace `main' with a function in `-ldl':
+AC_CHECK_LIB([dl], [dlopen])
+# Replace `main' with a function in `-lrt':
+AC_CHECK_LIB([rt], [shm_open])
+
+# Checks for header files.
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/socket.h sys/time.h unistd.h wchar.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT8_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_MKTIME
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([ftruncate inet_ntoa memmove memset munmap select setenv socket strchr strncasecmp tzset setenv unsetenv])
 
 ###############################################################################
 # debug compilation support
@@ -22,8 +43,8 @@ if test x"$debugit" = x"yes"; then
     AM_CFLAGS="$AM_CFLAGS -g -Wall -Werror -O0"
 else
     AC_DEFINE([NDEBUG],[],[No-debug Mode])
-    AM_CXXFLAGS="$AM_CXXFLAGS -O3"
-    AM_CFLAGS="$AM_CFLAGS -O3"
+    AM_CXXFLAGS="$AM_CXXFLAGS -O3 -save-temps"
+    AM_CFLAGS="$AM_CFLAGS -O3 -save-temps"
 fi
 AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_CFLAGS])

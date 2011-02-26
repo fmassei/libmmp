@@ -24,6 +24,10 @@
 #ifndef H_MMP_H_UTILS_H
 #define H_MMP_H_UTILS_H
 
+#ifdef HAVE_CONFIG_H
+#   include "config.h"
+#endif /* HAVE_CONFIG_H */
+
 /** \def MMP_CEXTERN_BEGIN
  * \brief begin extern "C" if compiling in C++ */
 /** \def MMP_CEXTERN_END
