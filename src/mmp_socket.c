@@ -43,6 +43,13 @@ ret_t mmp_socket_finiSystem(void)
 /** \todo missing unittest */
 ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
 {
+    return mmp_socket_server_start_bind(port, qsize, NULL, sock);
+}
+
+/** \todo missing unittest */
+ret_t mmp_socket_server_start_bind(int port, int qsize, char *bind_addr,
+                                t_socket *sock)
+{
 #ifndef _WIN32
     struct sockaddr_in sa;
     int raddr = 1;
@@ -53,7 +60,15 @@ ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
     setsockopt(*sock, SOL_SOCKET, SO_REUSEADDR, &raddr, sizeof(raddr));
     memset((char*)&sa, 0, sizeof(sa));
     sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = INADDR_ANY;
+    if (bind_addr==NULL) {
+        sa.sin_addr.s_addr = INADDR_ANY;
+    } else {
+        if (inet_aton(bind_addr, &sa.sin_addr.s_addr)==0) {
+            mmp_socket_close(sock, 0);
+            mmp_setError(MMP_ERR_SOCKET);
+            return MMP_ERR_SOCKET;
+        }
+    }
     sa.sin_port = htons(port);
     if (bind(*sock, (struct sockaddr*)&sa, sizeof(sa))<0) {
         mmp_socket_close(sock, 0);
