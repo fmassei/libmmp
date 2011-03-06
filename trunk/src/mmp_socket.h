@@ -74,6 +74,10 @@ MMP_API ret_t mmp_socket_finiSystem(void);
 /** \brief starts a socket server */
 MMP_API ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
 
+/** \brief starts a socket server on the passed interface */
+MMP_API ret_t mmp_socket_server_start_bind(int port, int qsize, char *bind_addr,
+                                    t_socket *sock);
+
 /** \brief close a socket */
 MMP_API ret_t mmp_socket_close(t_socket *sock, int shut);
 
