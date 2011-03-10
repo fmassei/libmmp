@@ -17,10 +17,46 @@
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "mmp_dir.h"
+#ifdef HAVE_LIBGEN_H
+#   include <libgen.h>
+#endif /* HAVE_LIBGEN_H */
+
+/* this should really be defined */
+#ifndef MAXPATHLEN
+#    define MAXPATHLEN 256
+#endif
+
+#ifndef HAVE_BASENAME
+static char s_basepath[MAXPATHLEN];
+#endif /* HAVE_BASENAME */
+
+#ifdef _WIN32
+#   define PSEP '\\'
+#else
+#   define PSEP '/'
+#endif
 
 static __inline void freeres(void **res)
 {
     MMP_XFREE_AND_NULL(*res);
+}
+
+/** \todo missing unittest */
+char *mmp_basename(char *path)
+{
+#ifdef HAVE_BASENAME
+    return basename(path);
+#else
+    char *pos;
+    if ((pos = strrch(path, PSEP))==NULL)
+        pos = path;
+    if (strlen(pos)>sizeof(s_basepath)) {
+        mmp_setError(MMP_ERR_FILE);
+        return NULL;
+    }
+    strcpy(s_basepath, pos);
+    return s_basepath;
+#endif
 }
 
 /** \todo missing unittest */

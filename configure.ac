@@ -12,7 +12,7 @@ AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([rt], [shm_open])
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/socket.h sys/time.h unistd.h wchar.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/socket.h sys/time.h unistd.h wchar.h libgen.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_OFF_T
@@ -25,7 +25,7 @@ AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([ftruncate inet_ntoa memmove memset munmap select setenv socket strchr strncasecmp tzset setenv unsetenv])
+AC_CHECK_FUNCS([ftruncate inet_ntoa memmove memset munmap select setenv socket strchr strncasecmp tzset setenv unsetenv basename])
 
 ###############################################################################
 # debug compilation support
