@@ -46,6 +46,9 @@ typedef t_mmp_list_s t_mmp_dirlist_s;
 
 MMP_CEXTERN_BEGIN
 
+/** get file basename (unix basename) */
+MMP_API char *mmp_basename(char *path);
+
 /** list all files in a directory */
 MMP_API t_mmp_dirlist_s *mmp_dir_listfiles(const char *dirname);
 
