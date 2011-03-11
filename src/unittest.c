@@ -30,7 +30,6 @@
 #include "mmp_files.h"
 #include "mmp_date.h"
 #include "mmp_barray.h"
-#include "mmp_stack.h"
 #include "mmp_btree.h"
 #include "mmp_2tree.h"
 #include "mmp_table.h"
@@ -52,7 +51,6 @@ int main(void)
             (mmp_files_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_date_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_barray_unittest(cycle)!=MMP_ERR_OK) ||
-            (mmp_stack_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_btree_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_2tree_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_allocator_unittest(cycle)!=MMP_ERR_OK) ||
