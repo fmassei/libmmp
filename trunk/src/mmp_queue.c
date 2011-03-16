@@ -73,3 +73,13 @@ ret_t mmp_queue_dequeue(t_mmp_queue_s *queue, void **elem)
     return MMP_ERR_OK;
 }
 
+ret_t mmp_queue_first(t_mmp_queue_s *queue, void **elem)
+{
+    MMP_CHECK_OR_RETURN((queue!=NULL && queue->data!=NULL && elem!=NULL),
+                        MMP_ERR_PARAMS);
+    if (queue->n_data<=0)
+        return MMP_ERR_EMPTY;
+    *elem = queue->data[queue->from];
+    return MMP_ERR_OK;
+}
+
