@@ -53,6 +53,9 @@ MMP_API ret_t mmp_queue_dequeue(t_mmp_queue_s *queue, void **elem);
 /** \brief destroy a queue */
 MMP_API void mmp_queue_destroy(t_mmp_queue_s **queue);
 
+/** \brief get the first element */
+ret_t mmp_queue_first(t_mmp_queue_s *queue, void **elem);
+
 MMP_CEXTERN_END
 
 #endif /* H_MMP_QUEUE_H */
