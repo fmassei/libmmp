@@ -70,9 +70,4 @@ MMP_API void mmp_2tree_visit_postorder(t_mmp_2tree_s *tree,
 
 MMP_CEXTERN_END
 
-#ifdef UNIT_TESTING
-#include "mmp_tap.h"
-ret_t mmp_2tree_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_MMP_2TREE_H */
