@@ -31,7 +31,7 @@ endif
 libmmp_base_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 libmmp_base_la_CFLAGS = $(AM_CFLAGS)
 
-check_PROGRAMS = test_stack test_table test_queue test_2tree
+check_PROGRAMS = test_stack test_table test_queue test_2tree test_htab
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
 test_table_SOURCES = test_mmp_table.c
@@ -40,4 +40,6 @@ test_queue_SOURCES = test_mmp_queue.c
 test_queue_LDFLAGS = -lmmp_base
 test_2tree_SOURCES = test_mmp_2tree.c
 test_2tree_LDFLAGS = -lmmp_base
+test_htab_SOURCES  = test_mmp_htab.c
+test_htab_LDFLAGS  = -lmmp_base
 TESTS = $(check_PROGRAMS)
