@@ -71,10 +71,4 @@ MMP_API void mmp_set_tm_zone(char *zone);
 
 MMP_CEXTERN_END
 
-#ifdef UNIT_TESTING
-#include "mmp_tap.h"
-/** date unit testing */
-ret_t mmp_date_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_DATE_H */
