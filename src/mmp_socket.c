@@ -40,6 +40,56 @@ ret_t mmp_socket_finiSystem(void)
     return MMP_ERR_OK;
 }
 
+/* get sockaddr for IPv4 or IPv6 */
+static void *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family==AF_INET)
+        return &(((struct sockaddr_in *)sa)->sin_addr);
+    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
+}
+
+/** \todo missing unittest */
+ret_t mmp_socket_connect(const char *hostname, int port, t_socket *sock,
+                            char *addrbuf, size_t addrbuf_len)
+{
+#ifdef _WIN32
+#   error "Unsupported function mmp_socket_connect :("
+#else
+    struct addrinfo hints, *servinfo, *p;
+    char portbuf[10];
+    int rv;
+    *sock = SOCKET_INVALID;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    sprintf(portbuf, "%d", port);
+    if ((rv = getaddrinfo(hostname, portbuf, &hints, &servinfo))!=0) {
+        mmp_setError_ext(MMP_ERR_SOCKET, gai_strerror(rv));
+        return MMP_ERR_SOCKET;
+    }
+    for (p=servinfo; p!=NULL; p=p->ai_next) {
+        if ((*sock = socket(p->ai_family, p->ai_socktype, p->ai_protocol))==-1)
+            continue;
+        if (connect(*sock, p->ai_addr, p->ai_addrlen)==-1) {
+            close(*sock);
+            continue;
+        }
+        break;
+    }
+    if (p==NULL) {
+        freeaddrinfo(servinfo);
+        mmp_setError_ext(MMP_ERR_SOCKET, "failed to connect");
+        return MMP_ERR_SOCKET;
+    }
+    if (addrbuf!=NULL && addrbuf_len>0) {
+        inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
+                addrbuf, addrbuf_len);
+    }
+    freeaddrinfo(servinfo);
+    return MMP_ERR_OK;
+#endif
+}
+
 /** \todo missing unittest */
 ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock)
 {
@@ -94,7 +144,7 @@ ret_t mmp_socket_server_start_bind(int port, int qsize, char *bind_addr,
         return MMP_ERR_SOCKET;
     }
     *sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if (*sock == INVALID_SOCKET) {
+    if (*sock == SOCKET_INVALID) {
         freeaddrinfo(result);
         mmp_setError(MMP_ERR_SOCKET);
         return MMP_ERR_SOCKET;

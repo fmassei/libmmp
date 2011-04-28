@@ -35,6 +35,7 @@
 #   include <sys/time.h>
 #   include <netinet/in.h>
 #   include <arpa/inet.h>
+#   include <netdb.h>
 #   include <fcntl.h>
 #   include <unistd.h>
     typedef int t_socket;
@@ -70,6 +71,10 @@ MMP_API ret_t mmp_socket_initSystem(void);
 
 /** \brief finalize socket subsystem */
 MMP_API ret_t mmp_socket_finiSystem(void);
+
+/** \brief connect to a given hostname:port, fill addrbuf if not NULL */
+ret_t mmp_socket_connect(const char *hostname, int port, t_socket *sock,
+                            char *addrbuf, size_t addrbuf_len);
 
 /** \brief starts a socket server */
 MMP_API ret_t mmp_socket_server_start(int port, int qsize, t_socket *sock);
