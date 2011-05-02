@@ -1,6 +1,6 @@
 AC_INIT([libmmp], [0.2], [fmassei@gmail.com])
 AC_CONFIG_AUX_DIR([autotools])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
 LT_INIT([shared static win32-dll])
 AC_CONFIG_HEADERS([config.h])
@@ -12,7 +12,10 @@ AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([rt], [shm_open])
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h stdint.h stdlib.h string.h strings.h sys/socket.h sys/time.h unistd.h wchar.h libgen.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h])
+AC_CHECK_HEADERS([stdint.h stdlib.h string.h strings.h sys/socket.h])
+AC_CHECK_HEADERS([sys/time.h unistd.h wchar.h libgen.h])
+AC_CHECK_HEADERS([sys/epoll.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_OFF_T
@@ -39,8 +42,8 @@ AC_ARG_ENABLE([debug],
 AC_MSG_RESULT([$debugit])
 if test x"$debugit" = x"yes"; then
     AC_DEFINE([DEBUG],[],[Debug Mode])
-    AM_CXXFLAGS="$AM_CXXFLAGS -g -Wall -Werror -O0"
-    AM_CFLAGS="$AM_CFLAGS -g -Wall -Werror -O0"
+    AM_CXXFLAGS="$AM_CXXFLAGS -g -Wall -O0"
+    AM_CFLAGS="$AM_CFLAGS -g -Wall -O0"
 else
     AC_DEFINE([NDEBUG],[],[No-debug Mode])
     AM_CXXFLAGS="$AM_CXXFLAGS -O3"
