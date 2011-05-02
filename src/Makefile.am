@@ -24,8 +24,10 @@ libmmp_base_la_SOURCES += mmp_dl.c
 libmmp_HEADERS +=         mmp_dl.h
 endif
 if WITHSOCKETS
-libmmp_base_la_SOURCES += mmp_socket.c
-libmmp_HEADERS +=         mmp_socket.h
+libmmp_base_la_SOURCES += mmp_socket.c \
+						  mmp_sock_scheduler_fake.c mmp_sock_scheduler_epoll.c
+libmmp_HEADERS +=         mmp_socket.h mmp_sock_scheduler.h \
+                          mmp_sock_scheduler_fake.h mmp_sock_scheduler_epoll.h
 endif
 
 libmmp_base_la_LDFLAGS = -version-info 0:0:0 -no-undefined
