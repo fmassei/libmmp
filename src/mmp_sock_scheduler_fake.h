@@ -29,7 +29,7 @@
 #ifdef BUILD_FAKE_SCHEDULER
 MMP_CEXTERN_BEGIN
 MMP_API t_mmp_sched_id mmp_scheduler_fake_create(size_t pool_size);
-MMP_API void mmp_scheduler_fake_destroy(t_sched_id sched_id);
+MMP_API void mmp_scheduler_fake_destroy(t_mmp_sched_id sched_id);
 MMP_API ret_t mmp_scheduler_fake_add_listen_socket(
 										t_mmp_sched_id sched_id, t_socket sock);
 MMP_API ret_t mmp_scheduler_fake_add_client_socket(

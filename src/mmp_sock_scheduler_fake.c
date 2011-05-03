@@ -57,7 +57,7 @@ t_mmp_sched_ret_e mmp_scheduler_fake_loop(t_mmp_sched_id sched_id,
                                           t_mmp_schedto_fp cback_to)
 {
     mmp_setError_ext(MMP_ERR_GENERIC, "Could not work with fake scheduler!");
-    return SCHEDRET_ERR;
+    return MMP_SCHEDRET_ERR;
 }
 
 #endif /* BUILD_FAKE_SCHEDULER */
