@@ -123,9 +123,4 @@ MMP_API void mmp_list_sort_by_data(t_mmp_list_s * __restrict list,
 
 MMP_CEXTERN_END
 
-#ifdef UNIT_TESTING
-#include "mmp_tap.h"
-ret_t mmp_list_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_MMP_LIST_H */
