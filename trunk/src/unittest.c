@@ -22,8 +22,6 @@
 #include "mmp_trace.h"
 #include "mmp_tap.h"
 #include "mmp_dir.h"
-#include "mmp_error.h"
-#include "mmp_thread.h"
 #include "mmp_files.h"
 #include "mmp_barray.h"
 #include "mmp_funclist.h"
@@ -37,8 +35,6 @@ int main(void)
     }
     if (
             (mmp_dir_unittest(cycle)!=MMP_ERR_OK) ||
-            (mmp_error_unittest(cycle)!=MMP_ERR_OK) ||
-            (mmp_thread_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_files_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_barray_unittest(cycle)!=MMP_ERR_OK) ||
             (mmp_allocator_unittest(cycle)!=MMP_ERR_OK) ||
