@@ -16,34 +16,39 @@
     You should have received a copy of the GNU Lesser General Public License
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "mmp_error.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "mmp_thread.h"
 
-static const char * const error_strings[] = {
-    "No error",
-    "Generic error",
-    "Wrong params",
-    "Not enough memory",
-    "File error",
-    "Dynamic linking error",
-    "Parsing error",
-    "Semaphore error",
-    "Shared memory error",
-    "Socket error",
-    "Syncronization error",
-    "Full",
-    "Empty",
-    "Not found"
-};
-
-/** \test   mmp_error_unittest */
-const char *mmp_error_ret_getdesc(ret_t ret)
+int glob;
+static void* thtest(void* ptr)
 {
-    return error_strings[ret];
+    ++glob;
+    mmp_thread_exit(0);
+    ptr = ptr;
+    return NULL;
+}
+static int test_threads(void)
+{
+    int i;
+    t_mmp_thread id[10];
+    glob = 0;
+    for (i=0; i<10; ++i) {
+        if (mmp_thread_create(thtest, NULL, &(id[i]))!=MMP_ERR_OK)
+            return -1;
+    }
+    for (i=0; i<10; ++i)
+        if (mmp_thread_join(&(id[i]))!=MMP_ERR_OK)
+            return -1;
+    if (glob!=10)
+        return -1;
+    return 0;
 }
 
-/** \todo   untested */
-const char *mmp_error_err_getdesc(err_t err)
+int main(void)
 {
-    return xstrerror(err);
+    if (    test_threads()!=0 )
+        return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
 

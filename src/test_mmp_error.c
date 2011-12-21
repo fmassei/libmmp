@@ -16,34 +16,21 @@
     You should have received a copy of the GNU Lesser General Public License
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <stdio.h>
+#include <stdlib.h>
 #include "mmp_error.h"
 
-static const char * const error_strings[] = {
-    "No error",
-    "Generic error",
-    "Wrong params",
-    "Not enough memory",
-    "File error",
-    "Dynamic linking error",
-    "Parsing error",
-    "Semaphore error",
-    "Shared memory error",
-    "Socket error",
-    "Syncronization error",
-    "Full",
-    "Empty",
-    "Not found"
-};
-
-/** \test   mmp_error_unittest */
-const char *mmp_error_ret_getdesc(ret_t ret)
+static int test_getdesc(void)
 {
-    return error_strings[ret];
+    if (!strcmp(mmp_error_ret_getdesc(MMP_ERR_SHM),"Shared memory error"))
+        return 0;
+    return -1;
 }
 
-/** \todo   untested */
-const char *mmp_error_err_getdesc(err_t err)
+int main(void)
 {
-    return xstrerror(err);
+    if (    test_getdesc()!=0   )
+        return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
 

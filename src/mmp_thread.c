@@ -55,39 +55,3 @@ void mmp_thread_exit(int code)
 #endif
 }
 
-#ifdef UNIT_TESTING
-int glob;
-static void* thtest(void* ptr)
-{
-    ++glob;
-    mmp_thread_exit(0);
-    ptr = ptr;
-    return NULL;
-}
-static t_mmp_tap_result_e test_threads(void)
-{
-    int i;
-    t_mmp_thread id[10];
-    glob = 0;
-    for (i=0; i<10; ++i) {
-        if (mmp_thread_create(thtest, NULL, &(id[i]))!=MMP_ERR_OK)
-            return MMP_TAP_FAILED;
-    }
-    for (i=0; i<10; ++i)
-        if (mmp_thread_join(&(id[i]))!=MMP_ERR_OK)
-            return MMP_TAP_FAILED;
-    if (glob!=10)
-        return MMP_TAP_FAILED;
-    return MMP_TAP_PASSED;
-}
-ret_t mmp_thread_unittest(t_mmp_tap_cycle_s *cycle)
-{
-    ret_t ret;
-    if (
-            ((ret=mmp_tap_test(cycle, "mmp_thread funcs", NULL,
-                                        test_threads()))!=MMP_ERR_OK)
-        )
-        return ret;
-    return MMP_ERR_OK;
-}
-#endif /* UNIT_TESTING */

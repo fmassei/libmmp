@@ -65,9 +65,4 @@ MMP_API const char *mmp_error_err_getdesc(err_t err);
 
 MMP_CEXTERN_END
 
-#ifdef UNIT_TESTING
-#include "mmp_tap.h"
-ret_t mmp_error_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_MMP_ERROR_H */
