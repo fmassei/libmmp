@@ -35,7 +35,7 @@ static const char * const error_strings[] = {
     "Not found"
 };
 
-/** \test   mmp_error_unittest */
+/** \test   test_mmp_error */
 const char *mmp_error_ret_getdesc(ret_t ret)
 {
     return error_strings[ret];

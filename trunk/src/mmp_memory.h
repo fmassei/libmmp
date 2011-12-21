@@ -72,10 +72,4 @@
         (_PTR) = NULL; \
     } while(0)
 
-#ifdef UNIT_TESTING
-#include "mmp_error.h"
-#include "mmp_tap.h"
-ret_t mmp_allocator_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_MMP_MEMORY_H */
