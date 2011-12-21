@@ -18,13 +18,13 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
-#include "mmp_table.h"
+#include "mmp_vect.h"
 
 int main(void)
 {
-    t_mmp_table_s *table;
+    t_mmp_vect_s *vect;
     int i = 0, *dt;
-    if ((table = mmp_table_create(10))==NULL)
+    if ((vect = mmp_vect_create(10))==NULL)
         return EXIT_FAILURE;
     for (i=0; i<10; ++i) {
         if ((dt = xmalloc(sizeof(*dt)))==NULL) {
@@ -32,17 +32,17 @@ int main(void)
             return EXIT_FAILURE;
         }
         *dt = i;
-        if (mmp_table_add(table, dt)!=i)
+        if (mmp_vect_add(vect, dt)!=i)
             return EXIT_FAILURE;
     }
     for (i=0; i<10; ++i) {
-        dt = mmp_table_del(table, 0);
+        dt = mmp_vect_del(vect, 0);
         if (*dt!=i)
             return EXIT_FAILURE;
         xfree(dt);
     }
-    mmp_table_destroy(&table);
-    if (table!=NULL)
+    mmp_vect_destroy(&vect);
+    if (vect!=NULL)
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }
