@@ -18,7 +18,7 @@
 */
 #include "mmp_list.h"
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 t_mmp_list_s *mmp_list_create(void)
 {
     t_mmp_list_s * __restrict ret;
@@ -28,7 +28,7 @@ t_mmp_list_s *mmp_list_create(void)
     return ret;
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 void mmp_list_delete(t_mmp_list_s **list)
 {
     t_mmp_listelem_s *p, *q;
@@ -41,7 +41,7 @@ void mmp_list_delete(t_mmp_list_s **list)
     MMP_XFREE_AND_NULL(*list);
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 void mmp_list_delete_withdata(t_mmp_list_s **list, void(*cback)(void**))
 {
     t_mmp_listelem_s *p, *q;
@@ -55,7 +55,7 @@ void mmp_list_delete_withdata(t_mmp_list_s **list, void(*cback)(void**))
     MMP_XFREE_AND_NULL(*list);
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 ret_t mmp_list_add_data(t_mmp_list_s * __restrict list, void * data)
 {
     t_mmp_listelem_s *nu;
@@ -73,7 +73,7 @@ ret_t mmp_list_add_data(t_mmp_list_s * __restrict list, void * data)
     return MMP_ERR_OK;
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
                                                         t_mmp_comparer_f comp)
 {
@@ -108,7 +108,7 @@ ret_t mmp_list_add_data_sorted(t_mmp_list_s * __restrict list, void *data,
     return MMP_ERR_OK;
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
                                                     t_mmp_listelem_s **elem)
 {
@@ -126,7 +126,7 @@ void *mmp_list_del_elem(t_mmp_list_s * __restrict list,
     return NULL;
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 void* mmp_list_del_elem_by_data(t_mmp_list_s * __restrict list,
                                                             const void * data)
 {
@@ -135,7 +135,7 @@ void* mmp_list_del_elem_by_data(t_mmp_list_s * __restrict list,
     return mmp_list_del_elem(list, &p);
 }
 
-/** \test mmp_list_unittest */
+/** \test test_mmp_list */
 t_mmp_listelem_s *mmp_list_find_data(const t_mmp_list_s * __restrict list,
                                                             const void * data)
 {
