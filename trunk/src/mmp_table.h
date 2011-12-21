@@ -62,10 +62,5 @@ MMP_API void mmp_table_destroy_withdata(t_mmp_table_s **table,
 
 MMP_CEXTERN_END
 
-#ifdef UNIT_TESTING
-#include "mmp_tap.h"
-ret_t mmp_table_unittest(t_mmp_tap_cycle_s *cycle);
-#endif /* UNIT_TESTING */
-
 #endif /* H_MMP_STACK_H */
 
