@@ -35,7 +35,7 @@ libmmp_base_la_CFLAGS = $(AM_CFLAGS)
 
 check_PROGRAMS = test_stack test_vect test_queue test_2tree test_htab \
 						test_date test_list test_string test_btree \
-                        test_thread test_error
+                        test_thread test_error test_memory test_funclist
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
 test_vect_SOURCES = test_mmp_vect.c
@@ -58,4 +58,8 @@ test_thread_SOURCES  = test_mmp_thread.c
 test_thread_LDFLAGS  = -lmmp_base
 test_error_SOURCES  = test_mmp_error.c
 test_error_LDFLAGS  = -lmmp_base
+test_memory_SOURCES  = test_mmp_memory.c
+test_memory_LDFLAGS  = -lmmp_base
+test_funclist_SOURCES  = test_mmp_funclist.c
+test_funclist_LDFLAGS  = -lmmp_base
 TESTS = $(check_PROGRAMS)

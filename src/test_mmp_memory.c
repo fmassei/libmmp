@@ -16,32 +16,39 @@
     You should have received a copy of the GNU Lesser General Public License
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <stdio.h>
+#include <stdlib.h>
+#include "mmp_error.h"
 #include "mmp_memory.h"
 
-#ifndef NO_MMP_ALLOCATOR
-
-/** \test test_mmp_memory */
-void *xmalloc(size_t size)
+static int test_allocators(void)
 {
-    return malloc(size);
+    int *i_p, i;
+    if ((i_p = xmalloc(sizeof(*i_p)))==NULL)
+        return -1;
+    xfree(i_p);
+    if ((i_p = xcalloc(10, sizeof(*i_p)))==NULL)
+        return -1;
+    for (i=0; i<10; ++i)
+        i_p[i] = i;
+    if ((i_p = xrealloc(i_p, 20*sizeof(*i_p)))==NULL)
+        return -1;
+    for (i=10; i<20; ++i)
+        i_p[i] = i;
+    for (i=0; i<20; ++i)
+        if (i_p[i]!=i)
+            return -1;
+    xfree(i_p);
+    i_p = NULL;
+    xfree(i_p); /* free NULL pointer, must result in no-op */
+    return 0;
 }
 
-/** \test test_mmp_memory */
-void *xcalloc(size_t count, size_t size)
+/* do the tests */
+int main(void)
 {
-    return calloc(count, size);
+    if (    test_allocators()!=0    )
+        return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
 
-/** \test test_mmp_memory */
-void xfree(void *ptr)
-{
-    free(ptr);
-}
-
-/** \test test_mmp_memory */
-void *xrealloc(void *ptr, size_t size)
-{
-    return realloc(ptr, size);
-}
-
-#endif /* MMP_ALLOCATOR */
