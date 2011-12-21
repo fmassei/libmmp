@@ -18,7 +18,7 @@
 */
 #include "mmp_string.h"
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *xstrdup(const char *s)
 {
     char * __restrict ret;
@@ -44,7 +44,7 @@ wchar_t *xwcsdup(const wchar_t *s)
     return ret;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *xstrdupn(const char *s, size_t n)
 {
     char * __restrict ret;
@@ -61,7 +61,7 @@ char *xstrdupn(const char *s, size_t n)
     return ret;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *xindex(const char *str, char c)
 {
     if (str==NULL || *str=='\0') return NULL;
@@ -70,7 +70,7 @@ char *xindex(const char *str, char c)
     return NULL;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *xrindex(const char *str, char c)
 {
     size_t l;
@@ -81,7 +81,7 @@ char *xrindex(const char *str, char c)
     return NULL;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 int xstrncasecmp(const char *s1, const char *s2, size_t n)
 {
 #ifdef _WIN32
@@ -91,7 +91,7 @@ int xstrncasecmp(const char *s1, const char *s2, size_t n)
 #endif
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *xstrtok_r(char *str, const char *delim, char **ctx)
 {
 #ifdef _WIN32
@@ -101,13 +101,13 @@ char *xstrtok_r(char *str, const char *delim, char **ctx)
 #endif
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 int mmp_str_is_trimmable(char c)
 {
     return (c==' ' || c=='\t' || c=='\n' || c=='\r');
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *mmp_str_ltrim(const char * str)
 {
     if (str==NULL) return NULL;
@@ -116,7 +116,7 @@ char *mmp_str_ltrim(const char * str)
     return (char*)str;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *mmp_str_rtrim(char *str)
 {
     int i;
@@ -127,13 +127,13 @@ char *mmp_str_rtrim(char *str)
     return (char*)str;
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *mmp_str_trim(char *str)
 {
     return mmp_str_rtrim(mmp_str_ltrim(str));
 }
 
-/** \test mmp_string_unittest */
+/** \test test_mmp_string */
 char *mmp_str_pathUnixToSys(const char *str)
 {
 #ifndef _WIN32
