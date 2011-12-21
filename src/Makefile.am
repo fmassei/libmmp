@@ -9,10 +9,10 @@ libmmp_HEADERS =         mmp_date.h mmp_error.h mmp_files.h mmp_funclist.h \
 				  		 mmp_compat.h mmp_h_utils.h
 if WITHCONTAINERS
 libmmp_base_la_SOURCES += mmp_2tree.c mmp_barray.c mmp_btree.c mmp_dir.c \
-						  mmp_htab.c mmp_list.c mmp_stack.c mmp_table.c \
+						  mmp_htab.c mmp_list.c mmp_stack.c mmp_vect.c \
                           mmp_queue.c
 libmmp_HEADERS +=         mmp_2tree.h mmp_barray.h mmp_btree.h mmp_dir.h \
-						  mmp_htab.h mmp_list.h mmp_stack.h mmp_table.h \
+						  mmp_htab.h mmp_list.h mmp_stack.h mmp_vect.h \
                           mmp_queue.h
 endif
 if WITHTHREADS
@@ -33,12 +33,12 @@ endif
 libmmp_base_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 libmmp_base_la_CFLAGS = $(AM_CFLAGS)
 
-check_PROGRAMS = test_stack test_table test_queue test_2tree test_htab \
+check_PROGRAMS = test_stack test_vect test_queue test_2tree test_htab \
 						test_date
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
-test_table_SOURCES = test_mmp_table.c
-test_table_LDFLAGS = -lmmp_base
+test_vect_SOURCES = test_mmp_vect.c
+test_vect_LDFLAGS = -lmmp_base
 test_queue_SOURCES = test_mmp_queue.c
 test_queue_LDFLAGS = -lmmp_base
 test_2tree_SOURCES = test_mmp_2tree.c

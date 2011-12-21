@@ -16,13 +16,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** \file   mmp_table.h
- * \brief   table (variable array) datatypes and functions
+/** \file   mmp_vect.h
+ * \brief   vect (variable array) datatypes and functions
  * \author  FtM
  * \date    2010-Oct-06
  */
-#ifndef H_MMP_TABLE_H
-#define H_MMP_TABLE_H
+#ifndef H_MMP_VECT_H
+#define H_MMP_VECT_H
 
 #include "mmp_h_utils.h"
 #include <stdio.h>
@@ -31,36 +31,36 @@
 #include "mmp_memory.h"
 #include "mmp_trace.h"
 
-/** \brief table structure */
-typedef struct mmp_table_s {
+/** \brief vect structure */
+typedef struct mmp_vect_s {
     void **data;    /**< data vector */
     int n_data;     /**< current data count */
     int n_alloc;    /**< current allocated count */
-} t_mmp_table_s;
+} t_mmp_vect_s;
 
-/** \brief id of a table entry */
-typedef int t_mmp_table_id;
+/** \brief id of a vect entry */
+typedef int t_mmp_vect_id;
 #define MMP_TABLE_INVALID_ID    -1
 
 MMP_CEXTERN_BEGIN
 
-/** \brief create a table */
-MMP_API t_mmp_table_s *mmp_table_create(int size);
+/** \brief create a vect */
+MMP_API t_mmp_vect_s *mmp_vect_create(int size);
 
-/** \brief add an element a the bottom of the table */
-MMP_API t_mmp_table_id mmp_table_add(t_mmp_table_s *table, void *elem);
+/** \brief add an element a the bottom of the vect */
+MMP_API t_mmp_vect_id mmp_vect_add(t_mmp_vect_s *vect, void *elem);
 
-/** \brief delete an element from the table */
-MMP_API void *mmp_table_del(t_mmp_table_s *table, t_mmp_table_id id);
+/** \brief delete an element from the vect */
+MMP_API void *mmp_vect_del(t_mmp_vect_s *vect, t_mmp_vect_id id);
 
-/** \brief destroy a table */
-MMP_API void mmp_table_destroy(t_mmp_table_s **table);
+/** \brief destroy a vect */
+MMP_API void mmp_vect_destroy(t_mmp_vect_s **vect);
 
-/** \brief destroy a table, and containing data too */
-MMP_API void mmp_table_destroy_withdata(t_mmp_table_s **table,
+/** \brief destroy a vect, and containing data too */
+MMP_API void mmp_vect_destroy_withdata(t_mmp_vect_s **vect,
                                                     void(*cback)(void**));
 
 MMP_CEXTERN_END
 
-#endif /* H_MMP_STACK_H */
+#endif /* H_MMP_VECT_H */
 
