@@ -34,7 +34,7 @@ libmmp_base_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 libmmp_base_la_CFLAGS = $(AM_CFLAGS)
 
 check_PROGRAMS = test_stack test_vect test_queue test_2tree test_htab \
-						test_date
+						test_date test_list
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
 test_vect_SOURCES = test_mmp_vect.c
@@ -47,4 +47,6 @@ test_htab_SOURCES  = test_mmp_htab.c
 test_htab_LDFLAGS  = -lmmp_base
 test_date_SOURCES  = test_mmp_date.c
 test_date_LDFLAGS  = -lmmp_base
+test_list_SOURCES  = test_mmp_list.c
+test_list_LDFLAGS  = -lmmp_base
 TESTS = $(check_PROGRAMS)
