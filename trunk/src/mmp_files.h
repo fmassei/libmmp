@@ -70,6 +70,9 @@ MMP_API int mmp_write(int fd, const void *buf, size_t count);
 /** unix close */
 MMP_API int mmp_close(int fd);
 
+/** unix ftruncate */
+MMP_API int mmp_ftruncate(int fd, size_t len);
+
 /** unix pread */
 MMP_API int mmp_pread(int fd, void *buf, size_t nbyte, off_t offset);
 /** unix pwrite */
