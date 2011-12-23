@@ -14,6 +14,61 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\mmp_2tree.c" />
+    <ClCompile Include="..\src\mmp_barray.c" />
+    <ClCompile Include="..\src\mmp_btree.c" />
+    <ClCompile Include="..\src\mmp_date.c" />
+    <ClCompile Include="..\src\mmp_dir.c" />
+    <ClCompile Include="..\src\mmp_dl.c" />
+    <ClCompile Include="..\src\mmp_error.c" />
+    <ClCompile Include="..\src\mmp_files.c" />
+    <ClCompile Include="..\src\mmp_funclist.c" />
+    <ClCompile Include="..\src\mmp_getopt.c" />
+    <ClCompile Include="..\src\mmp_htab.c" />
+    <ClCompile Include="..\src\mmp_list.c" />
+    <ClCompile Include="..\src\mmp_memory.c" />
+    <ClCompile Include="..\src\mmp_mmap.c" />
+    <ClCompile Include="..\src\mmp_queue.c" />
+    <ClCompile Include="..\src\mmp_shm.c" />
+    <ClCompile Include="..\src\mmp_stack.c" />
+    <ClCompile Include="..\src\mmp_string.c" />
+    <ClCompile Include="..\src\mmp_sync.c" />
+    <ClCompile Include="..\src\mmp_system.c" />
+    <ClCompile Include="..\src\mmp_tap.c" />
+    <ClCompile Include="..\src\mmp_thread.c" />
+    <ClCompile Include="..\src\mmp_trace.c" />
+    <ClCompile Include="..\src\mmp_vect.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\mmp_2tree.h" />
+    <ClInclude Include="..\src\mmp_barray.h" />
+    <ClInclude Include="..\src\mmp_btree.h" />
+    <ClInclude Include="..\src\mmp_compat.h" />
+    <ClInclude Include="..\src\mmp_date.h" />
+    <ClInclude Include="..\src\mmp_dir.h" />
+    <ClInclude Include="..\src\mmp_dl.h" />
+    <ClInclude Include="..\src\mmp_error.h" />
+    <ClInclude Include="..\src\mmp_files.h" />
+    <ClInclude Include="..\src\mmp_funclist.h" />
+    <ClInclude Include="..\src\mmp_getopt.h" />
+    <ClInclude Include="..\src\mmp_htab.h" />
+    <ClInclude Include="..\src\mmp_h_utils.h" />
+    <ClInclude Include="..\src\mmp_list.h" />
+    <ClInclude Include="..\src\mmp_memory.h" />
+    <ClInclude Include="..\src\mmp_mmap.h" />
+    <ClInclude Include="..\src\mmp_queue.h" />
+    <ClInclude Include="..\src\mmp_shm.h" />
+    <ClInclude Include="..\src\mmp_sock_scheduler.h" />
+    <ClInclude Include="..\src\mmp_stack.h" />
+    <ClInclude Include="..\src\mmp_string.h" />
+    <ClInclude Include="..\src\mmp_sync.h" />
+    <ClInclude Include="..\src\mmp_system.h" />
+    <ClInclude Include="..\src\mmp_tap.h" />
+    <ClInclude Include="..\src\mmp_thread.h" />
+    <ClInclude Include="..\src\mmp_trace.h" />
+    <ClInclude Include="..\src\mmp_vect.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{27289B09-29AC-4479-9853-221DFDD22FC7}</ProjectGuid>
     <RootNamespace>mmp_base</RootNamespace>
@@ -130,61 +185,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\mmp_2tree.c" />
-    <ClCompile Include="..\mmp_barray.c" />
-    <ClCompile Include="..\mmp_btree.c" />
-    <ClCompile Include="..\mmp_date.c" />
-    <ClCompile Include="..\mmp_dir.c" />
-    <ClCompile Include="..\mmp_dl.c" />
-    <ClCompile Include="..\mmp_error.c" />
-    <ClCompile Include="..\mmp_files.c" />
-    <ClCompile Include="..\mmp_funclist.c" />
-    <ClCompile Include="..\mmp_getopt.c" />
-    <ClCompile Include="..\mmp_htab.c" />
-    <ClCompile Include="..\mmp_list.c" />
-    <ClCompile Include="..\mmp_memory.c" />
-    <ClCompile Include="..\mmp_mmap.c" />
-    <ClCompile Include="..\mmp_shm.c" />
-    <ClCompile Include="..\mmp_socket.c" />
-    <ClCompile Include="..\mmp_stack.c" />
-    <ClCompile Include="..\mmp_string.c" />
-    <ClCompile Include="..\mmp_sync.c" />
-    <ClCompile Include="..\mmp_system.c" />
-    <ClCompile Include="..\mmp_table.c" />
-    <ClCompile Include="..\mmp_tap.c" />
-    <ClCompile Include="..\mmp_thread.c" />
-    <ClCompile Include="..\mmp_trace.c" />
-    <ClCompile Include="..\unittest.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\mmp_2tree.h" />
-    <ClInclude Include="..\mmp_barray.h" />
-    <ClInclude Include="..\mmp_btree.h" />
-    <ClInclude Include="..\mmp_compat.h" />
-    <ClInclude Include="..\mmp_date.h" />
-    <ClInclude Include="..\mmp_dir.h" />
-    <ClInclude Include="..\mmp_dl.h" />
-    <ClInclude Include="..\mmp_error.h" />
-    <ClInclude Include="..\mmp_files.h" />
-    <ClInclude Include="..\mmp_funclist.h" />
-    <ClInclude Include="..\mmp_getopt.h" />
-    <ClInclude Include="..\mmp_h_utils.h" />
-    <ClInclude Include="..\mmp_htab.h" />
-    <ClInclude Include="..\mmp_list.h" />
-    <ClInclude Include="..\mmp_memory.h" />
-    <ClInclude Include="..\mmp_mmap.h" />
-    <ClInclude Include="..\mmp_shm.h" />
-    <ClInclude Include="..\mmp_socket.h" />
-    <ClInclude Include="..\mmp_stack.h" />
-    <ClInclude Include="..\mmp_string.h" />
-    <ClInclude Include="..\mmp_sync.h" />
-    <ClInclude Include="..\mmp_system.h" />
-    <ClInclude Include="..\mmp_table.h" />
-    <ClInclude Include="..\mmp_tap.h" />
-    <ClInclude Include="..\mmp_thread.h" />
-    <ClInclude Include="..\mmp_trace.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

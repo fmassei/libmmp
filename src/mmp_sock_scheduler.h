@@ -25,7 +25,6 @@
 #define H_MMP_SOCK_SCHEDULER_H
 
 #include "mmp_h_utils.h"
-#include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
