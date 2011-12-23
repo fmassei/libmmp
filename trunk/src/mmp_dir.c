@@ -48,7 +48,7 @@ char *mmp_basename(char *path)
     return basename(path);
 #else
     char *pos;
-    if ((pos = strrch(path, PSEP))==NULL)
+    if ((pos = strrchr(path, PSEP))==NULL)
         pos = path;
     if (strlen(pos)>sizeof(s_basepath)) {
         mmp_setError(MMP_ERR_FILE);
