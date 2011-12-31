@@ -10,10 +10,10 @@ libmmp_HEADERS =         mmp_date.h mmp_error.h mmp_files.h mmp_funclist.h \
 if WITHCONTAINERS
 libmmp_base_la_SOURCES += mmp_2tree.c mmp_barray.c mmp_btree.c mmp_dir.c \
 						  mmp_htab.c mmp_list.c mmp_stack.c mmp_vect.c \
-                          mmp_queue.c
+                          mmp_queue.c mmp_prioq.c
 libmmp_HEADERS +=         mmp_2tree.h mmp_barray.h mmp_btree.h mmp_dir.h \
 						  mmp_htab.h mmp_list.h mmp_stack.h mmp_vect.h \
-                          mmp_queue.h
+                          mmp_queue.h mmp_prioq.h
 endif
 if WITHTHREADS
 libmmp_base_la_SOURCES += mmp_thread.c mmp_sync.c
@@ -35,7 +35,8 @@ libmmp_base_la_CFLAGS = $(AM_CFLAGS)
 
 check_PROGRAMS = test_stack test_vect test_queue test_2tree test_htab \
 						test_date test_list test_string test_btree \
-                        test_thread test_error test_memory test_funclist
+                        test_thread test_error test_memory test_funclist \
+                        test_prioq
 test_stack_SOURCES = test_mmp_stack.c
 test_stack_LDFLAGS = -lmmp_base
 test_vect_SOURCES = test_mmp_vect.c
@@ -62,4 +63,6 @@ test_memory_SOURCES  = test_mmp_memory.c
 test_memory_LDFLAGS  = -lmmp_base
 test_funclist_SOURCES  = test_mmp_funclist.c
 test_funclist_LDFLAGS  = -lmmp_base
+test_prioq_SOURCES = test_mmp_prioq.c
+test_prioq_LDFLAGS = -lmmp_base
 TESTS = $(check_PROGRAMS)
