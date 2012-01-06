@@ -26,6 +26,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "mmp_error.h"
+#include "mmp_trace.h"
 
 #ifndef NO_MMP_ALLOCATOR
 #   include "mmp_h_utils.h"
