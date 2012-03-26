@@ -47,7 +47,7 @@ MMP_CEXTERN_BEGIN
 /** \brief create a vect */
 MMP_API t_mmp_vect_s *mmp_vect_create(int size);
 
-/** \brief add an element a the bottom of the vect */
+/** \brief add an element at the bottom of the vect */
 MMP_API t_mmp_vect_id mmp_vect_add(t_mmp_vect_s *vect, void *elem);
 
 /** \brief delete an element from the vect */
