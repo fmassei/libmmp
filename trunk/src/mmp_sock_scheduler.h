@@ -53,7 +53,6 @@ typedef t_mmp_schedfnc_ret_e(*t_mmp_schedfnc_fp)(t_socket);
 typedef void(*t_mmp_schedto_fp)(void);
 
 #ifdef HAVE_SYS_EPOLL_H
-#   define BUILD_EPOLL_SCHEDULER
 #   include "mmp_sock_scheduler_epoll.h"
 #   define mmp_scheduler_create            mmp_scheduler_epoll_create
 #   define mmp_scheduler_destroy           mmp_scheduler_epoll_destroy
@@ -61,8 +60,15 @@ typedef void(*t_mmp_schedto_fp)(void);
 #   define mmp_scheduler_add_client_socket mmp_scheduler_epoll_add_client_socket
 #   define mmp_scheduler_del_socket        mmp_scheduler_epoll_del_socket
 #   define mmp_scheduler_loop              mmp_scheduler_epoll_loop
+#elif HAVE_SELECT
+#   include "mmp_sock_scheduler_select.h"
+#   define mmp_scheduler_create            mmp_scheduler_select_create
+#   define mmp_scheduler_destroy           mmp_scheduler_select_destroy
+#   define mmp_scheduler_add_listen_socket mmp_scheduler_select_add_listen_socket
+#   define mmp_scheduler_add_client_socket mmp_scheduler_select_add_client_socket
+#   define mmp_scheduler_del_socket        mmp_scheduler_select_del_socket
+#   define mmp_scheduler_loop              mmp_scheduler_select_loop
 #else
-#   define BUILD_FAKE_SCHEDULER
 #   include "mmp_sock_scheduler_fake.h"
 #   define mmp_scheduler_create            mmp_scheduler_fake_create
 #   define mmp_scheduler_destroy           mmp_scheduler_fake_destroy

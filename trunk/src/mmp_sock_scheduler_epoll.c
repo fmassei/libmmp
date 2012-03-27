@@ -17,13 +17,14 @@
     along with libmmp.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "mmp_sock_scheduler_epoll.h"
-#ifdef BUILD_EPOLL_SCHEDULER
+#ifdef HAVE_SYS_EPOLL_H
 
 #include <sys/epoll.h>
 
 static struct epoll_event *s_events;
 static size_t s_pool_size;
 
+/** \todo missing unittest */
 t_mmp_sched_id mmp_scheduler_epoll_create(size_t pool_size)
 {
     t_mmp_sched_id epollfd;
@@ -39,10 +40,12 @@ t_mmp_sched_id mmp_scheduler_epoll_create(size_t pool_size)
     return epollfd;
 }
 
+/** \todo missing unittest */
 void mmp_scheduler_epoll_destroy(t_mmp_sched_id sched_id)
 {
 }
 
+/** \todo missing unittest */
 ret_t mmp_scheduler_epoll_add_listen_socket(t_mmp_sched_id sched_id,
                                             t_socket sock)
 {
@@ -56,6 +59,7 @@ ret_t mmp_scheduler_epoll_add_listen_socket(t_mmp_sched_id sched_id,
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_scheduler_epoll_add_client_socket(t_mmp_sched_id sched_id,
                                             t_socket sock)
 {
@@ -69,6 +73,7 @@ ret_t mmp_scheduler_epoll_add_client_socket(t_mmp_sched_id sched_id,
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 ret_t mmp_scheduler_epoll_del_socket(t_mmp_sched_id sched_id, t_socket sock)
 {
     struct epoll_event ev;
@@ -79,6 +84,7 @@ ret_t mmp_scheduler_epoll_del_socket(t_mmp_sched_id sched_id, t_socket sock)
     return MMP_ERR_OK;
 }
 
+/** \todo missing unittest */
 t_mmp_sched_ret_e mmp_scheduler_epoll_loop(t_mmp_sched_id sched_id,
                                            t_mmp_schedfnc_fp cback_fp,
 	                                       int millisecs,
@@ -108,5 +114,5 @@ repoll:
     return (cback_err) ? MMP_SCHEDRET_CBACKERR : MMP_SCHEDRET_OK;
 }
 
-#endif /* BUILD_EPOLL_SCHEDULER */
+#endif /* HAVE_SYS_EPOLL_H */
 

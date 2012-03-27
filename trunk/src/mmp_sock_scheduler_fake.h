@@ -26,7 +26,6 @@
 
 #include "mmp_sock_scheduler.h"
 
-#ifdef BUILD_FAKE_SCHEDULER
 MMP_CEXTERN_BEGIN
 MMP_API t_mmp_sched_id mmp_scheduler_fake_create(size_t pool_size);
 MMP_API void mmp_scheduler_fake_destroy(t_mmp_sched_id sched_id);
@@ -41,6 +40,5 @@ MMP_API t_mmp_sched_ret_e mmp_scheduler_fake_loop(
                                         t_mmp_schedfnc_fp cback_fp,
                                         int millisecs, t_mmp_schedto_fp cback_to);
 MMP_CEXTERN_END
-#endif /* BUILD_FAKE_SCHEDULER */
 
 #endif /* H_MMP_SOCK_SCHEDULER_H */
