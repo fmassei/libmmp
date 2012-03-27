@@ -40,7 +40,7 @@ typedef struct mmp_vect_s {
 
 /** \brief id of a vect entry */
 typedef int t_mmp_vect_id;
-#define MMP_TABLE_INVALID_ID    -1
+#define MMP_VECT_INVALID_ID    -1
 
 MMP_CEXTERN_BEGIN
 

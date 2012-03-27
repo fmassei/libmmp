@@ -18,8 +18,6 @@
 */
 #include "mmp_sock_scheduler_fake.h"
 
-#ifdef BUILD_FAKE_SCHEDULER
-
 t_mmp_sched_id mmp_scheduler_fake_create(size_t pool_size)
 {
     mmp_trace_reset();
@@ -60,4 +58,3 @@ t_mmp_sched_ret_e mmp_scheduler_fake_loop(t_mmp_sched_id sched_id,
     return MMP_SCHEDRET_ERR;
 }
 
-#endif /* BUILD_FAKE_SCHEDULER */

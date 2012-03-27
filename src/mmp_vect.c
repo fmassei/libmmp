@@ -57,13 +57,13 @@ t_mmp_vect_s *mmp_vect_create(int size)
 t_mmp_vect_id mmp_vect_add(t_mmp_vect_s *vect, void *elem)
 {
     MMP_CHECK_OR_RETURN((vect!=NULL && vect->data!=NULL),
-            MMP_TABLE_INVALID_ID);
+            MMP_VECT_INVALID_ID);
     if (vect->n_data>=vect->n_alloc) {
         void **tmp;
         tmp = xrealloc(vect->data, sizeof(*vect->data)*(vect->n_data+1));
         if (tmp==NULL) {
             mmp_setError(MMP_ERR_ENOMEM);
-            return MMP_TABLE_INVALID_ID;
+            return MMP_VECT_INVALID_ID;
         }
         vect->data = tmp;
         ++vect->n_alloc;

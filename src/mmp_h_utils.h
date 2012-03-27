@@ -55,4 +55,8 @@
 #   define UNREFERENCED_PARAM(_P) ((void)(_P))
 #endif
 
+/** \brief paste and eval preprocessor macros */
+#define MMP_PASTE(_X, _Y) _X ## _Y
+#define MMP_EVAL(_X, _Y) MMP_PASTE(_X, _Y)
+
 #endif /* H_MMP_H_UTILS_H */
