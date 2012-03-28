@@ -22,20 +22,21 @@
 
 int main(void)
 {
-    t_mmp_ivect_s *vect;
-    int i, k;
-    if ((vect = mmp_ivect_create(10))==NULL)
+    t_mmp_i_vect_s *vect;
+    int i, k=0;
+    if ((vect = mmp_i_vect_create(10,1))==NULL)
         return EXIT_FAILURE;
-    for (i=0; i<10; ++i) {
-        if (mmp_ivect_push(vect, i)!=i)
+    for (i=0; i<5; ++i) {
+        if (mmp_i_vect_push_back(vect, i+1)!=MMP_ERR_OK)
             return EXIT_FAILURE;
     }
-    for (i=0; i<10; ++i) {
-        k = mmp_ivect_del(vect, 0);
-        if (k!=i)
-            return EXIT_FAILURE;
-    }
-    mmp_ivect_destroy(&vect);
+    do {
+        if (vect->n_data>0)
+            k += vect->data[vect->n_data-1];
+    } while (mmp_i_vect_pop_back(vect)==MMP_ERR_OK);
+    if (k!=10+1+2+3+4+5)
+        return EXIT_FAILURE;
+    mmp_i_vect_destroy(&vect);
     if (vect!=NULL)
         return EXIT_FAILURE;
     return EXIT_SUCCESS;

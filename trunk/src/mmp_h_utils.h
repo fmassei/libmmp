@@ -50,13 +50,17 @@
 #   endif
 #endif
 
-/** \brief unreferenced parameter macro */
+/** \def UNREFERENCED_PARAM
+ * \brief unreferenced parameter macro */
 #ifndef UNREFERENCED_PARAM
 #   define UNREFERENCED_PARAM(_P) ((void)(_P))
 #endif
 
-/** \brief paste and eval preprocessor macros */
+/** \def MMP_PASTE
+ * \brief paste preprocessor macro */
 #define MMP_PASTE(_X, _Y) _X ## _Y
+/** \def MMP_EVAL
+ * \brief eval preprocessor macro */
 #define MMP_EVAL(_X, _Y) MMP_PASTE(_X, _Y)
 
 #endif /* H_MMP_H_UTILS_H */
