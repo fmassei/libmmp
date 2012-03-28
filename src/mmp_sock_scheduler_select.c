@@ -22,16 +22,22 @@
 #include <sys/select.h>
 #include "mmp_gen_vect.h"
 
-static t_mmp_ivect_s *s_fds;
+static t_mmp_i_vect_s *s_fds;
 static int s_nfds, s_highestfd;
 
 t_mmp_sched_id mmp_scheduler_select_create(size_t pool_size)
 {
     t_mmp_sched_id epollfd = 1;
-    int i;
-    if ((s_fds = mmp_ivect_create(FD_SETSIZE))==NULL) {
+    ret_t ret;
+    size_t i;
+    if ((s_fds = mmp_i_vect_create(0, 0))==NULL) {
         mmp_setError(MMP_ERR_ENOMEM);
         return MMP_ERR_ENOMEM;
+    }
+    if ((ret = mmp_i_vect_reserve(s_fds, FD_SETSIZE))!=MMP_ERR_OK) {
+        mmp_i_vect_destroy(&s_fds);
+        mmp_setError(MMP_ERR_GENERIC);
+        return MMP_ERR_GENERIC;
     }
     for (i=0; i<s_fds->n_data; ++i)
         s_fds->data[i] = -1;
@@ -41,7 +47,7 @@ t_mmp_sched_id mmp_scheduler_select_create(size_t pool_size)
 
 void mmp_scheduler_select_destroy(t_mmp_sched_id sched_id)
 {
-    mmp_ivect_destroy(&s_fds);
+    mmp_i_vect_destroy(&s_fds);
 }
 
 ret_t mmp_scheduler_select_add_listen_socket(t_mmp_sched_id sched_id,
@@ -53,17 +59,17 @@ ret_t mmp_scheduler_select_add_listen_socket(t_mmp_sched_id sched_id,
 ret_t mmp_scheduler_select_add_client_socket(t_mmp_sched_id sched_id,
                                             t_socket sock)
 {
-    mmp_ivect_push(s_fds, sock);
+    mmp_i_vect_push_back(s_fds, sock);
     if (sock+1>s_nfds) s_nfds = sock+1;
     return MMP_ERR_OK;
 }
 
 ret_t mmp_scheduler_select_del_socket(t_mmp_sched_id sched_id, t_socket sock)
 {
-    int i;
+    size_t i;
     for (i=0; i<s_fds->n_data; ++i) {
         if (s_fds->data[i]==sock) {
-            mmp_ivect_del(s_fds, i);
+            mmp_i_vect_erase(s_fds, i);
             break;
         }
     }
@@ -75,8 +81,9 @@ t_mmp_sched_ret_e mmp_scheduler_select_loop(t_mmp_sched_id sched_id,
 	                                       int millisecs,
                                            t_mmp_schedto_fp cback_to)
 {
-    int nret, cback_err = 0, i;
+    int nret, cback_err = 0;
     struct timeval tv;
+    size_t i;
     fd_set rfds;
     tv.tv_sec = 0;
     tv.tv_usec = millisecs*1000;

@@ -15,7 +15,7 @@ AC_CHECK_LIB([rt], [shm_open])
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h limits.h locale.h memory.h netinet/in.h])
 AC_CHECK_HEADERS([stdint.h stdlib.h string.h strings.h sys/socket.h])
 AC_CHECK_HEADERS([sys/time.h unistd.h wchar.h libgen.h])
-AC_CHECK_HEADERS([sys/epoll.h])
+AC_CHECK_HEADERS([sys/epoll.h sys/select.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_OFF_T
@@ -42,12 +42,12 @@ AC_ARG_ENABLE([debug],
 AC_MSG_RESULT([$debugit])
 if test x"$debugit" = x"yes"; then
     AC_DEFINE([DEBUG],[],[Debug Mode])
-    AM_CXXFLAGS="$AM_CXXFLAGS -g -Wall -O0"
-    AM_CFLAGS="$AM_CFLAGS -g -Wall -O0"
+    AM_CXXFLAGS="$AM_CXXFLAGS -g -Wall -Wextra -O0 -DBUILDING_MMP"
+    AM_CFLAGS="$AM_CFLAGS -g -Wall -Wextra -O0 -DBUILDING_MMP"
 else
     AC_DEFINE([NDEBUG],[],[No-debug Mode])
-    AM_CXXFLAGS="$AM_CXXFLAGS -O3"
-    AM_CFLAGS="$AM_CFLAGS -O3"
+    AM_CXXFLAGS="$AM_CXXFLAGS -O3 -DBUILDING_MMP"
+    AM_CFLAGS="$AM_CFLAGS -O3 -DBUILDING_MMP"
 fi
 AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_CFLAGS])
