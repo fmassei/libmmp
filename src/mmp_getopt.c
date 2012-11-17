@@ -20,7 +20,7 @@
 
 #ifndef _WIN32
 
-int xgetopt(const int argc, char * const *argv, char *opts)
+int xgetopt(const int argc, char * const *argv, const char *opts)
 {
     return getopt(argc, argv, opts);
 }
@@ -39,7 +39,7 @@ int	optind = 1;
 int	optopt;
 char *optarg;
 
-int xgetopt(const int argc, char * const *argv, char *opts)
+int xgetopt(const int argc, char * const *argv, const char *opts)
 {
 	static int sp = 1;
 	register int c;
