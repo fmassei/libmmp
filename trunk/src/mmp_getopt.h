@@ -44,7 +44,7 @@
 MMP_CEXTERN_BEGIN
 
 /** unix getopt */
-MMP_API int xgetopt(const int argc, char * const *argv, char *opts);
+MMP_API int xgetopt(const int argc, char * const *argv, const char *opts);
 
 MMP_CEXTERN_END
 
